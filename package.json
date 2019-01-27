@@ -1,7 +1,7 @@
 {
-  "name": "humpback-web",
-  "version": "1.0.0",
-  "description": "humpback management website",
+  "name": "bluewhale-web",
+  "version": "0.0.1",
+  "description": "The bluewhale web management platform for docker.",
   "main": "src/server/index.js",
   "scripts": {
     "start": "npm run dev",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/humpback/humpback-web.git"
+    "url": "git+https://github.com/golang-community/bluewhale-web.git"
   },
   "keywords": [],
   "author": "",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/humpback/humpback-web/issues"
+    "url": "https://github.com/golang-community/bluewhale-web/issues"
   },
-  "homepage": "https://github.com/humpback/humpback-web#readme",
+  "homepage": "https://github.com/golang-community/bluewhale-web#readme",
   "dependencies": {
     "@types/file-saver": "^1.3.0",
     "@types/js-yaml": "^3.11.1",

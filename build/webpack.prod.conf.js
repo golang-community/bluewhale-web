@@ -17,7 +17,6 @@ module.exports = webpackMerge(commonConfig, {
   },
 
   plugins: [
-    new webpack.NoErrorsPlugin(),
     new MiniCssExtractPlugin({ filename: 'css/[name].[hash].css' }),
     new webpack.DefinePlugin({
       'process.env': {

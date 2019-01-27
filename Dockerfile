@@ -1,11 +1,11 @@
-FROM node:8.11-alpine
+FROM node:10.15.0-alpine
 
-LABEL author="Bob Liu" email="Bobliu0909@gmail.com"
+LABEL author="golang-community" email="hm910705@163.com"
 
-ADD humpback-web /humpback-web
+COPY dist /humpback-web
 
 WORKDIR /humpback-web
 
-EXPOSE 80
+EXPOSE 8100
 
 CMD ["node", "index.js"]
