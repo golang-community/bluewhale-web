@@ -65,7 +65,7 @@ gulp.task('server:clean', done => {
 });
 
 gulp.task('server:copy', () => {
-  return gulp.src(['src/server/**']).pipe(gulp.dest('dist/'));
+  return gulp.src(['src/**', '!src/web-front/**', '!src/client/**']).pipe(gulp.dest('dist/'));
 });
 
 gulp.task('server:start', callback => {
