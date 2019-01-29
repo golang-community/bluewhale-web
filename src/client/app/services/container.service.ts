@@ -1,40 +1,38 @@
 import { Injectable } from '@angular/core';
 import { CusHttpService } from './custom-http.service';
 import { GroupService } from './group.service';
-
+declare let _: any;
 @Injectable()
 export class ContainerService {
+  constructor(private http: CusHttpService, private groupService: GroupService) {}
 
-  constructor(
-    private http: CusHttpService,
-    private groupService: GroupService) {
-
-  }
-
-  private buildReq(ip: string, hidenLoading: boolean = false): any {
+  private buildReq(ip: string, hidenLoading: boolean = false, authToken: string): any {
     let useProxy: boolean = this.groupService.isIPEnableProxy(ip);
     let options: any = {
       disableLoading: hidenLoading,
-      timeout: 1 * 60 * 1000
+      timeout: 1 * 60 * 1000,
+      headers: {}
     };
     if (useProxy) {
-      options.headers = {
-        'x-proxy-ip': ip
-      };
+      options.headers['x-proxy-ip'] = ip;
+    }
+    if (authToken) {
+      options.headers['Authorization'] = authToken;
     }
     let url: string = `http://${ip}:8500/dockerapi/v2`;
     let req = {
       url: url,
       options: options
-    }
+    };
     return req;
   }
 
-  get(ip: string, hidenLoading: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip, hidenLoading);
+  get(ip: string, hidenLoading: boolean = false, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, hidenLoading, authToken);
     let url: string = `${reqConfig.url}/containers?all=true`;
     return new Promise((resolve, reject) => {
-      this.http.get(url, reqConfig.options)
+      this.http
+        .get(url, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -44,11 +42,12 @@ export class ContainerService {
     });
   }
 
-  getDockerInfo(ip: string, hidenLoading: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip, hidenLoading);
+  getDockerInfo(ip: string, hidenLoading: boolean = false, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, hidenLoading, authToken);
     let url: string = `${reqConfig.url}/dockerinfo`;
     return new Promise((resolve, reject) => {
-      this.http.get(url, reqConfig.options)
+      this.http
+        .get(url, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -59,11 +58,12 @@ export class ContainerService {
     });
   }
 
-  getById(ip: string, id: string, formatted: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip);
+  getById(ip: string, id: string, formatted: boolean = false, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, undefined, authToken);
     let url: string = `${reqConfig.url}/containers/${id}?originaldata=${!formatted}`;
     return new Promise((resolve, reject) => {
-      this.http.get(url, reqConfig.options)
+      this.http
+        .get(url, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -78,14 +78,15 @@ export class ContainerService {
     let url: string = `${reqConfig.url}/containers/${id}/logs`;
     let queryString: Array<string> = [];
     if (tail) {
-      queryString.push(`tail=${tail}`)
+      queryString.push(`tail=${tail}`);
     }
     if (since) {
-      queryString.push(`since=${since}`)
+      queryString.push(`since=${since}`);
     }
     url = `${url}?${queryString.join('&')}`;
     return new Promise((resolve, reject) => {
-      this.http.get(url, reqConfig.options)
+      this.http
+        .get(url, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -95,11 +96,12 @@ export class ContainerService {
     });
   }
 
-  create(ip: string, config: any, hidenLoading: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip, hidenLoading);
+  create(ip: string, config: any, hidenLoading: boolean = false, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, hidenLoading, authToken);
     let url: string = `${reqConfig.url}/containers`;
     return new Promise((resolve, reject) => {
-      this.http.post(url, config, reqConfig.options)
+      this.http
+        .post(url, config, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -109,14 +111,15 @@ export class ContainerService {
     });
   }
 
-  delete(ip: string, id: string, forceDeletion?: boolean): Promise<any> {
-    let reqConfig = this.buildReq(ip, false);
+  delete(ip: string, id: string, forceDeletion?: boolean, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, false, authToken);
     let url: string = `${reqConfig.url}/containers/${id}?force=false`;
-    if(forceDeletion){
+    if (forceDeletion) {
       url = `${reqConfig.url}/containers/${id}?force=true`;
     }
     return new Promise((resolve, reject) => {
-      this.http.delete(url, reqConfig.options)
+      this.http
+        .delete(url, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -126,15 +129,16 @@ export class ContainerService {
     });
   }
 
-  operate(ip: string, id: string, action: string): Promise<any> {
-    let reqConfig = this.buildReq(ip, false);
+  operate(ip: string, id: string, action: string, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, false, authToken);
     let url: string = `${reqConfig.url}/containers`;
     let data = {
       action: action,
       container: id
     };
     return new Promise((resolve, reject) => {
-      this.http.put(url, data, reqConfig.options)
+      this.http
+        .put(url, data, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -144,8 +148,8 @@ export class ContainerService {
     });
   }
 
-  rename(ip: string, id: string, newName: string): Promise<any> {
-    let reqConfig = this.buildReq(ip, false);
+  rename(ip: string, id: string, newName: string, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, false, authToken);
     let url: string = `${reqConfig.url}/containers`;
     let data = {
       action: 'rename',
@@ -153,7 +157,8 @@ export class ContainerService {
       newName: newName
     };
     return new Promise((resolve, reject) => {
-      this.http.put(url, data, reqConfig.options)
+      this.http
+        .put(url, data, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })
@@ -163,17 +168,24 @@ export class ContainerService {
     });
   }
 
-  upgradeImage(ip: string, id: string, imageTag: string, hidenLoading: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip, hidenLoading);
+  upgradeImage(
+    ip: string,
+    id: string,
+    imageTag: string,
+    hidenLoading: boolean = false,
+    authToken: string
+  ): Promise<any> {
+    let reqConfig = this.buildReq(ip, hidenLoading, authToken);
     let url: string = `${reqConfig.url}/containers`;
     let data = {
-      action: "upgrade",
+      action: 'upgrade',
       container: id,
       imagetag: imageTag
     };
     reqConfig.options.timeout = null;
     return new Promise((resolve, reject) => {
-      this.http.put(url, data, reqConfig.options)
+      this.http
+        .put(url, data, reqConfig.options)
         .then(res => {
           resolve(res.json ? res.json() : res.text());
         })

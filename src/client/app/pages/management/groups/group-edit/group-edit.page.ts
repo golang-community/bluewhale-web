@@ -14,7 +14,7 @@ export class ManageGroupEditPage {
   private subscribers: Array<any> = [];
   private isNew: boolean = true;
   private serverForm: FormGroup;
-  private submitted: boolean;
+  public submitted: boolean;
 
   private groupInfo: any = {
     Name: '',
@@ -97,7 +97,7 @@ export class ManageGroupEditPage {
     this.subscribers.forEach((item: any) => item.unsubscribe());
   }
 
-  private refreshSelectedUser(data: any) {
+  public refreshSelectedUser(data: any) {
     this.groupInfo.Owners = data.value || [];
   }
 
@@ -110,30 +110,31 @@ export class ManageGroupEditPage {
       OpenToPublic: data.OpenToPublic === true ? true : false,
       IsCluster: data.IsCluster === true ? true : false,
       Servers: this._fb.array([]),
-      ContactInfo: data.ContactInfo || ''
+      ContactInfo: data.ContactInfo || '',
     });
     if (data.Servers && data.Servers.length > 0) {
       for (let server of data.Servers) {
-        this.addServer(server.Name, server.IP);
+        this.addServer(server.Name, server.IP, server.authToken);
       }
     }
   }
 
-  private addServer(name?: string, ip?: string) {
+  private addServer(name?: string, ip?: string, authToken?:string) {
     let control = <FormArray>this.serverForm.controls['Servers'];
     let serverCtrl = this._fb.group({
       "Name": name || '',
-      "IP": ip || ''
+      "IP": ip || '',
+      "authToken": authToken || ''
     });
     control.push(serverCtrl);
   }
 
-  private removeServer(index: number) {
+  public removeServer(index: number) {
     let control = <FormArray>this.serverForm.controls['Servers'];
     control.removeAt(index);
   }
 
-  private save() {
+  public save() {
     this.submitted = true;
     let form = this.serverForm;
     if (form.invalid) return;

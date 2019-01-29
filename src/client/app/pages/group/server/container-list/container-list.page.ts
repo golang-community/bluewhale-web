@@ -12,7 +12,6 @@ declare let messager: any;
   styleUrls: ['./container-list.css']
 })
 export class ContainerListPage {
-
   private groupInfo: any;
   private ip: any;
   private containers: Array<any> = [];
@@ -54,6 +53,7 @@ export class ContainerListPage {
   private rmImageModalOptions: any = {};
   private agentInvalid: boolean = false;
   private dockerEngineVersion: string;
+  private serverInfo: { ip: string; authToken: string };
 
   constructor(
     private _route: ActivatedRoute,
@@ -62,16 +62,14 @@ export class ContainerListPage {
     private _composeService: ComposeService,
     private _groupService: GroupService,
     private _imageService: ImageService,
-    private _logService: LogService) {
-
-  }
+    private _logService: LogService
+  ) {}
 
   ngOnInit() {
-
     this.containerPageOption = {
-      "boundaryLinks": false,
-      "directionLinks": true,
-      "hidenLabel": true
+      boundaryLinks: false,
+      directionLinks: true,
+      hidenLabel: true
     };
     let modalCommonOptions = {
       title: 'WARN',
@@ -88,10 +86,15 @@ export class ContainerListPage {
       let groupId = params['groupId'];
       this.ip = params['ip'];
       this.groupInfo = { ID: groupId };
-      this._groupService.getById(groupId)
+      this._groupService
+        .getById(groupId)
         .then(data => {
           this.groupInfo = data;
-          this.init();
+          const findServer = this.groupInfo.Servers.find((x: any) => x.IP === this.ip);
+          if (findServer) {
+            this.serverInfo = { ip: findServer.IP, authToken: findServer.authToken };
+            this.init();
+          }
         })
         .catch(err => {
           messager.error(err);
@@ -121,10 +124,10 @@ export class ContainerListPage {
     this.filterServiceDone = false;
     this.currentServices = [];
 
-    if(sessionStorage.getItem('serverTab') == 'service'){
+    if (sessionStorage.getItem('serverTab') == 'service') {
       this.activedTab = 'service';
       this.getService();
-    }else{
+    } else {
       this.activedTab = 'containers';
       this.getContainers();
     }
@@ -147,11 +150,18 @@ export class ContainerListPage {
 
   private getContainers() {
     this.agentInvalid = false;
-    this._containerService.get(this.ip)
+    this._containerService
+      .get(this.ip, undefined, this.serverInfo.authToken)
       .then(data => {
         this.containers = _.sortBy(data, 'Names');
         this.containers = this.containers.filter((item: any) => {
-          if (item.Names[0] && item.Names[0].startsWith('/CLUSTER-') || (item.Labels && typeof(item.Labels) == 'object' && JSON.stringify(item.Labels) !== "{}" && item.Labels["com.docker.compose.service"])) {
+          if (
+            (item.Names[0] && item.Names[0].startsWith('/CLUSTER-')) ||
+            (item.Labels &&
+              typeof item.Labels == 'object' &&
+              JSON.stringify(item.Labels) !== '{}' &&
+              item.Labels['com.docker.compose.service'])
+          ) {
             return false;
           }
           return true;
@@ -159,42 +169,44 @@ export class ContainerListPage {
         this.filterContainer();
       })
       .catch(err => {
-        messager.error(err.message || "Get containers failed");
+        messager.error(err.message || 'Get containers failed');
       });
   }
 
   private getService() {
-    this._composeService.getAgentInfo(this.ip)
+    this._composeService
+      .getAgentInfo(this.ip, undefined, this.serverInfo.authToken)
       .then(data => {
-        if (data.AppVersion >= "1.3.3") {
+        if (data.AppVersion >= '1.3.3') {
           this.agentInvalid = false;
-          this._composeService.getDockerVersion(this.ip)
+          this._composeService
+            .getDockerVersion(this.ip)
             .then(data => {
               this.dockerEngineVersion = data.ServerVersion.Version;
             })
             .catch(err => {
-              messager.error(err.message || "Get services failed");
-            })
-          this._composeService.getService(this.ip)
+              messager.error(err.message || 'Get services failed');
+            });
+          this._composeService
+            .getService(this.ip, undefined, this.serverInfo.authToken)
             .then(data => {
               this.serviceInfo = _.sortBy(data, 'Name');
               this.serviceInfo.forEach(item => {
                 item.Containers = item.Containers || [];
                 item.Containers = _.sortBy(item.Containers, 'Name');
-
               });
               this.filterService();
             })
             .catch(err => {
-              messager.error(err.message || "Get services failed");
-            })
+              messager.error(err.message || 'Get services failed');
+            });
         } else {
           this.agentInvalid = true;
         }
       })
       .catch(err => {
-        messager.error(err.message || "Server is no response");
-      })
+        messager.error(err.message || 'Server is no response');
+      });
   }
 
   private getContainerStatus(status: any) {
@@ -202,14 +214,14 @@ export class ContainerListPage {
     if (status.indexOf('Paused') !== -1 || status.indexOf('Restarting') !== -1 || status === 'Created') {
       cls = 'warning';
       this.hasFailedContainer = true;
-    }else{
+    } else {
       //是否存在失败的container
       this.hasFailedContainer = false;
     }
     if (status.startsWith('Exited')) {
       cls = 'danger';
       this.hasFailedContainer = true;
-    }else{
+    } else {
       this.hasFailedContainer = false;
     }
     return cls;
@@ -229,7 +241,7 @@ export class ContainerListPage {
         let regex = new RegExp(keyWord, 'i');
         this.filterContainers = this.containers.filter(item => {
           return regex.test(item.Names[0]);
-        })
+        });
       }
       this.setContainerPage(this.containerPageIndex);
       this.filterContainerDone = true;
@@ -258,7 +270,8 @@ export class ContainerListPage {
   private operate(container: any, action: string) {
     let id = container.Id.substring(0, 14);
     let name = container.Names[0].substring(1);
-    this._containerService.operate(this.ip, id, action)
+    this._containerService
+      .operate(this.ip, id, action, this.serverInfo.authToken)
       .then(data => {
         messager.success('succeed');
         this._logService.addLog(`${action}ed container ${name} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
@@ -281,24 +294,26 @@ export class ContainerListPage {
   private rmContainer() {
     let id = this.rmContainerTarget.Id.substring(0, 14);
     let name = this.rmContainerTarget.Names[0].substring(1);
-    this._containerService.delete(this.ip, id, this.forceDeletion)
-      .then((data) => {
+    this._containerService
+      .delete(this.ip, id, this.forceDeletion, this.serverInfo.authToken)
+      .then(data => {
         messager.success('succeed');
         this._logService.addLog(`Deleted container ${name} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
         this.rmContainerModalOptions.show = false;
         this.getContainers();
       })
-      .catch((err) => {
+      .catch(err => {
         messager.error(err.Detail || err);
-      })
+      });
   }
 
   private getImages() {
-    this._imageService.getImages(this.ip)
+    this._imageService
+      .getImages(this.ip, this.serverInfo.authToken)
       .then(data => {
         this.images = [];
         let index = data.findIndex((item: any) => item.RepoTags == null);
-        if(index > -1){
+        if (index > -1) {
           data.splice(index, 1);
         }
         data.forEach((item: any) => {
@@ -319,8 +334,8 @@ export class ContainerListPage {
         this.images = _.sortBy(this.images, 'Name');
         this.filterImage();
       })
-      .catch((err) => {
-        messager.error(err.Detail || "Get images failed");
+      .catch(err => {
+        messager.error(err.Detail || 'Get images failed');
       });
   }
 
@@ -338,7 +353,7 @@ export class ContainerListPage {
         let regex = new RegExp(keyWord, 'i');
         this.filterImages = this.images.filter(item => {
           return regex.test(item.Name);
-        })
+        });
       }
       this.setImagePage(this.imagePageIndex);
       this.filterImageDone = true;
@@ -367,7 +382,7 @@ export class ContainerListPage {
         let regex = new RegExp(keyWord, 'i');
         this.filterServices = this.serviceInfo.filter(item => {
           return regex.test(item.Name);
-        })
+        });
       }
       this.setServicePage(this.servicePageIndex);
       this.filterServiceDone = true;
@@ -401,7 +416,8 @@ export class ContainerListPage {
       return;
     }
     this.pullImageModalOptions.show = false;
-    this._imageService.pullImage(this.ip, imageName)
+    this._imageService
+      .pullImage(this.ip, imageName, undefined, this.serverInfo.authToken)
       .then(data => {
         messager.success('succeed');
         this._logService.addLog(`Pulled image ${imageName} on ${this.ip}`, 'Image', this.groupInfo.ID, this.ip);
@@ -424,10 +440,16 @@ export class ContainerListPage {
       id = this.rmImageTarget._repo;
     }
     this.rmImageModalOptions.show = false;
-    this._imageService.deleteImage(this.ip, id)
+    this._imageService
+      .deleteImage(this.ip, id, this.serverInfo.authToken)
       .then(data => {
         messager.success('succeed');
-        this._logService.addLog(`Deleted image ${this.rmImageTarget._repo} on ${this.ip}`, 'Image', this.groupInfo.ID, this.ip);
+        this._logService.addLog(
+          `Deleted image ${this.rmImageTarget._repo} on ${this.ip}`,
+          'Image',
+          this.groupInfo.ID,
+          this.ip
+        );
         this.getImages();
       })
       .catch(err => {
@@ -436,7 +458,8 @@ export class ContainerListPage {
   }
 
   private serviceOperate(service: any, action: any) {
-    this._composeService.ComposeOperate(this.ip, service.Name, action)
+    this._composeService
+      .ComposeOperate(this.ip, service.Name, action)
       .then(data => {
         messager.success('succeed');
         // this._logService.addLog(`${action}ed container ${name} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
@@ -454,21 +477,22 @@ export class ContainerListPage {
 
   private rmService() {
     let name = this.rmServiceTarget.Name;
-    this._composeService.removeService(this.ip, name)
-      .then((data) => {
+    this._composeService
+      .removeService(this.ip, name)
+      .then(data => {
         messager.success('succeed');
         this.rmServiceModalOptions.show = false;
         this.getService();
       })
-      .catch((err) => {
+      .catch(err => {
         messager.error(err.Detail || err);
-      })
+      });
   }
 
   private downloadComposeData(item: any) {
     let content = item.ComposeData;
-    let blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    fileSaver.saveAs(blob, `${item.Name}.yml`)
+    let blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    fileSaver.saveAs(blob, `${item.Name}.yml`);
   }
 
   copyId(cIdInput: HTMLInputElement) {

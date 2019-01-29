@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { animate, trigger, state, style, transition } from '@angular/animations';
-import { ActivatedRoute, Router, NavigationEnd, RoutesRecognized } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, ActivatedRouteSnapshot } from '@angular/router';
 import { GroupService, MostUsedService } from './../../../services';
 
 declare let $: any;
@@ -39,9 +39,8 @@ export class GroupLayoutPage {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _groupService: GroupService,
     private _mostUsedService: MostUsedService) {
-
+      console.log(_route)
   }
 
   ngOnInit() {
@@ -78,7 +77,7 @@ export class GroupLayoutPage {
     this.fixGroupTreePanel();
   }
 
-  private addToMostUsed(groupId: any, server: any) {
+  public addToMostUsed(groupId: any, server: any) {
     let add = server.Name || server.IP;
     this._mostUsedService.add(add, groupId);
     //重置serverTab
@@ -95,7 +94,7 @@ export class GroupLayoutPage {
     });
   }
 
-  private toggleMenus(groupId: any) {
+  public toggleMenus(groupId: any) {
     if (this.selectedGroupId === groupId) {
       this.selectedGroupId = null;
     } else {
