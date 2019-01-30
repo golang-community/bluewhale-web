@@ -11,7 +11,6 @@ declare let messager: any;
   styleUrls: ['./overview.css']
 })
 export class GroupOverviewPage {
-
   @ViewChild('chartPanel')
   private chartPanel: ElementRef;
 
@@ -24,9 +23,8 @@ export class GroupOverviewPage {
     private _route: ActivatedRoute,
     private _router: Router,
     private _groupService: GroupService,
-    private _containerService: ContainerService) {
-
-  }
+    private _containerService: ContainerService
+  ) {}
 
   ngOnInit() {
     this._route.params.forEach(params => {
@@ -35,7 +33,8 @@ export class GroupOverviewPage {
       }
       this.servers = null;
       let groupId = params['groupId'];
-      this._groupService.getById(groupId)
+      this._groupService
+        .getById(groupId)
         .then(data => {
           this.groupInfo = data;
           let promiseArray = [];
@@ -51,11 +50,12 @@ export class GroupOverviewPage {
               running: [],
               stoped: []
             };
-            let tempPromis = this._containerService.get(ip)
-              .then((data) => {
+            let tempPromis = this._containerService
+              .get(ip, undefined, '123456')
+              .then(data => {
                 data.forEach((container: any) => {
-                  let name = container.Names[0].replace(/\//g, "");
-                  if (container.Status != undefined && container.Status.indexOf("Up") !== -1) {
+                  let name = container.Names[0].replace(/\//g, '');
+                  if (container.Status != undefined && container.Status.indexOf('Up') !== -1) {
                     temp.running.push(name);
                   } else {
                     temp.stoped.push(name);
@@ -64,7 +64,7 @@ export class GroupOverviewPage {
                 temp.isLoading = false;
                 return temp;
               })
-              .catch((err) => {
+              .catch(err => {
                 temp.errMsg = err.message || JSON.stringify(err);
                 return temp;
               });
@@ -83,7 +83,7 @@ export class GroupOverviewPage {
         .catch(err => {
           messager.error(err);
           this._router.navigate(['/group']);
-        })
+        });
     });
   }
 
@@ -136,7 +136,7 @@ export class GroupOverviewPage {
               msg = `${param.name}<br>${param.data.errMsg}`;
               break;
             }
-            msg += `<br>${param.seriesName}: ${param.value}`
+            msg += `<br>${param.seriesName}: ${param.value}`;
           }
           return msg;
         }

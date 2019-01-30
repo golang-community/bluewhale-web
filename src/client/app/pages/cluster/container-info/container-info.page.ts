@@ -44,9 +44,8 @@ export class ClusterContainerInfoPage {
     private _groupService: GroupService,
     private _clusterService: ClusterService,
     private _logService: LogService,
-    private _containerService: ContainerService) {
-
-  }
+    private _containerService: ContainerService
+  ) {}
 
   ngOnInit() {
     let modalCommonOptions = {
@@ -56,7 +55,7 @@ export class ClusterContainerInfoPage {
     };
     this.deleteContainerModalOptions = _.cloneDeep(modalCommonOptions);
     this.upgradeContainerModalOptions = _.cloneDeep(modalCommonOptions);
-    this.upgradeContainerModalOptions.title = "Upgrade";
+    this.upgradeContainerModalOptions.title = 'Upgrade';
     this.upgradeContainerModalOptions.hideFooter = true;
     this.reAssignConfirmModalOptions = _.cloneDeep(modalCommonOptions);
     this.advanceSettingModalOptions = {
@@ -74,13 +73,14 @@ export class ClusterContainerInfoPage {
       hideFooter: true,
       closable: false,
       logs: []
-    }
+    };
 
     let paramSub = this._route.params.subscribe(params => {
-      let groupId = params["groupId"];
-      this.metaId = params["metaId"];
+      let groupId = params['groupId'];
+      this.metaId = params['metaId'];
       this.groupInfo = { ID: groupId };
-      this._groupService.getById(groupId)
+      this._groupService
+        .getById(groupId)
         .then(data => {
           this.groupInfo = data;
           this.getContainer();
@@ -99,16 +99,17 @@ export class ClusterContainerInfoPage {
 
   private getContainer() {
     this.container = {};
-    this._clusterService.getClusterContainer(this.metaId)
+    this._clusterService
+      .getClusterContainer(this.metaId)
       .then(res => {
         let data = res.Data.Container;
         this.container = data;
         if (this.container.Containers && this.container.Containers.length) {
-          this.container.Containers = _.sortBy(this.container.Containers, ['IP', "HostName"]);
+          this.container.Containers = _.sortBy(this.container.Containers, ['IP', 'HostName']);
           this.activedTab = this.container.Containers[0].IP;
         }
-        if(this.container.Config.Labels){
-          if(this.container.Config.Labels == {}){
+        if (this.container.Config.Labels) {
+          if (this.container.Config.Labels == {}) {
             this.containerLabels = [];
           } else {
             for (let key in this.container.Config.Labels) {
@@ -119,14 +120,14 @@ export class ClusterContainerInfoPage {
           this.containerLabels = [];
         }
         let basicInfo = {
-          'Image': data.Config.Image,
-          'Hostname': data.Config.HostName,
-          'Command': data.Config.Command,
+          Image: data.Config.Image,
+          Hostname: data.Config.HostName,
+          Command: data.Config.Command,
           'Restart Policy': (data.Config.RestartPolicy || '').toUpperCase(),
           'Network Mode': (data.Config.NetworkMode || '').toUpperCase(),
-          'CpuShares': data.Config.CpuShares || 'Unlimited',
-          'Memory Limit': data.Config.Memory ? `${(data.Config.Memory / 1024 / 1024)} MB` : 'Unlimited',
-          'Instances': data.Instances
+          CpuShares: data.Config.CpuShares || 'Unlimited',
+          'Memory Limit': data.Config.Memory ? `${data.Config.Memory / 1024 / 1024} MB` : 'Unlimited',
+          Instances: data.Instances
         };
         this.containerBasicInfo = [];
         for (let key in basicInfo) {
@@ -162,10 +163,15 @@ export class ClusterContainerInfoPage {
       event.stopPropagation();
       return;
     }
-    this._clusterService.operate(this.container.MetaId, action)
+    this._clusterService
+      .operate(this.container.MetaId, action)
       .then(data => {
         messager.success('succeed');
-        this._logService.addLog(`${action} container ${this.container.Config.Name} on ${this.groupInfo.Name}`, 'Cluster', this.groupInfo.ID);
+        this._logService.addLog(
+          `${action} container ${this.container.Config.Name} on ${this.groupInfo.Name}`,
+          'Cluster',
+          this.groupInfo.ID
+        );
         this.getContainer();
       })
       .catch(err => {
@@ -183,12 +189,17 @@ export class ClusterContainerInfoPage {
 
   private deleteContainer() {
     this.deleteContainerModalOptions.show = false;
-    this._clusterService.deleteContainer(this.container.MetaId)
+    this._clusterService
+      .deleteContainer(this.container.MetaId)
       .then(data => {
-        this._logService.addLog(`Deleted container ${this.container.Config.Name} on ${this.groupInfo.Name}`, 'Cluster', this.groupInfo.ID);
-        this._router.navigate(["/cluster", this.groupInfo.ID, 'overview']);
+        this._logService.addLog(
+          `Deleted container ${this.container.Config.Name} on ${this.groupInfo.Name}`,
+          'Cluster',
+          this.groupInfo.ID
+        );
+        this._router.navigate(['/cluster', this.groupInfo.ID, 'overview']);
       })
-      .catch((err) => {
+      .catch(err => {
         messager.error(err);
       });
   }
@@ -203,11 +214,18 @@ export class ClusterContainerInfoPage {
     this.upgradeContainerModalOptions.formSubmitted = true;
     if (form.invalid) return;
     let newImage = `${this.container.Config.Image.split(':')[0]}:${form.value.newTag}`;
-    this._clusterService.upgradeImage(this.metaId, form.value.newTag)
+    this._clusterService
+      .upgradeImage(this.metaId, form.value.newTag)
       .then(res => {
         messager.success('succeed');
         this.upgradeContainerModalOptions.show = false;
-        this._logService.addLog(`Upgrade container ${this.container.Config.Name} from ${this.container.Config.Image} to ${newImage} on ${this.groupInfo.Name}`, 'Cluster', this.groupInfo.ID);
+        this._logService.addLog(
+          `Upgrade container ${this.container.Config.Name} from ${this.container.Config.Image} to ${newImage} on ${
+            this.groupInfo.Name
+          }`,
+          'Cluster',
+          this.groupInfo.ID
+        );
         this.getContainer();
       })
       .catch(err => messager.error(err));
@@ -233,12 +251,14 @@ export class ClusterContainerInfoPage {
     if (this.container.WebHooks && this.container.WebHooks.length > 0) {
       let hooksCtrl = this._fb.array([]);
       this.container.WebHooks.forEach((item: any) => {
-        hooksCtrl.push(this._fb.group({
-          Url: item.Url,
-          SecretToken: item.SecretToken
-        }));
+        hooksCtrl.push(
+          this._fb.group({
+            Url: item.Url,
+            SecretToken: item.SecretToken
+          })
+        );
       });
-      this.advanceSettingForm.addControl('WebHooks', hooksCtrl)
+      this.advanceSettingForm.addControl('WebHooks', hooksCtrl);
     } else {
       this.advanceSettingForm.addControl('WebHooks', this._fb.array([]));
     }
@@ -253,10 +273,12 @@ export class ClusterContainerInfoPage {
 
   private addWebhook() {
     let hooksCtrl = <FormArray>this.advanceSettingForm.controls['WebHooks'];
-    hooksCtrl.push(this._fb.group({
-      Url: '',
-      SecretToken: ''
-    }));
+    hooksCtrl.push(
+      this._fb.group({
+        Url: '',
+        SecretToken: ''
+      })
+    );
   }
 
   private updateAdvanceSetting() {
@@ -289,7 +311,8 @@ export class ClusterContainerInfoPage {
       WebHooks: formData.WebHooks,
       Instances: formData.Instances
     };
-    this._clusterService.updateContainer(config)
+    this._clusterService
+      .updateContainer(config)
       .then(res => {
         messager.success('Update Succeed!');
         this.advanceSettingModalOptions.show = false;
@@ -350,12 +373,17 @@ export class ClusterContainerInfoPage {
 
   private getLogs() {
     let instance = this.logsViewModalOptions.selectedInstance;
-    this._containerService.getLogs(instance.ip, instance.container, this.logsViewModalOptions.tailNum)
+    this._containerService
+      .getLogs(instance.ip, instance.container, this.logsViewModalOptions.tailNum, undefined, '123456')
       .then(data => {
         this.logs = data || [];
         if (this.logs.length > 0) {
           setTimeout(() => {
-            $(this.logPanel.nativeElement).animate({ scrollTop: this.logPanel.nativeElement.scrollHeight }, '500', 'swing')
+            $(this.logPanel.nativeElement).animate(
+              { scrollTop: this.logPanel.nativeElement.scrollHeight },
+              '500',
+              'swing'
+            );
           }, 500);
         }
       })

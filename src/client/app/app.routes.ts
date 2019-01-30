@@ -6,26 +6,47 @@ import {
   RootLayoutPage,
   DashboardPage,
   LoginPage,
-  GroupLayoutPage, GroupOverviewPage, ContainerListPage, ContainerDetailPage, ContainerNewPage, ContainerClonePage, ContainerMonitorPage, ContainerLogPage, ServerDetailPage,
-  ClusterLayoutPage, ClusterOverviewPage, ClusterContainerEditPage, ClusterContainerInfoPage, ComponentNewPage, ClusterNodePage,
-  HubHomePage, ImageOverviewPage, EditImageDescriptionPage,
+  GroupLayoutPage,
+  GroupOverviewPage,
+  ContainerListPage,
+  ContainerDetailPage,
+  ContainerNewPage,
+  ContainerClonePage,
+  ContainerMonitorPage,
+  ContainerLogPage,
+  ServerDetailPage,
+  ComponentNewPage,
+  // ClusterLayoutPage, ClusterOverviewPage, ClusterContainerEditPage, ClusterContainerInfoPage, ClusterNodePage,
+  HubHomePage,
+  ImageOverviewPage,
+  EditImageDescriptionPage,
   ActivityPage,
-  ManageGroupListPage, ManageGroupEditPage, ManageUserListPage, ManageUserEditPage,
-  UserProfilePage, ChangePasswordPage,
+  ManageGroupListPage,
+  ManageGroupEditPage,
+  ManageUserListPage,
+  ManageUserEditPage,
+  UserProfilePage,
+  ChangePasswordPage,
   SystemConfigPage,
-  NotFoundPage, UnAuthorizedPage
+  NotFoundPage,
+  UnAuthorizedPage
 } from './pages';
 
 let routes: Routes = [
   { path: 'login', component: LoginPage },
   {
-    path: '', component: RootLayoutPage, canActivate: [IsLogin], canActivateChild: [IsLogin],
+    path: '',
+    component: RootLayoutPage,
+    canActivate: [IsLogin],
+    canActivateChild: [IsLogin],
     resolve: { config: SystemConfigResolve },
     children: [
       { path: '', component: DashboardPage },
       { path: 'dashboard', redirectTo: '/' },
       {
-        path: 'group', component: GroupLayoutPage, canActivateChild: [IsGroupOwner],
+        path: 'group',
+        component: GroupLayoutPage,
+        canActivateChild: [IsGroupOwner],
         resolve: { groups: GroupResolve },
         children: [
           { path: ':groupId/overview', component: GroupOverviewPage },
@@ -40,17 +61,17 @@ let routes: Routes = [
           { path: ':groupId/:ip/containers/:containerId/logs', component: ContainerLogPage }
         ]
       },
-      {
-        path: 'cluster', component: ClusterLayoutPage, canActivateChild: [IsGroupOwner], data: { GroupType: 'cluster' },
-        children: [
-          { path: ':groupId/overview', component: ClusterOverviewPage },
-          { path: ':groupId/:ip/node', component: ClusterNodePage },
-          { path: ':groupId/new-container', component: ClusterContainerEditPage, data: { IsNew: true } },
-          { path: ':groupId/containers/:metaId/edit', component: ClusterContainerEditPage, data: { IsEdit: true } },
-          { path: ':groupId/containers/:metaId/clone', component: ClusterContainerEditPage, data: { IsClone: true } },
-          { path: ':groupId/containers/:metaId/info', component: ClusterContainerInfoPage }
-        ]
-      },
+      // {
+      //   path: 'cluster', component: ClusterLayoutPage, canActivateChild: [IsGroupOwner], data: { GroupType: 'cluster' },
+      //   children: [
+      //     { path: ':groupId/overview', component: ClusterOverviewPage },
+      //     { path: ':groupId/:ip/node', component: ClusterNodePage },
+      //     { path: ':groupId/new-container', component: ClusterContainerEditPage, data: { IsNew: true } },
+      //     { path: ':groupId/containers/:metaId/edit', component: ClusterContainerEditPage, data: { IsEdit: true } },
+      //     { path: ':groupId/containers/:metaId/clone', component: ClusterContainerEditPage, data: { IsClone: true } },
+      //     { path: ':groupId/containers/:metaId/info', component: ClusterContainerInfoPage }
+      //   ]
+      // },
 
       { path: 'hub', component: HubHomePage },
       { path: 'hub/_/:imageId/overview', component: ImageOverviewPage },

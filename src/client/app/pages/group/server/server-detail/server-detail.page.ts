@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef} from "@angular/core"
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CusHttpService } from './../../../../services';
 import { ComposeService, ContainerService } from '../../../../services';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -12,9 +12,7 @@ declare let messager: any;
   templateUrl: './server-detail.html',
   styleUrls: ['./server-detail.css']
 })
-
 export class ServerDetailPage {
-
   @ViewChild('logPanel')
   private logPanel: ElementRef;
 
@@ -39,12 +37,10 @@ export class ServerDetailPage {
     private _route: ActivatedRoute,
     private _composeService: ComposeService,
     private _containerService: ContainerService,
-    private _http: CusHttpService,
-  ){
+    private _http: CusHttpService
+  ) {}
 
-  }
-
-  ngOnInit(){
+  ngOnInit() {
     this.service = {};
     this.container = {};
     let modalCommonOptions = {
@@ -55,77 +51,80 @@ export class ServerDetailPage {
     let paramSub = this._route.params.subscribe(params => {
       this.ip = params['ip'];
       this.serviceName = params['serviceName'];
-      this.groupId = params["groupId"];
+      this.groupId = params['groupId'];
     });
     this.subscribers.push(paramSub);
     this.deleteContainerModalOptions = _.cloneDeep(modalCommonOptions);
     this.getService();
-      this.composeDataConfig = {
-        // SystemId: this.systemId,
-        ConfigKey: '',
-        Description: '',
-        ConfigValue: '',
-        SandboxValue: '',
-        _prdMode: 'json',
-        _sandMode: 'yaml',
-        _prdEnableCanary: false,
-        _sandEnableCanary: false
-      }
-      this.logsViewModalOptions = {
-        size: 'lg',
-        show: false,
-        title: '',
-        hideFooter: true,
-        closable: false,
-        logs: []
-      }
+    this.composeDataConfig = {
+      // SystemId: this.systemId,
+      ConfigKey: '',
+      Description: '',
+      ConfigValue: '',
+      SandboxValue: '',
+      _prdMode: 'json',
+      _sandMode: 'yaml',
+      _prdEnableCanary: false,
+      _sandEnableCanary: false
+    };
+    this.logsViewModalOptions = {
+      size: 'lg',
+      show: false,
+      title: '',
+      hideFooter: true,
+      closable: false,
+      logs: []
+    };
   }
 
-  private getService(){
-    this._composeService.getServiceByOne(this.ip, this.serviceName)
-    .then(res => {
-      this.service = res;
-      this.activedTab = this.service.Containers[0].Name;
-      this.containerId = this.service.Containers[0].Id;
-      this.getContainerInfo(this.containerId);
-      // let data = res.json();
-    })
-    .catch(err => {
-      messager.error(err);
-      this._router.navigate(['/cluster', this.groupId, 'overview']);
-    });
+  private getService() {
+    this._composeService
+      .getServiceByOne(this.ip, this.serviceName, undefined, '123456')
+      .then(res => {
+        this.service = res;
+        this.activedTab = this.service.Containers[0].Name;
+        this.containerId = this.service.Containers[0].Id;
+        this.getContainerInfo(this.containerId);
+        // let data = res.json();
+      })
+      .catch(err => {
+        messager.error(err);
+        this._router.navigate(['/cluster', this.groupId, 'overview']);
+      });
   }
 
   ngOnDestroy() {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private getContainerInfo(id: any){
-    this._containerService.getById(this.ip, id)
-    .then(data => {
-      this.container = data;
-      let stateText = '';
-      if (this.container.State.Running) {
-        stateText = 'Running';
-      } else {
-        stateText = 'Stopped';
-      }
-      if (this.container.State.Restarting) {
-        stateText = 'Restarting';
-      }
-      if (this.container.State.Paused) {
-        stateText = 'Paused';
-      }
-      if (this.container.State.Dead) {
-        stateText = 'Dead';
-      }
-      this.container.State.StateText = stateText;
-      this.container.formettedPortsBindings = this.container.NetworkSettings.Ports || this.container.HostConfig.PortBindings;
-    })
-    .catch(err => {
-      messager.error(err.Detail || "Get containers failed.");
-      this._router.navigate(['/group', this.groupId, this.ip, 'overview']);
-    });
+  private getContainerInfo(id: any) {
+    this._containerService
+      .getById(this.ip, id, undefined, '123456')
+      .then(data => {
+        this.container = data;
+        let stateText = '';
+        if (this.container.State.Running) {
+          stateText = 'Running';
+        } else {
+          stateText = 'Stopped';
+        }
+        if (this.container.State.Restarting) {
+          stateText = 'Restarting';
+        }
+        if (this.container.State.Paused) {
+          stateText = 'Paused';
+        }
+        if (this.container.State.Dead) {
+          stateText = 'Dead';
+        }
+        this.container.State.StateText = stateText;
+        this.container.formettedPortsBindings =
+          this.container.NetworkSettings.Ports || this.container.HostConfig.PortBindings;
+      })
+      .catch(err => {
+        messager.error(err.Detail || 'Get containers failed.');
+        this._router.navigate(['/group', this.groupId, this.ip, 'overview']);
+      });
   }
 
   private aceLoaded(editor: any, env: string) {
@@ -133,10 +132,10 @@ export class ServerDetailPage {
     editor.$blockScrolling = Infinity;
   }
 
-  private downloadComposeData(){
+  private downloadComposeData() {
     let content = this.service.ComposeData;
-    let blob = new Blob([content], {type: "text/plain;charset=utf-8"});
-    fileSaver.saveAs(blob, `${this.serviceName}.yml`)
+    let blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    fileSaver.saveAs(blob, `${this.serviceName}.yml`);
   }
 
   private changeTab(tab: string, id: string) {
@@ -166,8 +165,8 @@ export class ServerDetailPage {
     return cls;
   }
 
-  private getContainerCommand(){
-    return `${this.container.Path} ${this.container.Args.join(' ')}`
+  private getContainerCommand() {
+    return `${this.container.Path} ${this.container.Args.join(' ')}`;
   }
 
   private showLogsView(instance: any) {
@@ -182,7 +181,8 @@ export class ServerDetailPage {
   }
 
   private operate(action: string) {
-    this._composeService.ComposeOperate(this.ip, this.service.Name, action)
+    this._composeService
+      .ComposeOperate(this.ip, this.service.Name, action, '123456')
       .then(data => {
         messager.success('succeed');
         this.getService();
@@ -202,26 +202,31 @@ export class ServerDetailPage {
 
   private deleteService() {
     let name = this.serviceName;
-    this._composeService.removeService(this.ip, name)
-      .then((data) => {
+    this._composeService
+      .removeService(this.ip, name, undefined, '123456')
+      .then(data => {
         messager.success('succeed');
         this.deleteContainerModalOptions.show = false;
         this._router.navigate(['/group', this.groupId, this.ip, 'overview']);
       })
-      .catch((err) => {
+      .catch(err => {
         messager.error(err.Detail || err);
-      })
+      });
   }
-
 
   private getLogs() {
     let instance = this.logsViewModalOptions.selectedInstance;
-    this._containerService.getLogs(instance.ip, instance.container, this.logsViewModalOptions.tailNum)
+    this._containerService
+      .getLogs(instance.ip, instance.container, this.logsViewModalOptions.tailNum, undefined, '123456')
       .then(data => {
         this.logs = data || [];
         if (this.logs.length > 0) {
           setTimeout(() => {
-            $(this.logPanel.nativeElement).animate({ scrollTop: this.logPanel.nativeElement.scrollHeight }, '500', 'swing')
+            $(this.logPanel.nativeElement).animate(
+              { scrollTop: this.logPanel.nativeElement.scrollHeight },
+              '500',
+              'swing'
+            );
           }, 500);
         }
       })

@@ -14,7 +14,6 @@ declare let messager: any;
   styleUrls: ['./container-new.css']
 })
 export class ContainerNewPage {
-
   private groupInfo: any;
   private ip: string;
 
@@ -41,9 +40,8 @@ export class ContainerNewPage {
     private _containerService: ContainerService,
     private _composeService: ComposeService,
     private _groupService: GroupService,
-    private _logService: LogService) {
-
-  }
+    private _logService: LogService
+  ) {}
 
   ngOnInit() {
     this.isNew = !!this._route.snapshot.data['IsNew'];
@@ -58,48 +56,47 @@ export class ContainerNewPage {
     };
 
     let paramSub = this._route.params.subscribe(params => {
-      let groupId = params["groupId"];
-      this.ip = params["ip"];
+      let groupId = params['groupId'];
+      this.ip = params['ip'];
       this.selectedServers = [this.ip];
-      this.containerId = params["containerId"];
+      this.containerId = params['containerId'];
       this.groupInfo = { ID: groupId };
-      this._groupService.getById(groupId)
-        .then(data => {
-          this.groupInfo = data;
-        });
-        if (this.isNew) {
-          this.buildForm();
-        }
-        if (this.isEdit) {
-          this._composeService.getAgentInfo(this.ip)
-            .then(data => {
-              if (data.AppVersion >= "1.3.4") {
-                this.agentInvalid = false;
-                this._containerService.getById(this.ip, this.containerId, true)
-                  .then(containerInfo => {
-                    this.containerInfo = containerInfo;
-                    this.buildForm();
-                    this.servers = [];
-                    this.groupInfo.Servers.forEach((item: any) => {
-                      let temp: any = { id: item.IP || item.Name, text: item.IP };
-                      if (item.Name) {
-                        temp.text = item.Name;
-                        if (item.IP) temp.text = `${item.Name}(${item.IP})`;
-                      }
-                      this.servers.push({
-                        id: item.IP || item.Name,
-                        text: item.Name || item.IP
-                      })
-                    });
-                  })
-              } else {
-                this.agentInvalid = true;
-              }
-            })
-            .catch(err => {
-              messager.error(err.message || "Server is no response");
-            })
-        }
+      this._groupService.getById(groupId).then(data => {
+        this.groupInfo = data;
+      });
+      if (this.isNew) {
+        this.buildForm();
+      }
+      if (this.isEdit) {
+        this._composeService
+          .getAgentInfo(this.ip, undefined, '123456')
+          .then(data => {
+            if (data.AppVersion >= '1.3.4') {
+              this.agentInvalid = false;
+              this._containerService.getById(this.ip, this.containerId, true, '123456').then(containerInfo => {
+                this.containerInfo = containerInfo;
+                this.buildForm();
+                this.servers = [];
+                this.groupInfo.Servers.forEach((item: any) => {
+                  let temp: any = { id: item.IP || item.Name, text: item.IP };
+                  if (item.Name) {
+                    temp.text = item.Name;
+                    if (item.IP) temp.text = `${item.Name}(${item.IP})`;
+                  }
+                  this.servers.push({
+                    id: item.IP || item.Name,
+                    text: item.Name || item.IP
+                  });
+                });
+              });
+            } else {
+              this.agentInvalid = true;
+            }
+          })
+          .catch(err => {
+            messager.error(err.message || 'Server is no response');
+          });
+      }
     });
     this.subscribers.push(paramSub);
   }
@@ -115,7 +112,7 @@ export class ContainerNewPage {
   private buildForm() {
     let data = this.containerInfo || {};
     this.form = this._fb.group({
-      Name: [{ value: (data.Name || ''), disabled: (this.isEdit) }],
+      Name: [{ value: data.Name || '', disabled: this.isEdit }],
       Image: [data.Image] || [''],
       Command: [data.CommandWithoutEntryPoint || data.Command] || [''],
       HostName: [''],
@@ -128,7 +125,7 @@ export class ContainerNewPage {
       Labels: this._fb.array([]),
       Ulimits: this._fb.array([]),
       EnableLogFile: data.LogConfig ? (data.LogConfig.Type ? 1 : 0) : 0 || 0,
-      LogDriver: data.LogConfig ? (data.LogConfig.Type || 'json-file') : 'json-file' || 'json-file',
+      LogDriver: data.LogConfig ? data.LogConfig.Type || 'json-file' : 'json-file' || 'json-file',
       LogOpts: this._fb.array([]),
       Dns: [data.Dns] || [[]],
       CPUShares: data.CPUShares === 0 ? '' : data.CPUShares || [''],
@@ -160,7 +157,7 @@ export class ContainerNewPage {
         this.form.removeControl('LogDriver');
         this.form.removeControl('LogOpts');
       }
-    })
+    });
     this.subscribers.push(logConfigSub);
 
     let networkModeSub = this.form.controls['NetworkMode'].valueChanges.subscribe(value => {
@@ -174,7 +171,7 @@ export class ContainerNewPage {
         let portBindingCtrl = this._fb.array([]);
         this.form.addControl('Ports', portBindingCtrl);
       }
-      if (value === "custom") {
+      if (value === 'custom') {
         let networkNameCtrl = new FormControl('');
         this.form.addControl('NetworkName', networkNameCtrl);
       } else {
@@ -182,7 +179,6 @@ export class ContainerNewPage {
       }
     });
     this.subscribers.push(networkModeSub);
-
 
     if (this.isEdit) {
       if (data.RestartPolicy === 'on-failure') {
@@ -193,49 +189,59 @@ export class ContainerNewPage {
       if (data.NetworkMode !== 'host' && data.Ports && data.Ports.length > 0) {
         let portsCtrl = <FormArray>this.form.controls['Ports'];
         data.Ports.forEach((item: any) => {
-          portsCtrl.push(this._fb.group({
-            PrivatePort: [item.PrivatePort],
-            Type: [item.Type || 'tcp'],
-            PublicPort: [item.PublicPort === 0 ? '' : item.PublicPort],
-            IP: [item.Ip]
-          }))
+          portsCtrl.push(
+            this._fb.group({
+              PrivatePort: [item.PrivatePort],
+              Type: [item.Type || 'tcp'],
+              PublicPort: [item.PublicPort === 0 ? '' : item.PublicPort],
+              IP: [item.Ip]
+            })
+          );
         });
       }
 
       if (data.Volumes) {
         let volumeCtrl = <FormArray>this.form.controls['Volumes'];
         data.Volumes.forEach((item: any) => {
-          volumeCtrl.push(this._fb.group({
-            ContainerVolume: item.ContainerVolume,
-            HostVolume: item.HostVolume
-          }));
+          volumeCtrl.push(
+            this._fb.group({
+              ContainerVolume: item.ContainerVolume,
+              HostVolume: item.HostVolume
+            })
+          );
         });
       }
 
       if (data.Links) {
         let control = <FormArray>this.form.controls['Links'];
         data.Links.forEach((item: any) => {
-          control.push(this._fb.group({
-            "Value": [item]
-          }));
-        })
+          control.push(
+            this._fb.group({
+              Value: [item]
+            })
+          );
+        });
       }
 
       if (data.Env) {
         let control = <FormArray>this.form.controls['Envs'];
         data.Env.forEach((item: any) => {
-          control.push(this._fb.group({
-            "Value": [item]
-          }));
-        })
+          control.push(
+            this._fb.group({
+              Value: [item]
+            })
+          );
+        });
       }
 
       if (data.Labels) {
         let control = <FormArray>this.form.controls['Labels'];
         for (let key in data.Labels) {
-          control.push(this._fb.group({
-            "Value": [`${key}:${data.Labels[key]}`]
-          }));
+          control.push(
+            this._fb.group({
+              Value: [`${key}:${data.Labels[key]}`]
+            })
+          );
         }
       }
 
@@ -243,26 +249,30 @@ export class ContainerNewPage {
         if (data.LogConfig.Config) {
           let cloneOptsArr = [];
           for (let key in data.LogConfig.Config) {
-            cloneOptsArr.push(`${key}=${data.LogConfig.Config[key]}`)
+            cloneOptsArr.push(`${key}=${data.LogConfig.Config[key]}`);
           }
           let control = <FormArray>this.form.controls['LogOpts'];
           cloneOptsArr.forEach((item: any) => {
-            control.push(this._fb.group({
-              "Value": [item]
-            }));
-          })
+            control.push(
+              this._fb.group({
+                Value: [item]
+              })
+            );
+          });
         }
       }
 
       if (data.Ulimits) {
         let control = <FormArray>this.form.controls['Ulimits'];
         data.Ulimits.forEach((item: any) => {
-          control.push(this._fb.group({
-            "Name": [item['Name']],
-            "Soft": [item['Soft']],
-            "Hard": [item['Hard']]
-          }));
-        })
+          control.push(
+            this._fb.group({
+              Name: [item['Name']],
+              Soft: [item['Soft']],
+              Hard: [item['Hard']]
+            })
+          );
+        });
       }
       // if (this.form.controls.EnableLogFile.value || data.Ulimits) {
       //   this.AdvancedDisplay = true;
@@ -272,12 +282,14 @@ export class ContainerNewPage {
 
   private addPortBinding() {
     let control = <FormArray>this.form.controls['Ports'];
-    control.push(this._fb.group({
-      PrivatePort: [''],
-      Type: ['tcp'],
-      PublicPort: [''],
-      IP: ['0.0.0.0']
-    }));
+    control.push(
+      this._fb.group({
+        PrivatePort: [''],
+        Type: ['tcp'],
+        PublicPort: [''],
+        IP: ['0.0.0.0']
+      })
+    );
   }
 
   private removePortBinding(i: number) {
@@ -287,10 +299,12 @@ export class ContainerNewPage {
 
   private addVolumeBinding() {
     let control = <FormArray>this.form.controls['Volumes'];
-    control.push(this._fb.group({
-      ContainerVolume: [''],
-      HostVolume: ['']
-    }));
+    control.push(
+      this._fb.group({
+        ContainerVolume: [''],
+        HostVolume: ['']
+      })
+    );
   }
 
   private removeVolumeBinding(i: number) {
@@ -300,9 +314,11 @@ export class ContainerNewPage {
 
   private addEnv() {
     let control = <FormArray>this.form.controls['Envs'];
-    control.push(this._fb.group({
-      "Value": ['']
-    }));
+    control.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private removeEnv(i: number) {
@@ -312,16 +328,20 @@ export class ContainerNewPage {
 
   private addLink() {
     let control = <FormArray>this.form.controls['Links'];
-    control.push(this._fb.group({
-      "Value": ['']
-    }));
+    control.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private addLabel() {
     let control = <FormArray>this.form.controls['Labels'];
-    control.push(this._fb.group({
-      "Value": ['']
-    }));
+    control.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private removeLabel(i: number) {
@@ -331,11 +351,13 @@ export class ContainerNewPage {
 
   private addUlimit() {
     let control = <FormArray>this.form.controls['Ulimits'];
-    control.push(this._fb.group({
-      Name: [''],
-      Soft: [''],
-      Hard: ['']
-    }));
+    control.push(
+      this._fb.group({
+        Name: [''],
+        Soft: [''],
+        Hard: ['']
+      })
+    );
   }
 
   private removeUlimit(i: number) {
@@ -343,33 +365,42 @@ export class ContainerNewPage {
     control.removeAt(i);
   }
 
-  private getTargetLogDriver(){
-    if(!this.hasGetDockerInfo && this.form.controls.LogDriver.value && this.form.controls.LogOpts.value.length == 0){
-      this._containerService.getDockerInfo(this.ip)
-      .then((data:any) => {
-        if(data && data.LoggingDriver){
-          this.form.controls.LogDriver.setValue(data.LoggingDriver);
-        }
-        if(data && data.LoggingDriver == 'json-file'){
+  private getTargetLogDriver() {
+    if (!this.hasGetDockerInfo && this.form.controls.LogDriver.value && this.form.controls.LogOpts.value.length == 0) {
+      this._containerService
+        .getDockerInfo(this.ip, undefined, '123456')
+        .then((data: any) => {
+          if (data && data.LoggingDriver) {
+            this.form.controls.LogDriver.setValue(data.LoggingDriver);
+          }
+          if (data && data.LoggingDriver == 'json-file') {
+            let control = <FormArray>this.form.controls['LogOpts'];
+            control.push(
+              this._fb.group({
+                Value: ['max-size=10m']
+              })
+            );
+            control.push(
+              this._fb.group({
+                Value: ['max-file=3']
+              })
+            );
+          }
+          this.hasGetDockerInfo = true;
+        })
+        .catch(err => {
           let control = <FormArray>this.form.controls['LogOpts'];
-          control.push(this._fb.group({
-            "Value": ['max-size=10m']
-          }));
-          control.push(this._fb.group({
-            "Value": ['max-file=3']
-          }));
-        }
-        this.hasGetDockerInfo = true;
-      })
-      .catch(err => {
-        let control = <FormArray>this.form.controls['LogOpts'];
-          control.push(this._fb.group({
-            "Value": ['max-size=10m']
-          }));
-          control.push(this._fb.group({
-            "Value": ['max-file=3']
-          }));
-      })
+          control.push(
+            this._fb.group({
+              Value: ['max-size=10m']
+            })
+          );
+          control.push(
+            this._fb.group({
+              Value: ['max-file=3']
+            })
+          );
+        });
     }
   }
 
@@ -380,9 +411,11 @@ export class ContainerNewPage {
 
   private addLogOpt() {
     let control = <FormArray>this.form.controls['LogOpts'];
-    control.push(this._fb.group({
-      "Value": ['']
-    }));
+    control.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private removeLogOpt(i: number) {
@@ -401,21 +434,21 @@ export class ContainerNewPage {
 
     let optsObj = {};
     let postLables = {};
-    if(this.form.controls.EnableLogFile.value){
+    if (this.form.controls.EnableLogFile.value) {
       let optsArr = (formData.LogOpts || []).map((item: any) => item.Value);
       optsArr.forEach((item: any) => {
         let splitArr = item.split('=');
         optsObj[splitArr[0]] = splitArr[1];
-      })
+      });
     }
 
     if (formData.Labels) {
       if (formData.Labels.length > 0) {
         formData.Labels.forEach((item: any) => {
-          let key = item.Value.split(":")[0];
-          let value = item.Value.split(":")[1];
+          let key = item.Value.split(':')[0];
+          let value = item.Value.split(':')[1];
           postLables[key] = value;
-        })
+        });
       }
     }
 
@@ -438,12 +471,12 @@ export class ContainerNewPage {
       Labels: postLables || {},
       CPUShares: formData.CPUShares || 0,
       Memory: formData.Memory || 0
-    }
-    if(this.form.controls.EnableLogFile.value){
+    };
+    if (this.form.controls.EnableLogFile.value) {
       config.LogConfig = {
         Type: formData.LogDriver,
         Config: optsObj
-      }
+      };
     }
 
     if (formData.Ulimits.length > 0) {
@@ -452,21 +485,33 @@ export class ContainerNewPage {
     if (this.isEdit) {
       config.Id = this.form.controls.Name.value;
       this.selectedServers.forEach((item: any) => {
-        this._containerService.create(item, config)
+        this._containerService
+          .create(item, config, undefined, '123456')
           .then(data => {
             messager.success('succeed');
-            this._logService.addLog(`Edit container ${config.Name} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
+            this._logService.addLog(
+              `Edit container ${config.Name} on ${this.ip}`,
+              'Container',
+              this.groupInfo.ID,
+              this.ip
+            );
             this._router.navigate(['/group', this.groupInfo.ID, this.ip, 'containers', config.Name]);
           })
           .catch(err => {
             messager.error(err.Detail || err);
           });
-      })
+      });
     } else {
-      this._containerService.create(this.ip, config)
+      this._containerService
+        .create(this.ip, config, undefined, '123456')
         .then(data => {
           messager.success('succeed');
-          this._logService.addLog(`Create container ${config.Name} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
+          this._logService.addLog(
+            `Create container ${config.Name} on ${this.ip}`,
+            'Container',
+            this.groupInfo.ID,
+            this.ip
+          );
           this._router.navigate(['/group', this.groupInfo.ID, this.ip, 'containers', config.Name]);
         })
         .catch(err => {

@@ -1,6 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GroupService, ContainerService, LogService, ClusterService, HubService, ImageService } from './../../../services';
+import {
+  GroupService,
+  ContainerService,
+  LogService,
+  ClusterService,
+  HubService,
+  ImageService
+} from './../../../services';
 
 declare let _: any;
 declare let messager: any;
@@ -10,9 +17,7 @@ declare let messager: any;
   templateUrl: 'overview.component.html',
   styleUrls: ['./overview.component.css']
 })
-
 export class ClusterOverviewPage {
-
   private groupInfo: any = {};
   private containerFilter: string;
   private containers: Array<any> = [];
@@ -34,13 +39,12 @@ export class ClusterOverviewPage {
   private imagePageIndex: number = 1;
 
   private nodePageIndex: number = 1;
-	private currentNodes: Array<any> = [];
+  private currentNodes: Array<any> = [];
   private serverStatus: any = {};
 
   private filterNodeDone: boolean;
   private filterNodes: Array<any> = [];
   private nodeFilter: string;
-
 
   private pullImageModalOptions: any = {};
   private rmImageTarget: any;
@@ -65,15 +69,14 @@ export class ClusterOverviewPage {
     private _imageService: ImageService,
     private _logService: LogService,
     private _clusterService: ClusterService,
-    private _hubService: HubService) {
-
-  }
+    private _hubService: HubService
+  ) {}
 
   ngOnInit() {
     this.containerPageOption = {
-      "boundaryLinks": false,
-      "directionLinks": true,
-      "hidenLabel": true
+      boundaryLinks: false,
+      directionLinks: true,
+      hidenLabel: true
     };
     let modalCommonOptions = {
       title: 'WARN',
@@ -82,11 +85,11 @@ export class ClusterOverviewPage {
     };
     this.rmContainerModalOptions = _.cloneDeep(modalCommonOptions);
     this.upgradeContainerModalOptions = _.cloneDeep(modalCommonOptions);
-    this.upgradeContainerModalOptions.title = "Upgrade";
+    this.upgradeContainerModalOptions.title = 'Upgrade';
     this.upgradeContainerModalOptions.hideFooter = true;
 
     this.pullImageModalOptions = _.cloneDeep(modalCommonOptions);
-		this.pullImageModalOptions.hideFooter = true;
+    this.pullImageModalOptions.hideFooter = true;
     this.pullImageModalOptions.title = 'Pull Docker Image';
 
     this.rmImageModalOptions = _.cloneDeep(modalCommonOptions);
@@ -97,24 +100,24 @@ export class ClusterOverviewPage {
       this.allInstanceIp = [];
       let groupId = params['groupId'];
       this.groupInfo.ID = groupId;
-      this._groupService.getById(groupId)
-        .then(data => {
-          this.groupInfo = data;
-          this.activedTab = 'containers';
-          this.getContainers();
-          this.showServerStatus(true);
-        })
+      this._groupService.getById(groupId).then(data => {
+        this.groupInfo = data;
+        this.activedTab = 'containers';
+        this.getContainers();
+        this.showServerStatus(true);
+      });
     });
   }
 
   private getContainers() {
-    this._clusterService.getClusterContainers(this.groupInfo.ID)
+    this._clusterService
+      .getClusterContainers(this.groupInfo.ID)
       .then(data => {
         data = data.Data.Containers || [];
         this.containers = _.sortBy(data, 'Config.Name');
         this.containers.forEach(item => {
           item.Containers = item.Containers || [];
-          item.Containers = _.sortBy(item.Containers, ['IP', "HostName"]);
+          item.Containers = _.sortBy(item.Containers, ['IP', 'HostName']);
           item.IpTables = {};
           item.Running = 0;
           item.Stopped = 0;
@@ -141,50 +144,50 @@ export class ClusterOverviewPage {
             }
             subItem.Container.Status.StatusText = stateText;
           });
-
         });
         this.filterContainer();
       })
       .catch(err => {
-        messager.error(err.message || "Get containers failed");
+        messager.error(err.message || 'Get containers failed');
       });
   }
 
   private showServerStatus(silent: boolean = false) {
-		this.serverStatus.Status = [];
-		this._clusterService.getServerStatus(this.groupInfo.ID, silent, this.groupInfo)
-			.then(data => {
-				this.serverStatus.Status = data.Data.Engines;
-				let unHealth = _.findIndex(this.serverStatus.Status, (x: any) => x.StateText !== 'Healthy');
-				this.serverStatus.isHealth = (unHealth === -1);
-				this.filterNode();
-			})
-			.catch(err => {
-				if (!silent) {
-					messager.error(err);
-				}
-			});
-	}
+    this.serverStatus.Status = [];
+    this._clusterService
+      .getServerStatus(this.groupInfo.ID, silent, this.groupInfo)
+      .then(data => {
+        this.serverStatus.Status = data.Data.Engines;
+        let unHealth = _.findIndex(this.serverStatus.Status, (x: any) => x.StateText !== 'Healthy');
+        this.serverStatus.isHealth = unHealth === -1;
+        this.filterNode();
+      })
+      .catch(err => {
+        if (!silent) {
+          messager.error(err);
+        }
+      });
+  }
 
-
-	private getAllInstanceIp(){
-		if(this.allInstanceIp.length === 0){
-			this._clusterService.getServerStatus(this.groupInfo.ID, false, this.groupInfo)
-			.then(data => {
-				this.serverStatus.Status = data.Data.Engines;
-				this.serverStatus.Status.forEach((container: any) => {
-					let hasRepeated = !this.allInstanceIp.find((ip: any) => ip == container.IP ||  ip == container.HostName);
-					if(hasRepeated){
-						this.allInstanceIp.push(container.IP || container.HostName);
-					}
-				})
-				this.allInstanceIp = _.sortBy(this.allInstanceIp);
-			})
-			.catch(err => {
-				messager.error(err || 'Get server info failed');
-			});
-		}
-	}
+  private getAllInstanceIp() {
+    if (this.allInstanceIp.length === 0) {
+      this._clusterService
+        .getServerStatus(this.groupInfo.ID, false, this.groupInfo)
+        .then(data => {
+          this.serverStatus.Status = data.Data.Engines;
+          this.serverStatus.Status.forEach((container: any) => {
+            let hasRepeated = !this.allInstanceIp.find((ip: any) => ip == container.IP || ip == container.HostName);
+            if (hasRepeated) {
+              this.allInstanceIp.push(container.IP || container.HostName);
+            }
+          });
+          this.allInstanceIp = _.sortBy(this.allInstanceIp);
+        })
+        .catch(err => {
+          messager.error(err || 'Get server info failed');
+        });
+    }
+  }
 
   private changeTab(tab: string) {
     this.activedTab = tab;
@@ -202,7 +205,8 @@ export class ClusterOverviewPage {
   private getImages(ip: any) {
     this.activedTab = 'images';
     this.ip = ip;
-    this._imageService.getImages(ip)
+    this._imageService
+      .getImages(ip, '123456')
       .then(data => {
         this.images = [];
         data.forEach((item: any) => {
@@ -223,8 +227,8 @@ export class ClusterOverviewPage {
         this.images = _.sortBy(this.images, 'Name');
         this.filterImage();
       })
-      .catch((err) => {
-        messager.error(err.Detail || "Get images failed");
+      .catch(err => {
+        messager.error(err.Detail || 'Get images failed');
       });
   }
 
@@ -242,7 +246,7 @@ export class ClusterOverviewPage {
         let regex = new RegExp(keyWord, 'i');
         this.filterContainers = this.containers.filter(item => {
           return regex.test(item.Config.Name);
-        })
+        });
       }
       this.setContainerPage(this.containerPageIndex);
       this.filterContainerDone = true;
@@ -269,10 +273,15 @@ export class ClusterOverviewPage {
   }
 
   private operate(container: any, action: string) {
-    this._clusterService.operate(container.MetaId, action)
+    this._clusterService
+      .operate(container.MetaId, action)
       .then(data => {
         messager.success('succeed');
-        this._logService.addLog(`${action} container ${container.Config.Name} on ${this.groupInfo.Name}`, 'Cluster', this.groupInfo.ID);
+        this._logService.addLog(
+          `${action} container ${container.Config.Name} on ${this.groupInfo.Name}`,
+          'Cluster',
+          this.groupInfo.ID
+        );
         this.getContainers();
       })
       .catch(err => {
@@ -297,12 +306,13 @@ export class ClusterOverviewPage {
   private rmContainer() {
     this.rmContainerModalOptions.show = false;
     let name = this.rmContainerTarget.Config.Name;
-    this._clusterService.deleteContainer(this.rmContainerTarget.MetaId)
+    this._clusterService
+      .deleteContainer(this.rmContainerTarget.MetaId)
       .then(data => {
         this._logService.addLog(`Deleted container ${name} on ${this.groupInfo.Name}`, 'Cluster', this.groupInfo.ID);
         this.getContainers();
       })
-      .catch((err) => {
+      .catch(err => {
         messager.error(err);
       });
   }
@@ -318,11 +328,18 @@ export class ClusterOverviewPage {
     this.upgradeContainerModalOptions.formSubmitted = true;
     if (form.invalid) return;
     let newImage = `${this.upgradeContainerTarget.Config.Image.split(':')[0]}:${form.value.newTag}`;
-    this._clusterService.upgradeImage(this.upgradeContainerTarget.MetaId, form.value.newTag)
+    this._clusterService
+      .upgradeImage(this.upgradeContainerTarget.MetaId, form.value.newTag)
       .then(res => {
         messager.success('succeed');
         this.upgradeContainerModalOptions.show = false;
-        this._logService.addLog(`Upgrade container ${this.upgradeContainerTarget.Config.Name} from ${this.upgradeContainerTarget.Config.Image} to ${newImage} on ${this.groupInfo.Name}`, 'Cluster', this.groupInfo.ID);
+        this._logService.addLog(
+          `Upgrade container ${this.upgradeContainerTarget.Config.Name} from ${
+            this.upgradeContainerTarget.Config.Image
+          } to ${newImage} on ${this.groupInfo.Name}`,
+          'Cluster',
+          this.groupInfo.ID
+        );
         this.getContainers();
       })
       .catch(err => messager.error(err));
@@ -342,7 +359,7 @@ export class ClusterOverviewPage {
         let regex = new RegExp(keyWord, 'i');
         this.filterImages = this.images.filter(item => {
           return regex.test(item.Name);
-        })
+        });
       }
       this.setImagePage(1);
       this.filterImageDone = true;
@@ -376,7 +393,8 @@ export class ClusterOverviewPage {
       return;
     }
     this.pullImageModalOptions.show = false;
-    this._imageService.pullImage(this.ip, imageName)
+    this._imageService
+      .pullImage(this.ip, imageName, undefined, '123546')
       .then(data => {
         messager.success('succeed');
         this._logService.addLog(`Pulled image ${imageName} on ${this.ip}`, 'Image', this.groupInfo.ID, this.ip);
@@ -399,10 +417,16 @@ export class ClusterOverviewPage {
       id = this.rmImageTarget._repo;
     }
     this.rmImageModalOptions.show = false;
-    this._imageService.deleteImage(this.ip, id)
+    this._imageService
+      .deleteImage(this.ip, id, '123456')
       .then(data => {
         messager.success('succeed');
-        this._logService.addLog(`Deleted image ${this.rmImageTarget._repo} on ${this.ip}`, 'Image', this.groupInfo.ID, this.ip);
+        this._logService.addLog(
+          `Deleted image ${this.rmImageTarget._repo} on ${this.ip}`,
+          'Image',
+          this.groupInfo.ID,
+          this.ip
+        );
         this.getImages(this.ip);
       })
       .catch(err => {
@@ -424,7 +448,7 @@ export class ClusterOverviewPage {
         let regex = new RegExp(keyWord, 'i');
         this.filterNodes = this.serverStatus.Status.filter((item: any) => {
           return regex.test(`${item.Name} - ${item.IP}`);
-        })
+        });
       }
       this.setNodePage(this.nodePageIndex);
       this.filterNodeDone = true;

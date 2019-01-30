@@ -13,7 +13,6 @@ declare let moment: any;
   styleUrls: ['./container-detail.css']
 })
 export class ContainerDetailPage {
-
   private container: any = {};
   private containerLabels: Array<any> = [];
   private containerBasicInfo: Array<any> = [];
@@ -44,9 +43,8 @@ export class ContainerDetailPage {
     private _imageService: ImageService,
     private _groupService: GroupService,
     private _hubService: HubService,
-    private _logService: LogService) {
-
-  }
+    private _logService: LogService
+  ) {}
 
   ngOnInit() {
     let modalCommonOptions = {
@@ -56,10 +54,10 @@ export class ContainerDetailPage {
     };
     this.deleteContainerModalOptions = _.cloneDeep(modalCommonOptions);
     this.renameContainerModalOptions = _.cloneDeep(modalCommonOptions);
-    this.renameContainerModalOptions.title = "Rename";
+    this.renameContainerModalOptions.title = 'Rename';
     this.renameContainerModalOptions.hideFooter = true;
     this.upgradeContainerModalOptions = _.cloneDeep(modalCommonOptions);
-    this.upgradeContainerModalOptions.title = "Upgrade";
+    this.upgradeContainerModalOptions.title = 'Upgrade';
     this.upgradeContainerModalOptions.hideFooter = true;
     this.upgradeProgressModalOptions = _.cloneDeep(modalCommonOptions);
     this.upgradeProgressModalOptions.hideCloseBtn = true;
@@ -78,7 +76,8 @@ export class ContainerDetailPage {
       this.containerId = params['containerId'];
       this.isComposedData = params['compose'];
       this.groupInfo = { ID: groupId };
-      this._groupService.getById(groupId)
+      this._groupService
+        .getById(groupId)
         .then(data => {
           this.groupInfo = data;
           this.servers = [];
@@ -91,7 +90,7 @@ export class ContainerDetailPage {
             this.servers.push({
               id: item.IP || item.Name,
               text: item.Name || item.IP
-            })
+            });
           });
           this.getContainer();
         })
@@ -108,7 +107,8 @@ export class ContainerDetailPage {
   }
 
   private getContainer() {
-    this._containerService.getById(this.ip, this.containerId)
+    this._containerService
+      .getById(this.ip, this.containerId, undefined, '123456')
       .then(data => {
         this.container = data;
         if (this.container.Config.Labels) {
@@ -138,16 +138,17 @@ export class ContainerDetailPage {
           stateText = 'Dead';
         }
         this.container.State.StateText = stateText;
-        this.container.formettedPortsBindings = this.container.NetworkSettings.Ports || this.container.HostConfig.PortBindings;
+        this.container.formettedPortsBindings =
+          this.container.NetworkSettings.Ports || this.container.HostConfig.PortBindings;
         let basicInfo = {
-          'Image': data.Config.Image,
-          'Pid': data.State.Pid,
-          'Hostname': data.Config.Hostname,
-          'Command': `${data.Path} ${data.Args.join(' ')}`,
-          'Restart Policy': (data.HostConfig.RestartPolicy.Name || "none"),
+          Image: data.Config.Image,
+          Pid: data.State.Pid,
+          Hostname: data.Config.Hostname,
+          Command: `${data.Path} ${data.Args.join(' ')}`,
+          'Restart Policy': data.HostConfig.RestartPolicy.Name || 'none',
           'Network Mode': data.HostConfig.NetworkMode.toUpperCase(),
-          'CpuShares': data.HostConfig.CpuShares || 'Unlimited',
-          'Memory Limit': data.HostConfig.Memory ? `${(data.HostConfig.Memory / 1024 / 1024)} MB` : 'Unlimited',
+          CpuShares: data.HostConfig.CpuShares || 'Unlimited',
+          'Memory Limit': data.HostConfig.Memory ? `${data.HostConfig.Memory / 1024 / 1024} MB` : 'Unlimited',
           'Create Date': moment(data.Created).format('YYYY-MM-DD HH:mm:ss'),
           'Started At': moment(data.State.StartedAt).format('YYYY-MM-DD HH:mm:ss')
         };
@@ -160,7 +161,7 @@ export class ContainerDetailPage {
         }
       })
       .catch(err => {
-        messager.error(err.Detail || "Get containers failed.");
+        messager.error(err.Detail || 'Get containers failed.');
         this._router.navigate(['/group', this.groupInfo.ID, this.ip, 'overview']);
       });
   }
@@ -170,10 +171,16 @@ export class ContainerDetailPage {
       event.stopPropagation();
       return;
     }
-    this._containerService.operate(this.ip, this.containerId, action)
+    this._containerService
+      .operate(this.ip, this.containerId, action, '123456')
       .then(data => {
         messager.success('succeed');
-        this._logService.addLog(`${action}ed container ${this.containerId} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
+        this._logService.addLog(
+          `${action}ed container ${this.containerId} on ${this.ip}`,
+          'Container',
+          this.groupInfo.ID,
+          this.ip
+        );
         this.getContainer();
       })
       .catch(err => {
@@ -190,12 +197,18 @@ export class ContainerDetailPage {
   }
 
   private deleteContainer() {
-    this._containerService.delete(this.ip, this.containerId, this.forceDeletion)
+    this._containerService
+      .delete(this.ip, this.containerId, this.forceDeletion, '123456')
       .then(data => {
-        this._logService.addLog(`Deleted container ${this.containerId} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
-        this._router.navigate(["/group", this.groupInfo.ID, this.ip, 'overview']);
+        this._logService.addLog(
+          `Deleted container ${this.containerId} on ${this.ip}`,
+          'Container',
+          this.groupInfo.ID,
+          this.ip
+        );
+        this._router.navigate(['/group', this.groupInfo.ID, this.ip, 'overview']);
       })
-      .catch((err) => {
+      .catch(err => {
         messager.error(err);
       });
   }
@@ -209,20 +222,26 @@ export class ContainerDetailPage {
     this.renameContainerModalOptions.formSubmitted = true;
     if (form.invalid) return;
     let newName = form.value.newName;
-    this._containerService.rename(this.ip, this.containerId, newName)
-      .then((data) => {
+    this._containerService
+      .rename(this.ip, this.containerId, newName, '123456')
+      .then(data => {
         form.reset();
-        this._logService.addLog(`Renamed container ${this.containerId} to ${newName} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
+        this._logService.addLog(
+          `Renamed container ${this.containerId} to ${newName} on ${this.ip}`,
+          'Container',
+          this.groupInfo.ID,
+          this.ip
+        );
         messager.success('succeed');
         this.renameContainerModalOptions.show = false;
         this._router.navigate(['/group', this.groupInfo.ID, this.ip, 'containers', newName]);
       })
-      .catch((err) => {
+      .catch(err => {
         messager.error(err.Detail || err);
       });
   }
 
-  private showUpgradeModal(event:any) {
+  private showUpgradeModal(event: any) {
     if (event && event.target.classList.contains('disabled')) {
       event.stopPropagation();
       return;
@@ -231,7 +250,7 @@ export class ContainerDetailPage {
     this.upgradeContainerModalOptions.show = true;
   }
 
-  private enableForceDeletion(value: any){
+  private enableForceDeletion(value: any) {
     this.forceDeletion = value.target.checked;
   }
 
@@ -252,54 +271,61 @@ export class ContainerDetailPage {
     this.isUpgradeDone = [];
     let self = this;
     for (let server of this.selectedServers) {
-      (function (ip: string, image: string, tag: string) {
+      (function(ip: string, image: string, tag: string) {
         let containerId = self.containerId;
-        self.addUpgradeMsg(ip, "Begin to pull image", image);
-        self._imageService.pullImage(ip, image, true)
+        self.addUpgradeMsg(ip, 'Begin to pull image', image);
+        self._imageService
+          .pullImage(ip, image, true, '123456')
           .then(data => {
-            self.addUpgradeMsg(ip, "Pulling image done.");
-            self.addUpgradeMsg(ip, "Begin to upgrading image...");
-            self._containerService.upgradeImage(ip, containerId, tag, true)
+            self.addUpgradeMsg(ip, 'Pulling image done.');
+            self.addUpgradeMsg(ip, 'Begin to upgrading image...');
+            self._containerService
+              .upgradeImage(ip, containerId, tag, true, '123456')
               .then(data => {
-                self.addUpgradeMsg(ip, "Upgrading image done.");
-                self._logService.addLog(`Upgraded container ${self.containerId} from ${self.container.Config.Image} to ${image} on ${ip}`, 'Container', self.groupInfo.ID, ip);
+                self.addUpgradeMsg(ip, 'Upgrading image done.');
+                self._logService.addLog(
+                  `Upgraded container ${self.containerId} from ${self.container.Config.Image} to ${image} on ${ip}`,
+                  'Container',
+                  self.groupInfo.ID,
+                  ip
+                );
                 self.addUpgradeResult(ip, true);
               })
-              .catch((err) => {
+              .catch(err => {
                 let errMsg = err.Detail || JSON.stringify(err);
-                self.addUpgradeMsg(ip, "Upgrading image error : " + errMsg);
+                self.addUpgradeMsg(ip, 'Upgrading image error : ' + errMsg);
                 self.addUpgradeResult(ip, false);
-              })
+              });
           })
-          .catch((err) => {
+          .catch(err => {
             let errMsg = err.Detail || JSON.stringify(err);
-            self.addUpgradeMsg(ip, "Pulling image error : " + errMsg);
+            self.addUpgradeMsg(ip, 'Pulling image error : ' + errMsg);
             self.addUpgradeResult(ip, false);
-          })
+          });
       })(server, image, destTag);
     }
   }
 
   private addUpgradeMsg(ip: string, msg: any, image?: string) {
     this.upgradeProcessMsg.push({
-      "time": new Date(),
-      "server": ip,
-      "msg": msg,
-      "image": image
+      time: new Date(),
+      server: ip,
+      msg: msg,
+      image: image
     });
   }
 
   private addUpgradeResult(ip: string, result: boolean) {
     this.isUpgradeDone.push({
-      "server": ip,
-      "result": result
+      server: ip,
+      result: result
     });
     if (this.isUpgradeDone.length === this.selectedServers.length) {
       let failed = _.filter(this.isUpgradeDone, (item: any) => {
         return item.result === false;
       });
-      let servers = "";
-      let msg = "";
+      let servers = '';
+      let msg = '';
       if (failed.length > 0) {
         let temp: Array<any> = [];
         for (let item of failed) {
@@ -308,8 +334,8 @@ export class ContainerDetailPage {
         servers = temp.join(',');
         msg = 'Failed';
       } else {
-        servers = "All servers"
-        msg = "Succeed!";
+        servers = 'All servers';
+        msg = 'Succeed!';
       }
       this.addUpgradeMsg(servers, msg);
     }

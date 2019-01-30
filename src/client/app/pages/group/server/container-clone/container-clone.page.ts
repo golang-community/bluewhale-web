@@ -15,7 +15,6 @@ declare let messager: any;
   styleUrls: ['./container-clone.css']
 })
 export class ContainerClonePage {
-
   private groups: Array<any>;
   private groupInfo: any;
   private ip: string;
@@ -43,9 +42,8 @@ export class ContainerClonePage {
     private _fb: FormBuilder,
     private _containerService: ContainerService,
     private _groupService: GroupService,
-    private _logService: LogService) {
-
-  }
+    private _logService: LogService
+  ) {}
 
   ngOnInit() {
     this.cloneProcessModalOptions = {
@@ -53,7 +51,7 @@ export class ContainerClonePage {
       title: 'INFO',
       closable: false,
       hideCloseBtn: true
-    }
+    };
     this.serversSelect2Options = {
       multiple: true,
       closeOnSelect: false,
@@ -64,11 +62,12 @@ export class ContainerClonePage {
     let paramSub = this._route.params.subscribe(params => {
       let groupId = params['groupId'];
       this.ip = params['ip'];
-      this.containerId = params["containerId"];
+      this.containerId = params['containerId'];
 
       this.groupInfo = { ID: groupId };
       this.containerInfo = {};
-      this._groupService.get()
+      this._groupService
+        .get()
         .then(data => {
           this.groupInfo = _.find(data, (item: any) => {
             return item.ID === groupId;
@@ -77,7 +76,7 @@ export class ContainerClonePage {
             return Promise.reject('No group found.');
           }
           this.groups = data;
-          return this._containerService.getById(this.ip, this.containerId, true);
+          return this._containerService.getById(this.ip, this.containerId, true, '123456');
         })
         .then(containerInfo => {
           this.containerInfo = containerInfo;
@@ -109,7 +108,7 @@ export class ContainerClonePage {
       Links: this._fb.array([]),
       EnableLogFile: data.LogConfig ? (data.LogConfig.Type ? 1 : 0) : 0,
       Labels: this._fb.array([]),
-      LogDriver: data.LogConfig ? (data.LogConfig.Type || 'json-file') : 'json-file',
+      LogDriver: data.LogConfig ? data.LogConfig.Type || 'json-file' : 'json-file',
       LogOpts: this._fb.array([]),
       Ulimits: this._fb.array([]),
       Dns: [data.Dns],
@@ -126,22 +125,26 @@ export class ContainerClonePage {
     if (data.NetworkMode !== 'host' && data.Ports.length > 0) {
       let portsCtrl = <FormArray>this.form.controls['Ports'];
       data.Ports.forEach((item: any) => {
-        portsCtrl.push(this._fb.group({
-          PrivatePort: [item.PrivatePort],
-          Type: [item.Type || 'tcp'],
-          PublicPort: [item.PublicPort === 0 ? '' : item.PublicPort],
-          IP: [item.Ip]
-        }))
+        portsCtrl.push(
+          this._fb.group({
+            PrivatePort: [item.PrivatePort],
+            Type: [item.Type || 'tcp'],
+            PublicPort: [item.PublicPort === 0 ? '' : item.PublicPort],
+            IP: [item.Ip]
+          })
+        );
       });
     }
 
     if (data.Volumes) {
       let volumeCtrl = <FormArray>this.form.controls['Volumes'];
       data.Volumes.forEach((item: any) => {
-        volumeCtrl.push(this._fb.group({
-          ContainerVolume: item.ContainerVolume,
-          HostVolume: item.HostVolume
-        }));
+        volumeCtrl.push(
+          this._fb.group({
+            ContainerVolume: item.ContainerVolume,
+            HostVolume: item.HostVolume
+          })
+        );
       });
     }
 
@@ -157,45 +160,53 @@ export class ContainerClonePage {
     if (data.Links) {
       let control = <FormArray>this.form.controls['Links'];
       data.Links.forEach((item: any) => {
-        control.push(this._fb.group({
-          "Value": [item]
-        }));
-      })
+        control.push(
+          this._fb.group({
+            Value: [item]
+          })
+        );
+      });
     }
 
     if (data.Labels) {
       let control = <FormArray>this.form.controls['Labels'];
       for (let key in data.Labels) {
-        control.push(this._fb.group({
-          "Value": [`${key}:${data.Labels[key]}`]
-        }));
+        control.push(
+          this._fb.group({
+            Value: [`${key}:${data.Labels[key]}`]
+          })
+        );
       }
     }
 
-    if(data.LogConfig){
-      if(data.LogConfig.Config){
+    if (data.LogConfig) {
+      if (data.LogConfig.Config) {
         let cloneOptsArr = [];
-        for(let key in data.LogConfig.Config){
-          cloneOptsArr.push(`${key}=${data.LogConfig.Config[key]}`)
+        for (let key in data.LogConfig.Config) {
+          cloneOptsArr.push(`${key}=${data.LogConfig.Config[key]}`);
         }
         let control = <FormArray>this.form.controls['LogOpts'];
         cloneOptsArr.forEach((item: any) => {
-          control.push(this._fb.group({
-            "Value": [item]
-          }));
-        })
+          control.push(
+            this._fb.group({
+              Value: [item]
+            })
+          );
+        });
       }
     }
 
     if (data.Ulimits) {
       let control = <FormArray>this.form.controls['Ulimits'];
       data.Ulimits.forEach((item: any) => {
-        control.push(this._fb.group({
-          "Name": [item['Name']],
-          "Soft": [item['Soft']],
-          "Hard": [item['Hard']]
-        }));
-      })
+        control.push(
+          this._fb.group({
+            Name: [item['Name']],
+            Soft: [item['Soft']],
+            Hard: [item['Hard']]
+          })
+        );
+      });
     }
 
     let restartSub = this.form.controls['RestartPolicy'].valueChanges.subscribe(value => {
@@ -219,7 +230,7 @@ export class ContainerClonePage {
         this.form.removeControl('LogDriver');
         this.form.removeControl('LogOpts');
       }
-    })
+    });
     this.subscribers.push(logConfigSub);
 
     let networkModeSub = this.form.controls['NetworkMode'].valueChanges.subscribe(value => {
@@ -234,7 +245,7 @@ export class ContainerClonePage {
         let portBindingCtrl = this._fb.array([]);
         this.form.addControl('Ports', portBindingCtrl);
       }
-      if (value === "custom") {
+      if (value === 'custom') {
         let networkNameCtrl = new FormControl('');
         this.form.addControl('NetworkName', networkNameCtrl);
       }
@@ -257,7 +268,7 @@ export class ContainerClonePage {
       this.servers.push({
         id: item.IP || item.Name,
         text: item.Name || item.IP
-      })
+      });
     });
   }
 
@@ -278,9 +289,11 @@ export class ContainerClonePage {
         let envCtrl = this._fb.array([]);
         if (this.containerInfo && this.containerInfo.Env) {
           this.containerInfo.Env.forEach((item: any) => {
-            envCtrl.push(this._fb.group({
-              Value: item
-            }));
+            envCtrl.push(
+              this._fb.group({
+                Value: item
+              })
+            );
           });
         }
         control.addControl(server, envCtrl);
@@ -292,12 +305,14 @@ export class ContainerClonePage {
 
   private addPortBinding() {
     let control = <FormArray>this.form.controls['Ports'];
-    control.push(this._fb.group({
-      PrivatePort: [''],
-      Type: ['tcp'],
-      PublicPort: [''],
-      IP: ['0.0.0.0']
-    }));
+    control.push(
+      this._fb.group({
+        PrivatePort: [''],
+        Type: ['tcp'],
+        PublicPort: [''],
+        IP: ['0.0.0.0']
+      })
+    );
   }
 
   private removePortBinding(i: number) {
@@ -307,10 +322,12 @@ export class ContainerClonePage {
 
   private addVolumeBinding() {
     let control = <FormArray>this.form.controls['Volumes'];
-    control.push(this._fb.group({
-      ContainerVolume: [''],
-      HostVolume: ['']
-    }));
+    control.push(
+      this._fb.group({
+        ContainerVolume: [''],
+        HostVolume: ['']
+      })
+    );
   }
 
   private removeVolumeBinding(i: number) {
@@ -321,9 +338,11 @@ export class ContainerClonePage {
   private addEnv(server: string) {
     let control = <FormGroup>this.form.controls['ServerEnvs'];
     let envCtrl = <FormArray>control.controls[server];
-    envCtrl.push(this._fb.group({
-      "Value": ['']
-    }));
+    envCtrl.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private removeEnv(server: string, i: number) {
@@ -334,9 +353,11 @@ export class ContainerClonePage {
 
   private addLink() {
     let control = <FormArray>this.form.controls['Links'];
-    control.push(this._fb.group({
-      "Value": ['']
-    }));
+    control.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private removeLink(i: number) {
@@ -346,9 +367,11 @@ export class ContainerClonePage {
 
   private addLogOpt() {
     let control = <FormArray>this.form.controls['LogOpts'];
-    control.push(this._fb.group({
-      "Value": ['']
-    }));
+    control.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private removeLogOpt(i: number) {
@@ -358,9 +381,11 @@ export class ContainerClonePage {
 
   private addLabel() {
     let control = <FormArray>this.form.controls['Labels'];
-    control.push(this._fb.group({
-      "Value": ['']
-    }));
+    control.push(
+      this._fb.group({
+        Value: ['']
+      })
+    );
   }
 
   private removeLabel(i: number) {
@@ -370,11 +395,13 @@ export class ContainerClonePage {
 
   private addUlimit() {
     let control = <FormArray>this.form.controls['Ulimits'];
-    control.push(this._fb.group({
-      Name: [''],
-      Soft: [''],
-      Hard: ['']
-    }));
+    control.push(
+      this._fb.group({
+        Name: [''],
+        Soft: [''],
+        Hard: ['']
+      })
+    );
   }
 
   private removeUlimit(i: number) {
@@ -394,21 +421,21 @@ export class ContainerClonePage {
     let optsObj = {};
     let postLables = {};
 
-    if(this.form.controls.EnableLogFile.value){
+    if (this.form.controls.EnableLogFile.value) {
       let optsArr = (formData.LogOpts || []).map((item: any) => item.Value);
       optsArr.forEach((item: any) => {
         let splitArr = item.split('=');
         optsObj[splitArr[0]] = splitArr[1];
-      })
+      });
     }
 
     if (formData.Labels) {
       if (formData.Labels.length > 0) {
         formData.Labels.forEach((item: any) => {
-          let key = item.Value.split(":")[0];
-          let value = item.Value.split(":")[1];
+          let key = item.Value.split(':')[0];
+          let value = item.Value.split(':')[1];
           postLables[key] = value;
-        })
+        });
       }
     }
 
@@ -431,13 +458,13 @@ export class ContainerClonePage {
       Links: (formData.Links || []).map((item: any) => item.Value),
       CPUShares: formData.CPUShares || 0,
       Memory: formData.Memory || 0
-    }
+    };
 
-    if(this.form.controls.EnableLogFile.value){
+    if (this.form.controls.EnableLogFile.value) {
       config.LogConfig = {
         Type: formData.LogDriver,
         Config: optsObj
-      }
+      };
     }
 
     if (formData.Ulimits.length > 0) {
@@ -450,16 +477,22 @@ export class ContainerClonePage {
     let self = this;
     for (let server of this.selectedServers) {
       let containerConf = _.cloneDeep(config);
-      (function (server: string, containerConf: IContainer) {
+      (function(server: string, containerConf: IContainer) {
         containerConf.Env = (formData.ServerEnvs[server] || []).map((item: any) => item.Value);
-        self.addCloneMsg(server, "Begin to create container");
-        self._containerService.create(server, containerConf, true)
-          .then((data) => {
-            self.addCloneMsg(server, "Done!");
-            self._logService.addLog(`Clone ${containerConf.Name} from ${self.ip} to ${server}`, 'Container', self.groupInfo.ID, self.ip);
+        self.addCloneMsg(server, 'Begin to create container');
+        self._containerService
+          .create(server, containerConf, true, '123456')
+          .then(data => {
+            self.addCloneMsg(server, 'Done!');
+            self._logService.addLog(
+              `Clone ${containerConf.Name} from ${self.ip} to ${server}`,
+              'Container',
+              self.groupInfo.ID,
+              self.ip
+            );
             self.isCloneDone.push(true);
           })
-          .catch((err) => {
+          .catch(err => {
             let errMsg = err.Detail || JSON.stringify(err);
             self.addCloneMsg(server, `Failed! Detail: ${errMsg}`);
             self.isCloneDone.push(false);

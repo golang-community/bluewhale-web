@@ -73,8 +73,8 @@ export class ContainerService {
     });
   }
 
-  getLogs(ip: string, id: string, tail?: number, since?: string): Promise<any> {
-    let reqConfig = this.buildReq(ip);
+  getLogs(ip: string, id: string, tail: number, since: string, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, undefined, authToken);
     let url: string = `${reqConfig.url}/containers/${id}/logs`;
     let queryString: Array<string> = [];
     if (tail) {
@@ -111,7 +111,7 @@ export class ContainerService {
     });
   }
 
-  delete(ip: string, id: string, forceDeletion?: boolean, authToken: string): Promise<any> {
+  delete(ip: string, id: string, forceDeletion: boolean, authToken: string): Promise<any> {
     let reqConfig = this.buildReq(ip, false, authToken);
     let url: string = `${reqConfig.url}/containers/${id}?force=false`;
     if (forceDeletion) {

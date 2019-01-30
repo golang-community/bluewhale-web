@@ -1,5 +1,5 @@
-import { Component, Renderer } from "@angular/core";
-import { FormGroup, FormBuilder } from "@angular/forms"
+import { Component, Renderer } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { ComposeService, GroupService, FileUploader } from '../../../../services';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -11,11 +11,9 @@ declare let messager: any;
 @Component({
   selector: 'hb-component-new',
   styleUrls: ['/compose-new.css'],
-  templateUrl: './component-new.html',
+  templateUrl: './component-new.html'
 })
-
 export class ComponentNewPage {
-
   private form: FormGroup;
   private _editors: any = {};
   private configInfo: any;
@@ -36,10 +34,8 @@ export class ComponentNewPage {
     private _composeService: ComposeService,
     private _groupService: GroupService,
     private _renderer: Renderer,
-    private _fb: FormBuilder,
-  ) {
-
-  }
+    private _fb: FormBuilder
+  ) {}
 
   private buildForm() {
     this.form = this._fb.group({
@@ -47,7 +43,7 @@ export class ComponentNewPage {
       EnablePackageFile: 0,
       Data: '',
       EnableUploadYaml: 0
-    })
+    });
   }
 
   aceLoaded(editor: any, env: string) {
@@ -55,13 +51,11 @@ export class ComponentNewPage {
     editor.$blockScrolling = Infinity;
   }
 
-  private changeValue() {
-
-  }
+  private changeValue() {}
 
   private readerFile(reader: any): any {
     let self = this;
-    reader.onload = function (event: any) {
+    reader.onload = function(event: any) {
       self.form.controls['Data'].setValue(event.target.result);
     };
   }
@@ -80,8 +74,8 @@ export class ComponentNewPage {
   ngOnInit() {
     let paramSub = this._route.params.subscribe(params => {
       this.ip = params['ip'];
-      this.groupId = params["groupId"];
-      this.dockerEngineVersion = params["serverversion"];
+      this.groupId = params['groupId'];
+      this.dockerEngineVersion = params['serverversion'];
       // this.groupInfo = { ID: groupId };
       // this._groupService.getById(groupId)
       //   .then(data => {
@@ -100,7 +94,7 @@ export class ComponentNewPage {
       _sandMode: 'yaml',
       _prdEnableCanary: false,
       _sandEnableCanary: false
-    }
+    };
   }
 
   ngOnDestroy() {
@@ -117,13 +111,11 @@ export class ComponentNewPage {
     }
   }
 
-  private showExample(value: any){
-    this._composeService.getComposeExample()
-    .then(data => {
+  private showExample(value: any) {
+    this._composeService.getComposeExample().then(data => {
       this.form.controls['Data'].setValue(data);
-    })
+    });
   }
-
 
   private checkComposeData(isSave: any) {
     if (this.form.value.Data) {
@@ -164,32 +156,41 @@ export class ComponentNewPage {
     this.checkComposeData(true);
     if (this.composeDataError && this.composeDataError !== 'succeed') return;
     if (this.inputValue && form.controls.EnablePackageFile.value) {
-      this._fileUploader.upload(`http://${this.ip}:8500/dockerapi/v2/services/${form.controls.Name.value}/upload?filename=${this.inputValue.name}`, this.inputValue, { disableLoading: false })
+      this._fileUploader
+        .upload(
+          `http://${this.ip}:8500/dockerapi/v2/services/${form.controls.Name.value}/upload?filename=${
+            this.inputValue.name
+          }`,
+          this.inputValue,
+          { disableLoading: false }
+        )
         .then((res: any) => {
           let config: any = {
             Name: form.value.Name,
             ComposeData: `${form.value.Data}`,
             packagefile: JSON.parse(res).PackageFile
           };
-          this._composeService.addCompose(this.ip, JSON.parse(JSON.stringify(config)))
+          this._composeService
+            .addCompose(this.ip, JSON.parse(JSON.stringify(config)), '123456')
             .then(data => {
               this._router.navigate(['/group', this.groupId, this.ip, 'overview']);
             })
-            .catch(err => messager.error(err.Detail || err))
+            .catch(err => messager.error(err.Detail || err));
         })
         .catch(err => {
           messager.error(err.message || 'Upload file failed');
-        })
+        });
     } else {
       let config: any = {
         Name: form.value.Name,
         ComposeData: `${form.value.Data}`
-      }
-      this._composeService.addCompose(this.ip, JSON.parse(JSON.stringify(config)))
+      };
+      this._composeService
+        .addCompose(this.ip, JSON.parse(JSON.stringify(config)), '123456')
         .then(data => {
           this._router.navigate(['/group', this.groupId, this.ip, 'overview']);
         })
-        .catch(err => messager.error(err.Detail || err))
+        .catch(err => messager.error(err.Detail || err));
     }
   }
 }

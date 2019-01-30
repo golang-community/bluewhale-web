@@ -11,7 +11,6 @@ declare let messager: any;
   styleUrls: ['./container-log.css']
 })
 export class ContainerLogPage {
-
   @ViewChild('logPanel')
   private logPanel: ElementRef;
 
@@ -24,12 +23,7 @@ export class ContainerLogPage {
 
   private subscribers: Array<any> = [];
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _containerService: ContainerService) {
-
-  }
+  constructor(private _route: ActivatedRoute, private _router: Router, private _containerService: ContainerService) {}
 
   ngOnInit() {
     let paramSub = this._route.params.subscribe(params => {
@@ -46,7 +40,7 @@ export class ContainerLogPage {
   }
 
   ngAfterViewInit() {
-    $(window, ".wrapper").resize(() => {
+    $(window, '.wrapper').resize(() => {
       this.fixLogPanel();
     });
     this.fixLogPanel();
@@ -58,13 +52,16 @@ export class ContainerLogPage {
   }
 
   private getLogs() {
-    this._containerService.getLogs(this.ip, this.containerId, this.tailNum)
+    this._containerService
+      .getLogs(this.ip, this.containerId, this.tailNum, undefined, '123456')
       .then(data => {
         this.logs = data.map((item: string) => {
-          return item.replace(/^(\u0002\u0000\u0000\u0000\u0000\u0000\u0000)[0-9a-zA-z]{1,1}/, "");;
+          return item.replace(/^(\u0002\u0000\u0000\u0000\u0000\u0000\u0000)[0-9a-zA-z]{1,1}/, '');
         });
         if (this.logs.length === 0) {
-          $(this.logPanel.nativeElement).slimScroll({ destroy: true }).height("auto");
+          $(this.logPanel.nativeElement)
+            .slimScroll({ destroy: true })
+            .height('auto');
         } else {
           setTimeout(() => {
             let scrollHeight = this.logPanel.nativeElement.scrollHeight;
@@ -78,12 +75,14 @@ export class ContainerLogPage {
       });
   }
 
-  private fixLogPanel() {    
-    $(this.logPanel.nativeElement).slimScroll({ destroy: true }).height("auto");
+  private fixLogPanel() {
+    $(this.logPanel.nativeElement)
+      .slimScroll({ destroy: true })
+      .height('auto');
     $(this.logPanel.nativeElement).slimscroll({
-      height: ($(window).height() - this.logPanel.nativeElement.offsetTop - 15) + "px",
-      color: "rgba(255,255,255,0.7)",
-      size: "3px"
+      height: $(window).height() - this.logPanel.nativeElement.offsetTop - 15 + 'px',
+      color: 'rgba(255,255,255,0.7)',
+      size: '3px'
     });
   }
 }

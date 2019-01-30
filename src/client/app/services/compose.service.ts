@@ -50,8 +50,8 @@ export class ComposeService {
     });
   }
 
-  getServiceByOne(ip: string, name: any, hidenLoading: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip, hidenLoading);
+  getServiceByOne(ip: string, name: any, hidenLoading: boolean = false, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, hidenLoading, authToken);
     let url: string = `${reqConfig.url}/services/${name}`;
     return new Promise((resolve, reject) => {
       this._http
@@ -96,8 +96,8 @@ export class ComposeService {
     });
   }
 
-  getDockerVersion(ip: string, hidenLoading: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip, hidenLoading);
+  getDockerVersion(ip: string, hidenLoading: boolean = false, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, hidenLoading, authToken);
     let url: string = `${reqConfig.url}/dockerversion`;
     return new Promise((resolve, reject) => {
       this._http
@@ -112,8 +112,8 @@ export class ComposeService {
     });
   }
 
-  removeService(ip: string, name: any, hidenLoading: boolean = false): Promise<any> {
-    let reqConfig = this.buildReq(ip, hidenLoading);
+  removeService(ip: string, name: any, hidenLoading: boolean = false, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, hidenLoading, authToken);
     let url: string = `${reqConfig.url}/services/${name}`;
     return new Promise((resolve, reject) => {
       this._http
@@ -127,8 +127,8 @@ export class ComposeService {
     });
   }
 
-  addCompose(ip: string, data: any): Promise<any> {
-    let reqConfig = this.buildReq(ip);
+  addCompose(ip: string, data: any, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, undefined, authToken);
     let url: string = `${reqConfig.url}/services`;
     return new Promise((resolve, reject) => {
       this._http
@@ -142,8 +142,8 @@ export class ComposeService {
     });
   }
 
-  ComposeOperate(ip: string, name: string, action: string): Promise<any> {
-    let reqConfig = this.buildReq(ip, false);
+  ComposeOperate(ip: string, name: string, action: string, authToken: string): Promise<any> {
+    let reqConfig = this.buildReq(ip, false, authToken);
     let url: string = `${reqConfig.url}/services`;
     let data = {
       Name: name,

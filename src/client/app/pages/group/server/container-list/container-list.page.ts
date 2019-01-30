@@ -180,7 +180,7 @@ export class ContainerListPage {
         if (data.AppVersion >= '1.3.3') {
           this.agentInvalid = false;
           this._composeService
-            .getDockerVersion(this.ip)
+            .getDockerVersion(this.ip, undefined, '123456')
             .then(data => {
               this.dockerEngineVersion = data.ServerVersion.Version;
             })
@@ -459,7 +459,7 @@ export class ContainerListPage {
 
   private serviceOperate(service: any, action: any) {
     this._composeService
-      .ComposeOperate(this.ip, service.Name, action)
+      .ComposeOperate(this.ip, service.Name, action, '123456')
       .then(data => {
         messager.success('succeed');
         // this._logService.addLog(`${action}ed container ${name} on ${this.ip}`, 'Container', this.groupInfo.ID, this.ip);
@@ -478,7 +478,7 @@ export class ContainerListPage {
   private rmService() {
     let name = this.rmServiceTarget.Name;
     this._composeService
-      .removeService(this.ip, name)
+      .removeService(this.ip, name, undefined, '123456')
       .then(data => {
         messager.success('succeed');
         this.rmServiceModalOptions.show = false;
