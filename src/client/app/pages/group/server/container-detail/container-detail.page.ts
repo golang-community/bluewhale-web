@@ -35,6 +35,7 @@ export class ContainerDetailPage {
   private isComposedData: boolean = false;
 
   private subscribers: Array<any> = [];
+  private authToken: string;
 
   constructor(
     private _route: ActivatedRoute,
@@ -87,6 +88,9 @@ export class ContainerDetailPage {
               temp.text = item.Name;
               if (item.IP) temp.text = `${item.Name}(${item.IP})`;
             }
+            if (item.IP === this.ip) {
+              this.authToken = item.authToken;
+            }
             this.servers.push({
               id: item.IP || item.Name,
               text: item.Name || item.IP
@@ -108,7 +112,7 @@ export class ContainerDetailPage {
 
   private getContainer() {
     this._containerService
-      .getById(this.ip, this.containerId, undefined, '123456')
+      .getById(this.ip, this.containerId, undefined, this.authToken)
       .then(data => {
         this.container = data;
         if (this.container.Config.Labels) {
@@ -172,7 +176,7 @@ export class ContainerDetailPage {
       return;
     }
     this._containerService
-      .operate(this.ip, this.containerId, action, '123456')
+      .operate(this.ip, this.containerId, action, this.authToken)
       .then(data => {
         messager.success('succeed');
         this._logService.addLog(
@@ -198,7 +202,7 @@ export class ContainerDetailPage {
 
   private deleteContainer() {
     this._containerService
-      .delete(this.ip, this.containerId, this.forceDeletion, '123456')
+      .delete(this.ip, this.containerId, this.forceDeletion, this.authToken)
       .then(data => {
         this._logService.addLog(
           `Deleted container ${this.containerId} on ${this.ip}`,
@@ -223,7 +227,7 @@ export class ContainerDetailPage {
     if (form.invalid) return;
     let newName = form.value.newName;
     this._containerService
-      .rename(this.ip, this.containerId, newName, '123456')
+      .rename(this.ip, this.containerId, newName, this.authToken)
       .then(data => {
         form.reset();
         this._logService.addLog(
@@ -275,12 +279,12 @@ export class ContainerDetailPage {
         let containerId = self.containerId;
         self.addUpgradeMsg(ip, 'Begin to pull image', image);
         self._imageService
-          .pullImage(ip, image, true, '123456')
+          .pullImage(ip, image, true, this.authToken)
           .then(data => {
             self.addUpgradeMsg(ip, 'Pulling image done.');
             self.addUpgradeMsg(ip, 'Begin to upgrading image...');
             self._containerService
-              .upgradeImage(ip, containerId, tag, true, '123456')
+              .upgradeImage(ip, containerId, tag, true, this.authToken)
               .then(data => {
                 self.addUpgradeMsg(ip, 'Upgrading image done.');
                 self._logService.addLog(
