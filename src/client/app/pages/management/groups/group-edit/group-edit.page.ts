@@ -10,7 +10,6 @@ declare let messager: any;
   templateUrl: './group-edit.html'
 })
 export class ManageGroupEditPage {
-
   private subscribers: Array<any> = [];
   private isNew: boolean = true;
   private serverForm: FormGroup;
@@ -23,7 +22,7 @@ export class ManageGroupEditPage {
     ContactInfo: '',
     IsCluster: false,
     Owners: [],
-    Servers: [],
+    Servers: []
   };
 
   private users: Array<string> = [];
@@ -36,9 +35,8 @@ export class ManageGroupEditPage {
     private _groupService: GroupService,
     private _authService: AuthService,
     private _systemConfigService: SystemConfigService,
-    private _fb: FormBuilder) {
-
-  }
+    private _fb: FormBuilder
+  ) {}
 
   ngOnInit() {
     this.systemConfig = this._systemConfigService.Config;
@@ -49,24 +47,24 @@ export class ManageGroupEditPage {
       placeholder: 'Select User',
       dropdownAutoWidth: true,
       ajax: {
-        url: "/api/users/search",
+        url: '/api/users/search',
         dataType: 'json',
         delay: 250,
-        data: function (params: any) {
+        data: function(params: any) {
           return {
             q: params.term
           };
         },
-        processResults: function (data: any, params: any) {
+        processResults: function(data: any, params: any) {
           return {
             results: data.map((item: any) => {
-              return { "text": item.FullName, "id": item.UserID };
+              return { text: item.FullName, id: item.UserID };
             })
           };
         },
         cache: true
       },
-      formatSelection: function (item: any) {
+      formatSelection: function(item: any) {
         if (!item) return;
         return `${item.UserId} - ${item.FullName}`;
       }
@@ -77,7 +75,8 @@ export class ManageGroupEditPage {
       let groupId = params['groupId'];
       if (groupId) {
         this.isNew = false;
-        this._groupService.getById(groupId)
+        this._groupService
+          .getById(groupId)
           .then(data => {
             this.groupInfo = data;
             this.buildForm();
@@ -110,21 +109,22 @@ export class ManageGroupEditPage {
       OpenToPublic: data.OpenToPublic === true ? true : false,
       IsCluster: data.IsCluster === true ? true : false,
       Servers: this._fb.array([]),
-      ContactInfo: data.ContactInfo || '',
+      ContactInfo: data.ContactInfo || ''
     });
     if (data.Servers && data.Servers.length > 0) {
       for (let server of data.Servers) {
-        this.addServer(server.Name, server.IP, server.authToken);
+        this.addServer(server.Name, server.IP, server.authToken, server.enableServerProxy);
       }
     }
   }
 
-  private addServer(name?: string, ip?: string, authToken?:string) {
+  private addServer(name?: string, ip?: string, authToken?: string, enableServerProxy: boolean = false) {
     let control = <FormArray>this.serverForm.controls['Servers'];
     let serverCtrl = this._fb.group({
-      "Name": name || '',
-      "IP": ip || '',
-      "authToken": authToken || ''
+      Name: name || '',
+      IP: ip || '',
+      authToken: authToken || '',
+      enableServerProxy: Number(enableServerProxy)
     });
     control.push(serverCtrl);
   }
@@ -168,6 +168,6 @@ export class ManageGroupEditPage {
       })
       .catch((err: any) => {
         messager.error(err);
-      })
+      });
   }
 }
