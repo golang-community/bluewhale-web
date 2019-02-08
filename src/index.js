@@ -44,7 +44,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use('/', express.static(path.join(__dirname, 'client')));
+app.use('/', express.static(path.join(__dirname, 'wwwroot')));
 app.use('/public/avatar', express.static(path.join(__dirname, 'public/avatar')));
 
 app.get('/humpback-backend-faq', (req, res, next) => {

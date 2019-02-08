@@ -60,12 +60,12 @@ gulp.task('clean', () => {
 });
 
 gulp.task('server:clean', done => {
-  del(['dist/**/*', '!dist/client'], { force: true });
+  del(['dist/**/*', '!dist/wwwroot'], { force: true });
   done();
 });
 
 gulp.task('server:copy', () => {
-  return gulp.src(['src/**', '!src/web-front/**', '!src/client/**']).pipe(gulp.dest('dist/'));
+  return gulp.src(['src/**', '!src/web-front/**', '!src/web-front/**']).pipe(gulp.dest('dist/'));
 });
 
 gulp.task('server:start', callback => {
@@ -94,15 +94,15 @@ gulp.task('server:watch', done => {
 
 gulp.task('release:html', () => {
   return gulp
-    .src('dist/client/index.html')
+    .src('dist/web-front/index.html')
     .pipe(useref())
     .pipe(gulpif('*.js', uglify()))
     .pipe(gulpif('*.css', minifyCss()))
-    .pipe(gulp.dest('dist/client'));
+    .pipe(gulp.dest('dist/wwwroot'));
 });
 
 gulp.task('release:clean-unused-file', () => {
-  let rootPath = 'dist/client/static';
+  let rootPath = 'dist/wwwroot/static';
   return del(
     [
       `${rootPath}/**/*.css`,
