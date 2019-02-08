@@ -12,18 +12,18 @@ declare let messager: any;
 })
 export class ContainerLogPage {
   @ViewChild('logPanel')
-  private logPanel: ElementRef;
+  public logPanel: ElementRef;
 
-  private containerId: string;
-  private groupId: any = {};
-  private ip: string;
+  public containerId: string;
+  public groupId: any = {};
+  public ip: string;
 
-  private tailNum: number = 100;
-  private logs: Array<string> = [];
+  public tailNum: number = 100;
+  public logs: Array<string> = [];
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
-  constructor(private _route: ActivatedRoute, private _router: Router, private _containerService: ContainerService) {}
+  constructor(private _route: ActivatedRoute, public _router: Router, public _containerService: ContainerService) {}
 
   ngOnInit() {
     let paramSub = this._route.params.subscribe(params => {
@@ -46,12 +46,12 @@ export class ContainerLogPage {
     this.fixLogPanel();
   }
 
-  private tailNumChanged(value: any) {
+  public tailNumChanged(value: any) {
     this.tailNum = value;
     this.getLogs();
   }
 
-  private getLogs() {
+  public getLogs() {
     this._containerService
       .getLogs(this.ip, this.containerId, this.tailNum, undefined, '123456')
       .then(data => {
@@ -75,7 +75,7 @@ export class ContainerLogPage {
       });
   }
 
-  private fixLogPanel() {
+  public fixLogPanel() {
     $(this.logPanel.nativeElement)
       .slimScroll({ destroy: true })
       .height('auto');

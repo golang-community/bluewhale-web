@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class GlobalLoadingService {
-  private loadingEl: HTMLDivElement;
-  private count: number = 0;
-  private timmer: any;
+  public loadingEl: HTMLDivElement;
+  public count: number = 0;
+  public timmer: any;
 
   constructor() {
     this.loadingEl = <HTMLDivElement>document.getElementById('globalLoading');

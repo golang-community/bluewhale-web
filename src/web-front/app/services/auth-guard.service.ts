@@ -6,8 +6,8 @@ import { GroupService } from './group.service';
 @Injectable()
 export class IsLogin implements CanActivate {
   constructor(
-    private _router: Router,
-    private _authService: AuthService) {
+    public _router: Router,
+    public _authService: AuthService) {
 
   }
 
@@ -57,8 +57,8 @@ export class IsLogin implements CanActivate {
 @Injectable()
 export class IsGroupOwner implements CanActivateChild {
   constructor(
-    private _router: Router,
-    private _groupService: GroupService) {
+    public _router: Router,
+    public _groupService: GroupService) {
 
   }
 

@@ -7,7 +7,7 @@ declare let _: any;
 @Injectable()
 export class SystemConfigService {
 
-  private baseUrl: string;
+  public baseUrl: string;
 
   ConfigSubject = new ReplaySubject<any>(1);
 
@@ -18,10 +18,10 @@ export class SystemConfigService {
     this._config = value;
     this.ConfigSubject.next(this._config);
   }
-  private _config: any;
+  public _config: any;
 
   constructor(
-    private _http: CusHttpService) {
+    public _http: CusHttpService) {
     this.baseUrl = `/api/system-config`;
   }
 

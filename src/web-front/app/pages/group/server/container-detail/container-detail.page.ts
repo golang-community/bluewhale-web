@@ -13,38 +13,40 @@ declare let moment: any;
   styleUrls: ['./container-detail.css']
 })
 export class ContainerDetailPage {
-  private container: any = {};
-  private containerLabels: Array<any> = [];
-  private containerBasicInfo: Array<any> = [];
-  private groupInfo: any;
-  private ip: string;
-  private containerId: string;
+  public newName: string;
+  public newTag: string;
+  public container: any = {};
+  public containerLabels: Array<any> = [];
+  public containerBasicInfo: Array<any> = [];
+  public groupInfo: any;
+  public ip: string;
+  public containerId: string;
 
-  private servers: Array<any>;
-  private selectedServers: Array<any> = [];
-  private serversSelect2Options: Select2Options;
+  public servers: Array<any>;
+  public selectedServers: Array<any> = [];
+  public serversSelect2Options: Select2Options;
 
-  private deleteContainerModalOptions: any = {};
-  private forceDeletion: boolean = false;
-  private renameContainerModalOptions: any = {};
-  private upgradeContainerModalOptions: any = {};
-  private upgradeProgressModalOptions: any = {};
+  public deleteContainerModalOptions: any = {};
+  public forceDeletion: boolean = false;
+  public renameContainerModalOptions: any = {};
+  public upgradeContainerModalOptions: any = {};
+  public upgradeProgressModalOptions: any = {};
 
-  private isUpgradeDone: Array<any> = [];
-  private upgradeProcessMsg: Array<any> = [];
-  private isComposedData: boolean = false;
+  public isUpgradeDone: Array<any> = [];
+  public upgradeProcessMsg: Array<any> = [];
+  public isComposedData: boolean = false;
 
-  private subscribers: Array<any> = [];
-  private authToken: string;
+  public subscribers: Array<any> = [];
+  public authToken: string;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _containerService: ContainerService,
-    private _imageService: ImageService,
-    private _groupService: GroupService,
-    private _hubService: HubService,
-    private _logService: LogService
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _containerService: ContainerService,
+    public _imageService: ImageService,
+    public _groupService: GroupService,
+    public _hubService: HubService,
+    public _logService: LogService
   ) {}
 
   ngOnInit() {
@@ -110,7 +112,7 @@ export class ContainerDetailPage {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private getContainer() {
+  public getContainer() {
     this._containerService
       .getById(this.ip, this.containerId, undefined, this.authToken)
       .then(data => {
@@ -170,7 +172,7 @@ export class ContainerDetailPage {
       });
   }
 
-  private operate(action: string, event: any) {
+  public operate(action: string, event: any) {
     if (event && event.target.classList.contains('disable')) {
       event.stopPropagation();
       return;
@@ -192,7 +194,7 @@ export class ContainerDetailPage {
       });
   }
 
-  private showDeleteModal(event: any) {
+  public showDeleteModal(event: any) {
     if (event && event.target.classList.contains('disable')) {
       event.stopPropagation();
       return;
@@ -200,7 +202,7 @@ export class ContainerDetailPage {
     this.deleteContainerModalOptions.show = true;
   }
 
-  private deleteContainer() {
+  public deleteContainer() {
     this._containerService
       .delete(this.ip, this.containerId, this.forceDeletion, this.authToken)
       .then(data => {
@@ -217,12 +219,12 @@ export class ContainerDetailPage {
       });
   }
 
-  private showRenameModal() {
+  public showRenameModal() {
     this.renameContainerModalOptions.formSubmitted = false;
     this.renameContainerModalOptions.show = true;
   }
 
-  private rename(form: any) {
+  public rename(form: any) {
     this.renameContainerModalOptions.formSubmitted = true;
     if (form.invalid) return;
     let newName = form.value.newName;
@@ -245,7 +247,7 @@ export class ContainerDetailPage {
       });
   }
 
-  private showUpgradeModal(event: any) {
+  public showUpgradeModal(event: any) {
     if (event && event.target.classList.contains('disabled')) {
       event.stopPropagation();
       return;
@@ -254,15 +256,15 @@ export class ContainerDetailPage {
     this.upgradeContainerModalOptions.show = true;
   }
 
-  private enableForceDeletion(value: any) {
+  public enableForceDeletion(value: any) {
     this.forceDeletion = value.target.checked;
   }
 
-  private refreshSelectedServer(data: any) {
+  public refreshSelectedServer(data: any) {
     this.selectedServers = data.value || [];
   }
 
-  private upgrade(form: any) {
+  public upgrade(form: any) {
     this.upgradeContainerModalOptions.formSubmitted = true;
     if (form.invalid || !this.selectedServers.length) return;
     let destTag = form.value.newTag;
@@ -310,7 +312,7 @@ export class ContainerDetailPage {
     }
   }
 
-  private addUpgradeMsg(ip: string, msg: any, image?: string) {
+  public addUpgradeMsg(ip: string, msg: any, image?: string) {
     this.upgradeProcessMsg.push({
       time: new Date(),
       server: ip,
@@ -319,7 +321,7 @@ export class ContainerDetailPage {
     });
   }
 
-  private addUpgradeResult(ip: string, result: boolean) {
+  public addUpgradeResult(ip: string, result: boolean) {
     this.isUpgradeDone.push({
       server: ip,
       result: result
@@ -345,7 +347,7 @@ export class ContainerDetailPage {
     }
   }
 
-  private closeUpgradeProgressModal() {
+  public closeUpgradeProgressModal() {
     this.upgradeProgressModalOptions.show = false;
     this.getContainer();
   }

@@ -13,23 +13,23 @@ declare let messager: any;
 })
 export class HubHomePage {
 
-  private searchText: string;
+  public searchText: string;
 
-  private pageSize: number = 10;
-  private pageOptions: any;
-  private totalCount: number;
+  public pageSize: number = 10;
+  public pageOptions: any;
+  public totalCount: number;
 
-  private images: Array<any>;
-  private filterImages: Array<any>;
-  private currentImages: Array<any>;
+  public images: Array<any>;
+  public filterImages: Array<any>;
+  public currentImages: Array<any>;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _location: Location,
-    private _router: Router,
-    private _hubService: HubService) {
+    public _route: ActivatedRoute,
+    public _location: Location,
+    public _router: Router,
+    public _hubService: HubService) {
 
   }
 
@@ -50,7 +50,7 @@ export class HubHomePage {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private getImages(location: string) {
+  public getImages(location: string) {
     this.images = [];
     this.currentImages = [];
     this._hubService.getImages(location)
@@ -65,7 +65,7 @@ export class HubHomePage {
       });
   }
 
-  private search() {
+  public search() {
     let url = `/hub`;
     if (this.searchText) {
       url += `;search=${encodeURIComponent(this.searchText)}`;
@@ -80,7 +80,7 @@ export class HubHomePage {
     this._location.replaceState(url);
   }
 
-  private setPage(pageIndex: number) {
+  public setPage(pageIndex: number) {
     if (!this.filterImages) return;
     let start = (pageIndex - 1) * this.pageSize;
     let end = start + this.pageSize;

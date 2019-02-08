@@ -11,18 +11,18 @@ declare let messager: any;
 })
 export class ChangePasswordPage {
 
-  private userInfo: any;
-  private submitted: boolean = false;
+  public userInfo: any;
+  public submitted: boolean = false;
 
-  private passwordModel: any = {
+  public passwordModel: any = {
     oldPassword: '',
     newPassword: '',
     confirmPassword: ''
   }
 
   constructor(
-    private _router: Router,
-    private _userService: UserService) {
+    public _router: Router,
+    public _userService: UserService) {
 
   }
 
@@ -36,7 +36,7 @@ export class ChangePasswordPage {
       });
   }
 
-  private changePassword(form: any) {
+  public changePassword(form: any) {
     this.submitted = true;
     if (form.invalid) return;
     this.submitted = false;

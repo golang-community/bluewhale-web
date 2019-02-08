@@ -6,11 +6,11 @@ import { IUserLogin } from './../interfaces';
 @Injectable()
 export class AuthService {
 
-  private userInfo: any = null;
+  public userInfo: any = null;
 
   constructor(
-    private http: CusHttpService,
-    private eventNotify: EventNotifyService) {
+    public http: CusHttpService,
+    public eventNotify: EventNotifyService) {
 
   }
 

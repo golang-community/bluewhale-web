@@ -106,7 +106,6 @@ hb-container-log .logs-panel {
 @-moz-document url-prefix() {
     select {
         -moz-appearance: none;
-        background-image: url('/static/images/menu-down.png') !important;
         background-repeat: no-repeat;
         background-position-x: 100%;
         background-position-y: 6px;
@@ -291,7 +290,7 @@ body.hidenScrollY {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 400;
-    src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url('./../vendor/fonts/SourceSansPro-Regular.woff2') format('woff2');
+    src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url('../static/vendor/fonts/SourceSansPro-Regular.woff2') format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
@@ -299,7 +298,7 @@ body.hidenScrollY {
     font-family: 'Source Sans Pro';
     font-style: normal;
     font-weight: 600;
-    src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'), url('./../vendor/fonts/SourceSansPro-Semibold.woff2') format('woff2');
+    src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'), url('../static/vendor/fonts/SourceSansPro-Semibold.woff2') format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 

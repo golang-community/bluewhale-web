@@ -24,6 +24,9 @@
               "static"
             ],
             "styles": [
+              "css/globalLoading.css",
+              "css/preloader.css",
+              "css/site.css",
               "styles.css"
             ],
             "scripts": []

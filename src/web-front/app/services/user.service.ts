@@ -4,10 +4,10 @@ import { CusHttpService } from './custom-http.service';
 @Injectable()
 export class UserService {
 
-  private baseUrl: string;
+  public baseUrl: string;
 
   constructor(
-    private _http: CusHttpService) {
+    public _http: CusHttpService) {
     this.baseUrl = '/api/users';
   }
 

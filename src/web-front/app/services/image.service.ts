@@ -5,16 +5,16 @@ import { GroupService } from './group.service';
 
 @Injectable()
 export class ImageService {
-  private headers: any;
+  public headers: any;
 
-  constructor(private http: CusHttpService, private authService: AuthService, private groupService: GroupService) {
+  constructor(private http: CusHttpService, public authService: AuthService, public groupService: GroupService) {
     this.headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     };
   }
 
-  private buildReq(ip: string, hidenLoading: boolean = false, authToken: string): any {
+  public buildReq(ip: string, hidenLoading: boolean = false, authToken: string): any {
     let useProxy: boolean = this.groupService.isIPEnableProxy(ip);
     let options: any = {
       disableLoading: hidenLoading,

@@ -15,27 +15,27 @@ declare let fetch: any;
 export class ContainerMonitorPage {
 
   @ViewChild('cpuChart')
-  private cpuChartDiv: ElementRef;
+  public cpuChartDiv: ElementRef;
 
   @ViewChild('memoryChart')
-  private memoryChartDiv: ElementRef;
+  public memoryChartDiv: ElementRef;
 
-  private containerId: string;
-  private groupId: any = {};
-  private ip: string;
+  public containerId: string;
+  public groupId: any = {};
+  public ip: string;
 
-  private cpuChart: any;
-  private cpuChartOption: any;
-  private memoryChart: any;
-  private memoryChartOption: any;
-  private refreshInterval: any;
-  private continuousErrCount: number = 0;
+  public cpuChart: any;
+  public cpuChartOption: any;
+  public memoryChart: any;
+  public memoryChartOption: any;
+  public refreshInterval: any;
+  public continuousErrCount: number = 0;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router) {
+    public _route: ActivatedRoute,
+    public _router: Router) {
 
   }
 
@@ -58,7 +58,7 @@ export class ContainerMonitorPage {
     this.initChart();
   }
 
-  private initChart(containerId?: string) {
+  public initChart(containerId?: string) {
     containerId = containerId || this.containerId;
     let cpuChartEle = this.cpuChartDiv.nativeElement;
     let memoryChartEle = this.memoryChartDiv.nativeElement;
@@ -170,7 +170,7 @@ export class ContainerMonitorPage {
     }, 5000);
   }
 
-  private updateChart() {
+  public updateChart() {
     let time = new Date();
     let self = this;
     let url = `http://${this.ip}:8500/v1/containers/${this.containerId}/stats`;

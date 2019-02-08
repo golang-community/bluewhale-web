@@ -14,18 +14,18 @@ declare let messager: any;
 export class ClusterLayoutPage {
 
   @ViewChild('groupTreePanel')
-  private groupTreePanel: ElementRef;
+  public groupTreePanel: ElementRef;
 
-  private selectedGroupId: any;
-  private groups: Array<any>;
-  private getGroupDone: boolean;
+  public selectedGroupId: any;
+  public groups: Array<any>;
+  public getGroupDone: boolean;
 
-  private routerEventSubscriber: any;
+  public routerEventSubscriber: any;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _groupService: GroupService) {
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _groupService: GroupService) {
 
   }
 
@@ -70,7 +70,7 @@ export class ClusterLayoutPage {
       });
   }
 
-  private fixGroupTreePanel() {
+  public fixGroupTreePanel() {
     let panel = this.groupTreePanel.nativeElement;
     $(panel).slimScroll({ destroy: true }).height("auto");
     $(panel).slimscroll({

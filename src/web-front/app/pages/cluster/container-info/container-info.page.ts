@@ -14,37 +14,39 @@ declare let $: any;
 })
 export class ClusterContainerInfoPage {
   @ViewChild('logPanel')
-  private logPanel: ElementRef;
+  public logPanel: ElementRef;
 
-  private groupInfo: any = {};
-  private container: any;
-  private containerBasicInfo: Array<any> = [];
-  private metaId: string;
-  private activedTab: string;
-  private instances: any;
+  public newTag: string;
 
-  private logs: Array<any>;
+  public groupInfo: any = {};
+  public container: any;
+  public containerBasicInfo: Array<any> = [];
+  public metaId: string;
+  public activedTab: string;
+  public instances: any;
 
-  private deleteContainerModalOptions: any = {};
-  private upgradeContainerModalOptions: any = {};
-  private reAssignConfirmModalOptions: any = {};
-  private logsViewModalOptions: any = {};
-  private advanceSettingModalOptions: any = {};
-  private advanceSettingForm: FormGroup;
-  private selectTag: string;
-  private candidateTags: Array<any>;
-  private containerLabels: Array<any> = [];
+  public logs: Array<any>;
 
-  private subscribers: Array<any> = [];
+  public deleteContainerModalOptions: any = {};
+  public upgradeContainerModalOptions: any = {};
+  public reAssignConfirmModalOptions: any = {};
+  public logsViewModalOptions: any = {};
+  public advanceSettingModalOptions: any = {};
+  public advanceSettingForm: FormGroup;
+  public selectTag: string;
+  public candidateTags: Array<any>;
+  public containerLabels: Array<any> = [];
+
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _fb: FormBuilder,
-    private _groupService: GroupService,
-    private _clusterService: ClusterService,
-    private _logService: LogService,
-    private _containerService: ContainerService
+    public _router: Router,
+    public _route: ActivatedRoute,
+    public _fb: FormBuilder,
+    public _groupService: GroupService,
+    public _clusterService: ClusterService,
+    public _logService: LogService,
+    public _containerService: ContainerService
   ) {}
 
   ngOnInit() {
@@ -97,7 +99,7 @@ export class ClusterContainerInfoPage {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private getContainer() {
+  public getContainer() {
     this.container = {};
     this._clusterService
       .getClusterContainer(this.metaId)
@@ -158,7 +160,7 @@ export class ClusterContainerInfoPage {
       });
   }
 
-  private operate(action: string, event: any) {
+  public operate(action: string, event: any) {
     if (event && event.target.classList.contains('disable')) {
       event.stopPropagation();
       return;
@@ -179,7 +181,7 @@ export class ClusterContainerInfoPage {
       });
   }
 
-  private showDeleteModal(event: any) {
+  public showDeleteModal(event: any) {
     if (event && event.target.classList.contains('disable')) {
       event.stopPropagation();
       return;
@@ -187,7 +189,7 @@ export class ClusterContainerInfoPage {
     this.deleteContainerModalOptions.show = true;
   }
 
-  private deleteContainer() {
+  public deleteContainer() {
     this.deleteContainerModalOptions.show = false;
     this._clusterService
       .deleteContainer(this.container.MetaId)
@@ -204,13 +206,13 @@ export class ClusterContainerInfoPage {
       });
   }
 
-  private showUpgradeModal() {
+  public showUpgradeModal() {
     this.selectTag = '';
     this.upgradeContainerModalOptions.formSubmitted = false;
     this.upgradeContainerModalOptions.show = true;
   }
 
-  private upgrade(form: any) {
+  public upgrade(form: any) {
     this.upgradeContainerModalOptions.formSubmitted = true;
     if (form.invalid) return;
     let newImage = `${this.container.Config.Image.split(':')[0]}:${form.value.newTag}`;
@@ -231,15 +233,15 @@ export class ClusterContainerInfoPage {
       .catch(err => messager.error(err));
   }
 
-  private showReAssignConfirm() {
+  public showReAssignConfirm() {
     this.reAssignConfirmModalOptions.show = true;
   }
 
-  private reAssign() {
+  public reAssign() {
     messager.error('not implement');
   }
 
-  private showAdvanceSettingModal() {
+  public showAdvanceSettingModal() {
     if (!this.advanceSettingForm) {
       this.advanceSettingForm = this._fb.group({
         Instances: [this.container.Instances || '']
@@ -266,12 +268,12 @@ export class ClusterContainerInfoPage {
     this.advanceSettingModalOptions.submitted = false;
   }
 
-  private removeWebhook(index: number) {
+  public removeWebhook(index: number) {
     let hooksCtrl = <FormArray>this.advanceSettingForm.controls['WebHooks'];
     hooksCtrl.removeAt(index);
   }
 
-  private addWebhook() {
+  public addWebhook() {
     let hooksCtrl = <FormArray>this.advanceSettingForm.controls['WebHooks'];
     hooksCtrl.push(
       this._fb.group({
@@ -281,7 +283,7 @@ export class ClusterContainerInfoPage {
     );
   }
 
-  private updateAdvanceSetting() {
+  public updateAdvanceSetting() {
     this.advanceSettingModalOptions.submitted = true;
     if (this.advanceSettingForm.invalid) return;
     let formData = this.advanceSettingForm.value;
@@ -321,11 +323,11 @@ export class ClusterContainerInfoPage {
       .catch(err => messager.error(err));
   }
 
-  private changeTab(tab: string) {
+  public changeTab(tab: string) {
     this.activedTab = tab;
   }
 
-  private getStatusCls(status: any) {
+  public getStatusCls(status: any) {
     let cls = 'success';
     if (status.Dead || !status.Running) {
       cls = 'danger';
@@ -336,7 +338,7 @@ export class ClusterContainerInfoPage {
     return cls;
   }
 
-  private getStatusText(status: any) {
+  public getStatusText(status: any) {
     let stateText = '';
     if (status.Running) {
       stateText = 'Running';
@@ -355,7 +357,7 @@ export class ClusterContainerInfoPage {
     return stateText;
   }
 
-  private showLogsView(ip: string, instance: any) {
+  public showLogsView(ip: string, instance: any) {
     this.logsViewModalOptions.selectedInstance = {
       ip: ip,
       container: instance.Id.substr(0, 12)
@@ -366,12 +368,12 @@ export class ClusterContainerInfoPage {
     this.logsViewModalOptions.show = true;
   }
 
-  private tailNumChanged(value: any) {
+  public tailNumChanged(value: any) {
     this.logsViewModalOptions.tailNum = value;
     this.getLogs();
   }
 
-  private getLogs() {
+  public getLogs() {
     let instance = this.logsViewModalOptions.selectedInstance;
     this._containerService
       .getLogs(instance.ip, instance.container, this.logsViewModalOptions.tailNum, undefined, '123456')

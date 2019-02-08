@@ -15,16 +15,16 @@ declare let $: any;
 export class TagsInputComponent implements ControlValueAccessor {
 
   @ViewChild('tagsInput')
-  private tagsInput: ElementRef;
+  public tagsInput: ElementRef;
 
   @Input()
   validatePattern: string;
 
-  private validateReg: RegExp;
-  private tags: Array<any>;
+  public validateReg: RegExp;
+  public tags: Array<any>;
 
-  private _onChange = (_: any) => { };
-  private _onTouched = () => { };
+  public _onChange = (_: any) => { };
+  public _onTouched = () => { };
 
   constructor() { }
 
@@ -75,7 +75,7 @@ export class TagsInputComponent implements ControlValueAccessor {
     this._onTouched = fn;
   }
 
-  private valueChanged() {
+  public valueChanged() {
     let items = $(this.tagsInput.nativeElement).tagsinput('items') || [];
     this.tags = items;
     this._onChange(this.tags);

@@ -12,18 +12,18 @@ declare let messager: any;
 })
 export class GroupOverviewPage {
   @ViewChild('chartPanel')
-  private chartPanel: ElementRef;
+  public chartPanel: ElementRef;
 
-  private groupInfo: any;
-  private servers: Array<any>;
-  private chart: any;
-  private viewInited: boolean = false;
+  public groupInfo: any;
+  public servers: Array<any>;
+  public chart: any;
+  public viewInited: boolean = false;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _groupService: GroupService,
-    private _containerService: ContainerService
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _groupService: GroupService,
+    public _containerService: ContainerService
   ) {}
 
   ngOnInit() {
@@ -92,7 +92,7 @@ export class GroupOverviewPage {
     this.updateChart();
   }
 
-  private updateChart() {
+  public updateChart() {
     if (!this.viewInited || !this.servers) return;
     if (!this.chart) {
       this.chart = echarts.init(this.chartPanel.nativeElement);

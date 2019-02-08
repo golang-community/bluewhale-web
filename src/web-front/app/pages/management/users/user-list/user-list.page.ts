@@ -11,22 +11,22 @@ declare let _: any;
 })
 export class ManageUserListPage {
 
-  private users: Array<any>;
+  public users: Array<any>;
 
-  private searchWord: string;
-  private totalCount: number = 0;
-  private pageSize: number = 10;
-  private pageIndex: number = 1;
-  private pageOptions: any;
+  public searchWord: string;
+  public totalCount: number = 0;
+  public pageSize: number = 10;
+  public pageIndex: number = 1;
+  public pageOptions: any;
 
-  private delTarget: any;
-  private deleteUserModalOptions: any;
+  public delTarget: any;
+  public deleteUserModalOptions: any;
 
-  private resetTarget: any;
-  private resetPasswordModalOptions: any;
+  public resetTarget: any;
+  public resetPasswordModalOptions: any;
 
   constructor(
-    private _userService: UserService) {
+    public _userService: UserService) {
 
   }
 
@@ -46,7 +46,7 @@ export class ManageUserListPage {
     this.setPage(1);
   }
 
-  private setPage(pageIndex: number) {
+  public setPage(pageIndex: number) {
     this.pageIndex = pageIndex;
     this._userService.getAll(pageIndex, this.pageSize, this.searchWord)
       .then(data => {
@@ -58,17 +58,17 @@ export class ManageUserListPage {
       });
   }
 
-  private search(keyWord: string) {
+  public search(keyWord: string) {
     this.searchWord = keyWord;
     this.setPage(1);
   }
 
-  private showResetPasswordModal(target: any) {
+  public showResetPasswordModal(target: any) {
     this.resetTarget = target;
     this.resetPasswordModalOptions.show = true;
   }
 
-  private resetPassword() {
+  public resetPassword() {
     if (!this.resetTarget) return;
     this.resetPasswordModalOptions.show = false;
     this._userService.resetPassword(this.resetTarget.UserID)
@@ -81,12 +81,12 @@ export class ManageUserListPage {
       });
   }
 
-  private showDeleteModal(target: any) {
+  public showDeleteModal(target: any) {
     this.delTarget = target;
     this.deleteUserModalOptions.show = true;
   }
 
-  private delUser() {
+  public delUser() {
     if (!this.delTarget) return;
     this.deleteUserModalOptions.show = false;
     this._userService.remove(this.delTarget.UserID)

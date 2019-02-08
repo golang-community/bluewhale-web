@@ -11,11 +11,11 @@ declare let messager: any;
 })
 export class UserProfilePage {
 
-  private userInfo: any;
+  public userInfo: any;
 
   constructor(
-    private _router: Router,
-    private _userService: UserService) {
+    public _router: Router,
+    public _userService: UserService) {
 
   }
 
@@ -23,7 +23,7 @@ export class UserProfilePage {
     this.getUserInfo();
   }
 
-  private getUserInfo() {
+  public getUserInfo() {
     this._userService.getCurrentUser()
       .then(data => {
         this.userInfo = data;
@@ -34,7 +34,7 @@ export class UserProfilePage {
       });
   }
 
-  private updateProfile(form: any) {
+  public updateProfile(form: any) {
     if (form.invalid) return;
     this._userService.updateProfile(this.userInfo)
       .then(data => {

@@ -5,11 +5,11 @@ import { SystemConfigService } from './system-config.service';
 @Injectable()
 export class ClusterService {
 
-  private systemConfig: any;
+  public systemConfig: any;
 
   constructor(
-    private _http: CusHttpService,
-    private _systemConfigService: SystemConfigService) {
+    public _http: CusHttpService,
+    public _systemConfigService: SystemConfigService) {
     this._systemConfigService.ConfigSubject.forEach(data => {
       this.systemConfig = data;
     });

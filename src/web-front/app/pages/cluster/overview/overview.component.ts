@@ -18,58 +18,60 @@ declare let messager: any;
   styleUrls: ['./overview.component.css']
 })
 export class ClusterOverviewPage {
-  private groupInfo: any = {};
-  private containerFilter: string;
-  private containers: Array<any> = [];
-  private filterContainers: Array<any> = [];
-  private filterContainerDone: boolean;
-  private currentContainers: Array<any> = [];
-  private containerPageOption: any;
-  private containerPageIndex: number = 1;
-  private pageSize: number = 15;
+  public pullImageName: string;
+  public newTag: string;
+  public groupInfo: any = {};
+  public containerFilter: string;
+  public containers: Array<any> = [];
+  public filterContainers: Array<any> = [];
+  public filterContainerDone: boolean;
+  public currentContainers: Array<any> = [];
+  public containerPageOption: any;
+  public containerPageIndex: number = 1;
+  public pageSize: number = 15;
 
-  private activedTab: string = 'containers';
-  private allInstanceIp: Array<any> = [];
-  private ip: any;
-  private images: Array<any> = [];
-  private filterImages: Array<any> = [];
-  private filterImageDone: boolean;
-  private imageFilter: string;
-  private currentImages: Array<any> = [];
-  private imagePageIndex: number = 1;
+  public activedTab: string = 'containers';
+  public allInstanceIp: Array<any> = [];
+  public ip: any;
+  public images: Array<any> = [];
+  public filterImages: Array<any> = [];
+  public filterImageDone: boolean;
+  public imageFilter: string;
+  public currentImages: Array<any> = [];
+  public imagePageIndex: number = 1;
 
-  private nodePageIndex: number = 1;
-  private currentNodes: Array<any> = [];
-  private serverStatus: any = {};
+  public nodePageIndex: number = 1;
+  public currentNodes: Array<any> = [];
+  public serverStatus: any = {};
 
-  private filterNodeDone: boolean;
-  private filterNodes: Array<any> = [];
-  private nodeFilter: string;
+  public filterNodeDone: boolean;
+  public filterNodes: Array<any> = [];
+  public nodeFilter: string;
 
-  private pullImageModalOptions: any = {};
-  private rmImageTarget: any;
-  private rmImageModalOptions: any = {};
+  public pullImageModalOptions: any = {};
+  public rmImageTarget: any;
+  public rmImageModalOptions: any = {};
 
-  private rmContainerTarget: any;
-  private rmContainerModalOptions: any = {};
-  private reAssignTarget: any;
-  private reAssignConfirmModalOptions: any = {};
+  public rmContainerTarget: any;
+  public rmContainerModalOptions: any = {};
+  public reAssignTarget: any;
+  public reAssignConfirmModalOptions: any = {};
 
-  private selectTag: string;
-  private candidateTags: Array<any> = [];
+  public selectTag: string;
+  public candidateTags: Array<any> = [];
 
-  private upgradeContainerTarget: any;
-  private upgradeContainerModalOptions: any = {};
+  public upgradeContainerTarget: any;
+  public upgradeContainerModalOptions: any = {};
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _containerService: ContainerService,
-    private _groupService: GroupService,
-    private _imageService: ImageService,
-    private _logService: LogService,
-    private _clusterService: ClusterService,
-    private _hubService: HubService
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _containerService: ContainerService,
+    public _groupService: GroupService,
+    public _imageService: ImageService,
+    public _logService: LogService,
+    public _clusterService: ClusterService,
+    public _hubService: HubService
   ) {}
 
   ngOnInit() {
@@ -109,7 +111,7 @@ export class ClusterOverviewPage {
     });
   }
 
-  private getContainers() {
+  public getContainers() {
     this._clusterService
       .getClusterContainers(this.groupInfo.ID)
       .then(data => {
@@ -152,7 +154,7 @@ export class ClusterOverviewPage {
       });
   }
 
-  private showServerStatus(silent: boolean = false) {
+  public showServerStatus(silent: boolean = false) {
     this.serverStatus.Status = [];
     this._clusterService
       .getServerStatus(this.groupInfo.ID, silent, this.groupInfo)
@@ -169,7 +171,7 @@ export class ClusterOverviewPage {
       });
   }
 
-  private getAllInstanceIp() {
+  public getAllInstanceIp() {
     if (this.allInstanceIp.length === 0) {
       this._clusterService
         .getServerStatus(this.groupInfo.ID, false, this.groupInfo)
@@ -189,7 +191,7 @@ export class ClusterOverviewPage {
     }
   }
 
-  private changeTab(tab: string) {
+  public changeTab(tab: string) {
     this.activedTab = tab;
     if (tab === 'containers' && this.containers.length === 0) {
       this.getContainers();
@@ -202,7 +204,7 @@ export class ClusterOverviewPage {
     // }
   }
 
-  private getImages(ip: any) {
+  public getImages(ip: any) {
     this.activedTab = 'images';
     this.ip = ip;
     this._imageService
@@ -232,8 +234,8 @@ export class ClusterOverviewPage {
       });
   }
 
-  private filterContainerTimeout: any;
-  private filterContainer(value?: any) {
+  public filterContainerTimeout: any;
+  public filterContainer(value?: any) {
     this.containerFilter = value || '';
     if (this.filterContainerTimeout) {
       clearTimeout(this.filterContainerTimeout);
@@ -253,7 +255,7 @@ export class ClusterOverviewPage {
     }, 100);
   }
 
-  private setContainerPage(pageIndex: number) {
+  public setContainerPage(pageIndex: number) {
     this.containerPageIndex = pageIndex;
     if (!this.filterContainers) return;
     let start = (pageIndex - 1) * this.pageSize;
@@ -261,7 +263,7 @@ export class ClusterOverviewPage {
     this.currentContainers = this.filterContainers.slice(start, end);
   }
 
-  private getStatsCls(status: any) {
+  public getStatsCls(status: any) {
     let cls = 'success';
     if (status.Dead || !status.Running) {
       cls = 'danger';
@@ -272,7 +274,7 @@ export class ClusterOverviewPage {
     return cls;
   }
 
-  private operate(container: any, action: string) {
+  public operate(container: any, action: string) {
     this._clusterService
       .operate(container.MetaId, action)
       .then(data => {
@@ -289,21 +291,21 @@ export class ClusterOverviewPage {
       });
   }
 
-  private showReAssignConfirm(target: any) {
+  public showReAssignConfirm(target: any) {
     this.reAssignTarget = target;
     this.reAssignConfirmModalOptions.show = true;
   }
 
-  private reAssign() {
+  public reAssign() {
     messager.error('not implement');
   }
 
-  private showRmContainerModal(container: any) {
+  public showRmContainerModal(container: any) {
     this.rmContainerTarget = container;
     this.rmContainerModalOptions.show = true;
   }
 
-  private rmContainer() {
+  public rmContainer() {
     this.rmContainerModalOptions.show = false;
     let name = this.rmContainerTarget.Config.Name;
     this._clusterService
@@ -317,14 +319,14 @@ export class ClusterOverviewPage {
       });
   }
 
-  private showUpgradeModal(target: any) {
+  public showUpgradeModal(target: any) {
     this.upgradeContainerTarget = target;
     this.selectTag = '';
     this.upgradeContainerModalOptions.formSubmitted = false;
     this.upgradeContainerModalOptions.show = true;
   }
 
-  private upgrade(form: any) {
+  public upgrade(form: any) {
     this.upgradeContainerModalOptions.formSubmitted = true;
     if (form.invalid) return;
     let newImage = `${this.upgradeContainerTarget.Config.Image.split(':')[0]}:${form.value.newTag}`;
@@ -345,8 +347,8 @@ export class ClusterOverviewPage {
       .catch(err => messager.error(err));
   }
 
-  private filterImageTimeout: any;
-  private filterImage(value?: any) {
+  public filterImageTimeout: any;
+  public filterImage(value?: any) {
     this.imageFilter = value || '';
     if (this.filterImageTimeout) {
       clearTimeout(this.filterImageTimeout);
@@ -366,7 +368,7 @@ export class ClusterOverviewPage {
     }, 100);
   }
 
-  private setImagePage(pageIndex: number) {
+  public setImagePage(pageIndex: number) {
     this.imagePageIndex = pageIndex;
     if (!this.filterImages) return;
     let start = (pageIndex - 1) * this.pageSize;
@@ -374,12 +376,12 @@ export class ClusterOverviewPage {
     this.currentImages = this.filterImages.slice(start, end);
   }
 
-  private showPullImageModal() {
+  public showPullImageModal() {
     this.pullImageModalOptions.formSubmitted = false;
     this.pullImageModalOptions.show = true;
   }
 
-  private pullImage(form: any) {
+  public pullImage(form: any) {
     this.pullImageModalOptions.formSubmitted = true;
     if (form.invalid) return;
     let imageName = form.value.pullImageName;
@@ -406,12 +408,12 @@ export class ClusterOverviewPage {
       });
   }
 
-  private showRmImageModal(image: any) {
+  public showRmImageModal(image: any) {
     this.rmImageTarget = image;
     this.rmImageModalOptions.show = true;
   }
 
-  private rmImage() {
+  public rmImage() {
     let id = this.rmImageTarget.Id.substring(0, 14);
     if (this.rmImageTarget.isDuplicatedImage) {
       id = this.rmImageTarget._repo;
@@ -434,8 +436,8 @@ export class ClusterOverviewPage {
       });
   }
 
-  private filterNodeTimeout: any;
-  private filterNode(value?: any) {
+  public filterNodeTimeout: any;
+  public filterNode(value?: any) {
     this.nodeFilter = value || '';
     if (this.filterNodeTimeout) {
       clearTimeout(this.filterNodeTimeout);
@@ -455,7 +457,7 @@ export class ClusterOverviewPage {
     }, 100);
   }
 
-  private setNodePage(pageIndex: number) {
+  public setNodePage(pageIndex: number) {
     this.nodePageIndex = pageIndex;
     if (!this.filterNodes) return;
     let start = (pageIndex - 1) * this.pageSize;

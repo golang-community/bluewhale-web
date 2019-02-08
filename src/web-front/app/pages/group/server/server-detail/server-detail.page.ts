@@ -14,30 +14,30 @@ declare let messager: any;
 })
 export class ServerDetailPage {
   @ViewChild('logPanel')
-  private logPanel: ElementRef;
+  public logPanel: ElementRef;
 
-  private service: any;
-  private containerBasicInfo: Array<any> = [];
-  private activedTab: string;
-  private instances: any;
-  private composeDataConfig: any;
-  private _editors: any = {};
-  private ip: any;
-  private subscribers: Array<any> = [];
-  private serviceName: any;
-  private container: any;
-  private containerId: any;
-  private groupId: any;
-  private logsViewModalOptions: any = {};
-  private logs: Array<any>;
-  private deleteContainerModalOptions: any = {};
+  public service: any;
+  public containerBasicInfo: Array<any> = [];
+  public activedTab: string;
+  public instances: any;
+  public composeDataConfig: any;
+  public _editors: any = {};
+  public ip: any;
+  public subscribers: Array<any> = [];
+  public serviceName: any;
+  public container: any;
+  public containerId: any;
+  public groupId: any;
+  public logsViewModalOptions: any = {};
+  public logs: Array<any>;
+  public deleteContainerModalOptions: any = {};
 
   constructor(
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _composeService: ComposeService,
-    private _containerService: ContainerService,
-    private _http: CusHttpService
+    public _router: Router,
+    public _route: ActivatedRoute,
+    public _composeService: ComposeService,
+    public _containerService: ContainerService,
+    public _http: CusHttpService
   ) {}
 
   ngOnInit() {
@@ -77,7 +77,7 @@ export class ServerDetailPage {
     };
   }
 
-  private getService() {
+  public getService() {
     this._composeService
       .getServiceByOne(this.ip, this.serviceName, undefined, '123456')
       .then(res => {
@@ -97,7 +97,7 @@ export class ServerDetailPage {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private getContainerInfo(id: any) {
+  public getContainerInfo(id: any) {
     this._containerService
       .getById(this.ip, id, undefined, '123456')
       .then(data => {
@@ -127,23 +127,23 @@ export class ServerDetailPage {
       });
   }
 
-  private aceLoaded(editor: any, env: string) {
+  public aceLoaded(editor: any, env: string) {
     this._editors[env] = editor;
     editor.$blockScrolling = Infinity;
   }
 
-  private downloadComposeData() {
+  public downloadComposeData() {
     let content = this.service.ComposeData;
     let blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     fileSaver.saveAs(blob, `${this.serviceName}.yml`);
   }
 
-  private changeTab(tab: string, id: string) {
+  public changeTab(tab: string, id: string) {
     this.activedTab = tab;
     this.getContainerInfo(id);
   }
 
-  private getStatusCls(status: any) {
+  public getStatusCls(status: any) {
     let cls = 'success';
     if (status.Dead || !status.Running) {
       cls = 'danger';
@@ -154,7 +154,7 @@ export class ServerDetailPage {
     return cls;
   }
 
-  private getContainerStatus(status: any) {
+  public getContainerStatus(status: any) {
     let cls = 'success';
     if (status.indexOf('Paused') !== -1 || status.indexOf('Restarting') !== -1 || status === 'Created') {
       cls = 'warning';
@@ -165,11 +165,11 @@ export class ServerDetailPage {
     return cls;
   }
 
-  private getContainerCommand() {
+  public getContainerCommand() {
     return `${this.container.Path} ${this.container.Args.join(' ')}`;
   }
 
-  private showLogsView(instance: any) {
+  public showLogsView(instance: any) {
     this.logsViewModalOptions.selectedInstance = {
       ip: this.ip,
       container: instance.Id.substr(0, 12)
@@ -180,7 +180,7 @@ export class ServerDetailPage {
     this.logsViewModalOptions.show = true;
   }
 
-  private operate(action: string) {
+  public operate(action: string) {
     this._composeService
       .ComposeOperate(this.ip, this.service.Name, action, '123456')
       .then(data => {
@@ -192,7 +192,7 @@ export class ServerDetailPage {
       });
   }
 
-  private showDeleteModal(event: any) {
+  public showDeleteModal(event: any) {
     if (event && event.target.classList.contains('disable')) {
       event.stopPropagation();
       return;
@@ -200,7 +200,7 @@ export class ServerDetailPage {
     this.deleteContainerModalOptions.show = true;
   }
 
-  private deleteService() {
+  public deleteService() {
     let name = this.serviceName;
     this._composeService
       .removeService(this.ip, name, undefined, '123456')
@@ -214,7 +214,7 @@ export class ServerDetailPage {
       });
   }
 
-  private getLogs() {
+  public getLogs() {
     let instance = this.logsViewModalOptions.selectedInstance;
     this._containerService
       .getLogs(instance.ip, instance.container, this.logsViewModalOptions.tailNum, undefined, '123456')
@@ -236,12 +236,12 @@ export class ServerDetailPage {
       });
   }
 
-  private tailNumChanged(value: any) {
+  public tailNumChanged(value: any) {
     this.logsViewModalOptions.tailNum = value;
     this.getLogs();
   }
 
-  private getStatusText(status: any) {
+  public getStatusText(status: any) {
     let stateText = '';
     if (status.Running) {
       stateText = 'Running';

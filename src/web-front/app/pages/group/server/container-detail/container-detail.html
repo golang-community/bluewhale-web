@@ -224,7 +224,7 @@
     </label>
   </div>
   <hb-modal-footer>
-    <button type="button" class="btn btn-default btn-flat" (click)="deleteContainerModalOptions.show = fasle">Cancel</button>
+    <button type="button" class="btn btn-default btn-flat" (click)="deleteContainerModalOptions.show = false">Cancel</button>
     <button type="button" class="btn btn-success btn-flat" (click)="deleteContainer()">Confirm</button>
   </hb-modal-footer>
 </hb-modal>
@@ -243,7 +243,7 @@
       </div>
     </div>
     <div class="form-group text-right">
-      <button type="button" class="btn btn-default btn-flat" (click)="renameContainerModalOptions.show = fasle">Cancel</button>
+      <button type="button" class="btn btn-default btn-flat" (click)="renameContainerModalOptions.show = false">Cancel</button>
       <button type="submit" class="btn btn-success btn-flat">Confirm</button>
     </div>
   </form>
@@ -278,7 +278,7 @@
       <span class="help-block" *ngIf="!selectedServers.length && upgradeContainerModalOptions.formSubmitted">Servers cannot be empty.</span>
     </div>
     <div class="form-group text-right">
-      <button type="button" class="btn btn-default btn-flat" (click)="upgradeContainerModalOptions.show = fasle">Cancel</button>
+      <button type="button" class="btn btn-default btn-flat" (click)="upgradeContainerModalOptions.show = false">Cancel</button>
       <button type="submit" class="btn btn-success btn-flat">Confirm</button>
     </div>
   </form>

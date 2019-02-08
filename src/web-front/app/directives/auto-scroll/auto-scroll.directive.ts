@@ -5,8 +5,8 @@ import { Directive, ElementRef, Input } from '@angular/core';
 })
 export class AutoScrollDirective {
   public el: any;
-  private _observer: any;
-  private _oldScrollHeight: number = 0;
+  public _observer: any;
+  public _oldScrollHeight: number = 0;
 
   constructor(private _el: ElementRef) {
     this.el = _el.nativeElement;

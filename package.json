@@ -7,8 +7,9 @@
     "start": "npm run dev",
     "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
     "dev:api": "gulp dev",
-    "dev:web": "cd src/web-front && ng build --watch",
+    "dev:web": "cd src/web-front && ng build --extract-css --watch",
     "lint:web": "cd src/web-front && ng lint",
+    "build:web":"cd src/web-front && ng build --prod",
     "build": "gulp release"
   },
   "repository": {

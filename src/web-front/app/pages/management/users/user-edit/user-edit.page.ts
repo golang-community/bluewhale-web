@@ -11,10 +11,10 @@ declare let messager: any;
 })
 export class ManageUserEditPage {
 
-  private subscribers: Array<any> = [];
-  private isNew: boolean = true;
+  public subscribers: Array<any> = [];
+  public isNew: boolean = true;
 
-  private userInfo: any = {
+  public userInfo: any = {
     UserID: '',
     FullName: '',
     Password: '',
@@ -24,9 +24,9 @@ export class ManageUserEditPage {
   };
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _userService: UserService) {
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _userService: UserService) {
 
   }
 
@@ -48,7 +48,7 @@ export class ManageUserEditPage {
     this.subscribers.push(paramSub);
   }
 
-  private save(form: any) {
+  public save(form: any) {
     if (form.invalid) return;
     let promis: any;
     if (this.isNew) {

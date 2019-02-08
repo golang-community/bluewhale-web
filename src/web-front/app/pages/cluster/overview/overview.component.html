@@ -280,7 +280,7 @@
     <strong class="important-text">{{ rmContainerTarget?.Config?.Name }}</strong> ?
   </div>
   <hb-modal-footer>
-    <button type="button" class="btn btn-default btn-flat" (click)="rmContainerModalOptions.show = fasle">Cancel</button>
+    <button type="button" class="btn btn-default btn-flat" (click)="rmContainerModalOptions.show = false">Cancel</button>
     <button type="button" class="btn btn-success btn-flat" (click)="rmContainer()">Confirm</button>
   </hb-modal-footer>
 </hb-modal>
@@ -290,7 +290,7 @@
     <strong class="text-danger">{{ reAssignTarget?.Config?.Name }}</strong>?</p>
   <p>This may cause service interruption for a few seconds!</p>
   <hb-modal-footer>
-    <button type="button" class="btn btn-default btn-flat" (click)="reAssignConfirmModalOptions.show = fasle">Cancel</button>
+    <button type="button" class="btn btn-default btn-flat" (click)="reAssignConfirmModalOptions.show = false">Cancel</button>
     <button type="button" class="btn btn-success btn-flat" (click)="reAssign()">Confirm</button>
   </hb-modal-footer>
 </hb-modal>
@@ -309,7 +309,7 @@
     <div class="form-group" [ngClass]="{'has-error': upgradeContainerModalOptions.formSubmitted && newTagInput.invalid}">
       <label class="control-label">New Tag</label>
       <input type="text" autocomplete="off" class="form-control" name="newTag" [(ngModel)]="newTag" #newTagInput="ngModel" required
-        maxlength="128" pattern="^[0-9a-z._-]*$" [validateNotEqual]="container?.Config?.Image | imageNameFmt:'Tag'">
+        maxlength="128" pattern="^[0-9a-z._-]*$">
       <div [hidden]="newTagInput.valid || !upgradeContainerModalOptions.formSubmitted">
         <span class="help-block" *ngIf="newTagInput.errors?.required">Tag cannot be empty.</span>
         <span class="help-block" *ngIf="newTagInput.errors?.maxlength">Tag cannot more than 128 characters.</span>
@@ -318,7 +318,7 @@
       </div>
     </div>
     <div class="form-group text-right">
-      <button type="button" class="btn btn-default btn-flat" (click)="upgradeContainerModalOptions.show = fasle">Cancel</button>
+      <button type="button" class="btn btn-default btn-flat" (click)="upgradeContainerModalOptions.show = false">Cancel</button>
       <button type="submit" class="btn btn-success btn-flat">Confirm</button>
     </div>
   </form>
@@ -335,7 +335,7 @@
       </div>
     </div>
     <div class="form-group text-right">
-      <button type="button" class="btn btn-default btn-flat" (click)="pullImageModalOptions.show = fasle">Cancel</button>
+      <button type="button" class="btn btn-default btn-flat" (click)="pullImageModalOptions.show = false">Cancel</button>
       <button type="submit" class="btn btn-success btn-flat">Pull</button>
     </div>
   </form>
@@ -347,7 +347,7 @@
     <strong class="important-text">{{ rmImageTarget?._repo }}</strong> ?
   </div>
   <hb-modal-footer>
-    <button type="button" class="btn btn-default btn-flat" (click)="rmImageModalOptions.show = fasle">Cancel</button>
+    <button type="button" class="btn btn-default btn-flat" (click)="rmImageModalOptions.show = false">Cancel</button>
     <button type="button" class="btn btn-success btn-flat" (click)="rmImage()">Confirm</button>
   </hb-modal-footer>
 </hb-modal>

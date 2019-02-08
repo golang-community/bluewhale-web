@@ -6,9 +6,9 @@ import { CusHttpService } from './custom-http.service';
 @Injectable()
 export class DashboardService {
 
-  private url: string;
+  public url: string;
 
-  constructor(private http: CusHttpService, private authService: AuthService) {
+  constructor(private http: CusHttpService, public authService: AuthService) {
     this.url = '/api/dashboard';
   }
 

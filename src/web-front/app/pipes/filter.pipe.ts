@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 
 export class FilterPipe implements PipeTransform {
-  private timer: any;
-  private result: any;
+  public timer: any;
+  public result: any;
 
   transform(items: Array<any>, conditions: { [field: string]: any }): Array<any> {
     if (!items) return items;

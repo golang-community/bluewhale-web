@@ -10,34 +10,34 @@ declare let messager: any;
 
 @Component({
   selector: 'hb-component-new',
-  styleUrls: ['/compose-new.css'],
+  styleUrls: ['./compose-new.css'],
   templateUrl: './component-new.html'
 })
 export class ComponentNewPage {
-  private form: FormGroup;
-  private _editors: any = {};
-  private configInfo: any;
-  private composeDataError: any;
-  private submitted: boolean = false;
-  private ip: any;
-  private groupInfo: any;
-  private groupId: any;
-  private inputValue: any;
-  private isSaveCheck: boolean;
-  private dockerEngineVersion: any;
-  private subscribers: Array<any> = [];
+  public form: FormGroup;
+  public _editors: any = {};
+  public configInfo: any;
+  public composeDataError: any;
+  public submitted: boolean = false;
+  public ip: any;
+  public groupInfo: any;
+  public groupId: any;
+  public inputValue: any;
+  public isSaveCheck: boolean;
+  public dockerEngineVersion: any;
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _router: Router,
-    private _fileUploader: FileUploader,
-    private _route: ActivatedRoute,
-    private _composeService: ComposeService,
-    private _groupService: GroupService,
-    private _renderer: Renderer,
-    private _fb: FormBuilder
+    public _router: Router,
+    public _fileUploader: FileUploader,
+    public _route: ActivatedRoute,
+    public _composeService: ComposeService,
+    public _groupService: GroupService,
+    public _renderer: Renderer,
+    public _fb: FormBuilder
   ) {}
 
-  private buildForm() {
+  public buildForm() {
     this.form = this._fb.group({
       Name: '',
       EnablePackageFile: 0,
@@ -51,9 +51,9 @@ export class ComponentNewPage {
     editor.$blockScrolling = Infinity;
   }
 
-  private changeValue() {}
+  public changeValue() {}
 
-  private readerFile(reader: any): any {
+  public readerFile(reader: any): any {
     let self = this;
     reader.onload = function(event: any) {
       self.form.controls['Data'].setValue(event.target.result);
@@ -101,7 +101,7 @@ export class ComponentNewPage {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private showFullScreen(env: string, container: HTMLDivElement) {
+  public showFullScreen(env: string, container: HTMLDivElement) {
     let isFullScreen = container.classList.contains('full-screen');
     let editor = this._editors[env];
     if (editor) {
@@ -111,13 +111,13 @@ export class ComponentNewPage {
     }
   }
 
-  private showExample(value: any) {
+  public showExample(value: any) {
     this._composeService.getComposeExample().then(data => {
       this.form.controls['Data'].setValue(data);
     });
   }
 
-  private checkComposeData(isSave: any) {
+  public checkComposeData(isSave: any) {
     if (this.form.value.Data) {
       try {
         let doc = jsYaml.safeLoad(this.form.value.Data);
@@ -149,7 +149,7 @@ export class ComponentNewPage {
     }
   }
 
-  private onSubmit() {
+  public onSubmit() {
     this.submitted = true;
     let form = this.form;
     if (form.invalid) return;

@@ -74,7 +74,7 @@
     Are you sure you want to delete <strong class="important-text">{{ delTarget?.UserID }} ({{delTarget?.FullName}})</strong> ?
   </div>
   <hb-modal-footer>
-    <button type="button" class="btn btn-default btn-flat" (click)="deleteUserModalOptions.show = fasle">Cancel</button>
+    <button type="button" class="btn btn-default btn-flat" (click)="deleteUserModalOptions.show = false">Cancel</button>
     <button type="button" class="btn btn-success btn-flat" (click)="delUser()">Confirm</button>
   </hb-modal-footer>
 </hb-modal>
@@ -85,7 +85,7 @@
     Are you sure you want to reset <strong class="important-text">{{ resetTarget?.UserID }}'s ({{resetTarget?.FullName}})</strong> password to '123456' ?
   </div>
   <hb-modal-footer>
-    <button type="button" class="btn btn-default btn-flat" (click)="resetPasswordModalOptions.show = fasle">Cancel</button>
+    <button type="button" class="btn btn-default btn-flat" (click)="resetPasswordModalOptions.show = false">Cancel</button>
     <button type="button" class="btn btn-success btn-flat" (click)="resetPassword()">Confirm</button>
   </hb-modal-footer>
 </hb-modal>

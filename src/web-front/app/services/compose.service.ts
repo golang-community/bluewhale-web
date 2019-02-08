@@ -7,13 +7,13 @@ declare let _: any;
 
 @Injectable()
 export class ComposeService {
-  private systemConfig: any;
-  private groups: any = {};
-  private baseUrl: string;
+  public systemConfig: any;
+  public groups: any = {};
+  public baseUrl: string;
 
-  constructor(private _http: CusHttpService, private _groupService: GroupService, private _authService: AuthService) {}
+  constructor(private _http: CusHttpService, public _groupService: GroupService, public _authService: AuthService) {}
 
-  private buildReq(ip: string, hidenLoading: boolean = false, authToken: string): any {
+  public buildReq(ip: string, hidenLoading: boolean = false, authToken: string): any {
     let useProxy: boolean = this._groupService.isIPEnableProxy(ip);
     let options: any = {
       disableLoading: hidenLoading,

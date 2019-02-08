@@ -15,34 +15,34 @@ declare let messager: any;
   styleUrls: ['./container-clone.css']
 })
 export class ContainerClonePage {
-  private groups: Array<any>;
-  private groupInfo: any;
-  private ip: string;
-  private containerId: string;
-  private containerInfo: any;
+  public groups: Array<any>;
+  public groupInfo: any;
+  public ip: string;
+  public containerId: string;
+  public containerInfo: any;
 
-  private selectedGroupId: string = '';
-  private selectedGroup: any;
-  private serversSelect2Options: any;
-  private servers: Array<any> = [];
-  private selectedServers: Array<any>;
-  private currentEditEnvServer: string;
-  private cloneProcessModalOptions: any;
-  private cloneProcessMsg: Array<any>;
-  private isCloneDone: Array<any>;
+  public selectedGroupId: string = '';
+  public selectedGroup: any;
+  public serversSelect2Options: any;
+  public servers: Array<any> = [];
+  public selectedServers: Array<any>;
+  public currentEditEnvServer: string;
+  public cloneProcessModalOptions: any;
+  public cloneProcessMsg: Array<any>;
+  public isCloneDone: Array<any>;
 
-  private form: FormGroup;
-  private submitted: boolean = false;
+  public form: FormGroup;
+  public submitted: boolean = false;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _fb: FormBuilder,
-    private _containerService: ContainerService,
-    private _groupService: GroupService,
-    private _logService: LogService
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _fb: FormBuilder,
+    public _containerService: ContainerService,
+    public _groupService: GroupService,
+    public _logService: LogService
   ) {}
 
   ngOnInit() {
@@ -94,7 +94,7 @@ export class ContainerClonePage {
     this.subscribers.forEach((item: any) => item.unsubscribe());
   }
 
-  private buildForm(data: any) {
+  public buildForm(data: any) {
     this.form = this._fb.group({
       Name: [''],
       Image: [data.Image],
@@ -253,7 +253,7 @@ export class ContainerClonePage {
     this.subscribers.push(networkModeSub);
   }
 
-  private selectedGroupChanged(value: any) {
+  public selectedGroupChanged(value: any) {
     this.selectedGroup = _.find(this.groups, (item: any) => {
       return item.ID === value;
     });
@@ -272,7 +272,7 @@ export class ContainerClonePage {
     });
   }
 
-  private refreshSelectedServer(data: any) {
+  public refreshSelectedServer(data: any) {
     let selectedServers = (data.value || []).sort();
     let control = <FormGroup>this.form.controls['ServerEnvs'];
     if (!control) {
@@ -303,7 +303,7 @@ export class ContainerClonePage {
     this.currentEditEnvServer = this.selectedServers[0] || '';
   }
 
-  private addPortBinding() {
+  public addPortBinding() {
     let control = <FormArray>this.form.controls['Ports'];
     control.push(
       this._fb.group({
@@ -315,12 +315,12 @@ export class ContainerClonePage {
     );
   }
 
-  private removePortBinding(i: number) {
+  public removePortBinding(i: number) {
     let control = <FormArray>this.form.controls['Ports'];
     control.removeAt(i);
   }
 
-  private addVolumeBinding() {
+  public addVolumeBinding() {
     let control = <FormArray>this.form.controls['Volumes'];
     control.push(
       this._fb.group({
@@ -330,12 +330,12 @@ export class ContainerClonePage {
     );
   }
 
-  private removeVolumeBinding(i: number) {
+  public removeVolumeBinding(i: number) {
     let control = <FormArray>this.form.controls['Volumes'];
     control.removeAt(i);
   }
 
-  private addEnv(server: string) {
+  public addEnv(server: string) {
     let control = <FormGroup>this.form.controls['ServerEnvs'];
     let envCtrl = <FormArray>control.controls[server];
     envCtrl.push(
@@ -345,13 +345,13 @@ export class ContainerClonePage {
     );
   }
 
-  private removeEnv(server: string, i: number) {
+  public removeEnv(server: string, i: number) {
     let control = <FormGroup>this.form.controls['ServerEnvs'];
     let envCtrl = <FormArray>control.controls[server];
     envCtrl.removeAt(i);
   }
 
-  private addLink() {
+  public addLink() {
     let control = <FormArray>this.form.controls['Links'];
     control.push(
       this._fb.group({
@@ -360,12 +360,12 @@ export class ContainerClonePage {
     );
   }
 
-  private removeLink(i: number) {
+  public removeLink(i: number) {
     let control = <FormArray>this.form.controls['Links'];
     control.removeAt(i);
   }
 
-  private addLogOpt() {
+  public addLogOpt() {
     let control = <FormArray>this.form.controls['LogOpts'];
     control.push(
       this._fb.group({
@@ -374,12 +374,12 @@ export class ContainerClonePage {
     );
   }
 
-  private removeLogOpt(i: number) {
+  public removeLogOpt(i: number) {
     let control = <FormArray>this.form.controls['LogOpts'];
     control.removeAt(i);
   }
 
-  private addLabel() {
+  public addLabel() {
     let control = <FormArray>this.form.controls['Labels'];
     control.push(
       this._fb.group({
@@ -388,12 +388,12 @@ export class ContainerClonePage {
     );
   }
 
-  private removeLabel(i: number) {
+  public removeLabel(i: number) {
     let control = <FormArray>this.form.controls['Labels'];
     control.removeAt(i);
   }
 
-  private addUlimit() {
+  public addUlimit() {
     let control = <FormArray>this.form.controls['Ulimits'];
     control.push(
       this._fb.group({
@@ -404,12 +404,12 @@ export class ContainerClonePage {
     );
   }
 
-  private removeUlimit(i: number) {
+  public removeUlimit(i: number) {
     let control = <FormArray>this.form.controls['Ulimits'];
     control.removeAt(i);
   }
 
-  private onSubmit() {
+  public onSubmit() {
     this.submitted = true;
     if (!this.selectedServers || !this.selectedServers.length) {
       messager.error('Please select one server at least');
@@ -501,7 +501,7 @@ export class ContainerClonePage {
     }
   }
 
-  private addCloneMsg(server: string, msg: string) {
+  public addCloneMsg(server: string, msg: string) {
     this.cloneProcessMsg.push({
       time: new Date(),
       server: server,
@@ -509,7 +509,7 @@ export class ContainerClonePage {
     });
   }
 
-  private closeUpgradeProgressModal() {
+  public closeUpgradeProgressModal() {
     this.cloneProcessModalOptions.show = false;
     this._router.navigate(['/group', this.groupInfo.ID, 'overview']);
   }

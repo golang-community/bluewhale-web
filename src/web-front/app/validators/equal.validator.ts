@@ -14,7 +14,7 @@ import { IValidationResult } from './../interfaces';
 })
 export class EqualValidator implements Validator {
   @Input("validateEqual")
-  private dynamicCompareValue: string;
+  public dynamicCompareValue: string;
 
   constructor( @Attribute('validateEqual') public validateEqual: string) { }
 

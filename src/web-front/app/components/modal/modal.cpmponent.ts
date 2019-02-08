@@ -34,15 +34,15 @@ export class ModalComponent implements OnInit {
   @ContentChild(ModalHeaderComponent) header: ModalHeaderComponent;
   @ContentChild(ModalFooterComponent) footer: ModalFooterComponent;
 
-  private modalId: string = `h_modal_${new Date().valueOf()}`;
+  public modalId: string = `h_modal_${new Date().valueOf()}`;
   constructor(
-    private globalLoadingService: GlobalLoadingService) {
+    public globalLoadingService: GlobalLoadingService) {
 
   }
 
   ngOnInit() { }
 
-  private getStyleClass(): string {
+  public getStyleClass(): string {
     let cls = 'show modal';
     if (this.options.style) {
       cls += ` modal-${this.options.style}`;
@@ -50,7 +50,7 @@ export class ModalComponent implements OnInit {
     return cls;
   }
 
-  private getSizeClass(): string {
+  public getSizeClass(): string {
     let cls = 'modal-dialog';
     if (this.options.size) {
       cls += ` modal-${this.options.size}`;
@@ -58,13 +58,13 @@ export class ModalComponent implements OnInit {
     return cls;
   }
 
-  private dimmerClick(event: any) {
+  public dimmerClick(event: any) {
     if (this.options.closable !== false && event.target.id === this.modalId) {
       this.options.show = false;
     }
   }
 
-  private cancelBtnClick() {
+  public cancelBtnClick() {
     if (typeof this.options.cancelBtnClick === 'function') {
       let result = this.options.cancelBtnClick();
       if (result !== false) {
@@ -75,7 +75,7 @@ export class ModalComponent implements OnInit {
     }
   }
 
-  private okBtnClick() {
+  public okBtnClick() {
     if (typeof this.options.okBtnClick === 'function') {
       let result = this.options.okBtnClick();
       if (result !== false) {

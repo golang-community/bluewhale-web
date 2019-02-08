@@ -13,18 +13,18 @@ declare let messager: any;
 export class EditImageDescriptionPage {
 
   @ViewChild('descriptionEditor')
-  private descriptionEditor: ElementRef;
+  public descriptionEditor: ElementRef;
 
-  private imageId: string;
-  private image: any;
-  private simplemde: any;
+  public imageId: string;
+  public image: any;
+  public simplemde: any;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _imageService: ImageService) {
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _imageService: ImageService) {
 
   }
 
@@ -70,7 +70,7 @@ export class EditImageDescriptionPage {
     }
   }
 
-  private save() {
+  public save() {
     let value = this.simplemde.value();
     if (!value) {
       messager.error('Description cannot be empty.');

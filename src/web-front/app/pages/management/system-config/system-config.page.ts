@@ -12,11 +12,11 @@ declare let messager: any;
 })
 export class SystemConfigPage {
 
-  private config: any = {};
+  public config: any = {};
 
   constructor(
-    private _router: Router,
-    private _systemConfig: SystemConfigService) {
+    public _router: Router,
+    public _systemConfig: SystemConfigService) {
 
   }
 
@@ -31,14 +31,14 @@ export class SystemConfigPage {
       });
   }
 
-  private enablePrivateRegistryChange(value: any) {
+  public enablePrivateRegistryChange(value: any) {
     this.config.EnablePrivateRegistry = value;
     if (!value) {
       this.config.PrivateRegistry = '';
     }
   }
 
-  private save(form: any) {
+  public save(form: any) {
     if (this.config.EnablePrivateRegistry && form.controls.privateRegistry.invalid) return;
     if (this.config.EnableClusterMode && form.controls.humpbackCenterAPI.invalid) return;
     this._systemConfig.save(this.config)

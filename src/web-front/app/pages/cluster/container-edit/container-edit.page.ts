@@ -13,28 +13,28 @@ declare let messager: any;
 })
 export class ClusterContainerEditPage {
 
-  private groupInfo: any;
-  private selectedGroup: any;
-  private selectedGroupId: any;
-  private clusterGroups: Array<any>;
-  private isNew: boolean;
-  private isClone: boolean;
-  private isEdit: boolean;
-  private metaId: string;
+  public groupInfo: any;
+  public selectedGroup: any;
+  public selectedGroupId: any;
+  public clusterGroups: Array<any>;
+  public isNew: boolean;
+  public isClone: boolean;
+  public isEdit: boolean;
+  public metaId: string;
 
-  private form: FormGroup;
-  private submitted: boolean = false;
+  public form: FormGroup;
+  public submitted: boolean = false;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _fb: FormBuilder,
-    private _containerService: ContainerService,
-    private _groupService: GroupService,
-    private _clusterService: ClusterService,
-    private _logService: LogService) {
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _fb: FormBuilder,
+    public _containerService: ContainerService,
+    public _groupService: GroupService,
+    public _clusterService: ClusterService,
+    public _logService: LogService) {
 
   }
 
@@ -73,7 +73,7 @@ export class ClusterContainerEditPage {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private buildForm(data?: any) {
+  public buildForm(data?: any) {
     this.form = this._fb.group({
       Name: [{ value: (data.Name || ''), disabled: (this.isEdit) }],
       Image: [(data.Image || '')],
@@ -274,12 +274,12 @@ export class ClusterContainerEditPage {
     this.subscribers.push(networkModeSub);
   }
 
-  private selectedGroupChange(id: string) {
+  public selectedGroupChange(id: string) {
     this.selectedGroupId = id;
     this.selectedGroup = _.find(this.clusterGroups, (item: any) => item.ID === id);
   }
 
-  private addPortBinding() {
+  public addPortBinding() {
     let control = <FormArray>this.form.controls['Ports'];
     control.push(this._fb.group({
       PrivatePort: [''],
@@ -289,12 +289,12 @@ export class ClusterContainerEditPage {
     }));
   }
 
-  private removePortBinding(i: number) {
+  public removePortBinding(i: number) {
     let control = <FormArray>this.form.controls['Ports'];
     control.removeAt(i);
   }
 
-  private addVolumeBinding() {
+  public addVolumeBinding() {
     let control = <FormArray>this.form.controls['Volumes'];
     control.push(this._fb.group({
       ContainerVolume: [''],
@@ -302,60 +302,60 @@ export class ClusterContainerEditPage {
     }));
   }
 
-  private removeVolumeBinding(i: number) {
+  public removeVolumeBinding(i: number) {
     let control = <FormArray>this.form.controls['Volumes'];
     control.removeAt(i);
   }
 
-  private addEnv() {
+  public addEnv() {
     let control = <FormArray>this.form.controls['Envs'];
     control.push(this._fb.group({
       "Value": ['']
     }));
   }
 
-  private removeEnv(i: number) {
+  public removeEnv(i: number) {
     let control = <FormArray>this.form.controls['Envs'];
     control.removeAt(i);
   }
 
-  private addLink() {
+  public addLink() {
     let control = <FormArray>this.form.controls['Links'];
     control.push(this._fb.group({
       "Value": ['']
     }));
   }
 
-  private removeLink(i: number) {
+  public removeLink(i: number) {
     let control = <FormArray>this.form.controls['Links'];
     control.removeAt(i);
   }
 
-  private addLogOpt() {
+  public addLogOpt() {
     let control = <FormArray>this.form.controls['LogOpts'];
     control.push(this._fb.group({
       "Value": ['']
     }));
   }
 
-  private removeLogOpt(i: number) {
+  public removeLogOpt(i: number) {
     let control = <FormArray>this.form.controls['LogOpts'];
     control.removeAt(i);
   }
 
-  private addLabel() {
+  public addLabel() {
     let control = <FormArray>this.form.controls['Labels'];
     control.push(this._fb.group({
       "Value": ['']
     }));
   }
 
-  private removeLabel(i: number) {
+  public removeLabel(i: number) {
     let control = <FormArray>this.form.controls['Labels'];
     control.removeAt(i);
   }
 
-  private addUlimit() {
+  public addUlimit() {
     let control = <FormArray>this.form.controls['Ulimits'];
     control.push(this._fb.group({
       Name: [''],
@@ -364,17 +364,17 @@ export class ClusterContainerEditPage {
     }));
   }
 
-  private removeUlimit(i: number) {
+  public removeUlimit(i: number) {
     let control = <FormArray>this.form.controls['Ulimits'];
     control.removeAt(i);
   }
 
-  private removeWebhook(index: number) {
+  public removeWebhook(index: number) {
     let hooksCtrl = <FormArray>this.form.controls['WebHooks'];
     hooksCtrl.removeAt(index);
   }
 
-  private addWebhook() {
+  public addWebhook() {
     let hooksCtrl = <FormArray>this.form.controls['WebHooks'];
     hooksCtrl.push(this._fb.group({
       Url: '',
@@ -382,7 +382,7 @@ export class ClusterContainerEditPage {
     }));
   }
 
-  private addConstraint() {
+  public addConstraint() {
     let constraintsCtrl = <FormArray>this.form.controls['Constraints'];
     constraintsCtrl.push(this._fb.group({
       Name: [''],
@@ -391,12 +391,12 @@ export class ClusterContainerEditPage {
     }));
   }
 
-  private removeConstraint(index: number) {
+  public removeConstraint(index: number) {
     let constraintsCtrl = <FormArray>this.form.controls['Constraints'];
     constraintsCtrl.removeAt(index);
   }
 
-  private onSubmit() {
+  public onSubmit() {
     this.submitted = true;
     if (this.form.invalid) return;
     let formData = _.cloneDeep(this.form.value);

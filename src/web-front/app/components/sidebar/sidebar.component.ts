@@ -17,23 +17,23 @@ declare let messager: any;
 })
 export class SideBarComponent {
   @ViewChild("mainSidebar")
-  private mainSidebar: ElementRef;
-  private sideBar: HTMLElement;
+  public mainSidebar: ElementRef;
+  public sideBar: HTMLElement;
 
-  private groups: Array<Object>;
-  private userInfo: any;
-  private config: any;
+  public groups: Array<Object>;
+  public userInfo: any;
+  public config: any;
 
-  private activeSubMenu: string = "";
+  public activeSubMenu: string = "";
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _router: Router,
-    private _renderer: Renderer,
-    private _authService: AuthService,
-    private _eventNotifyService: EventNotifyService,
-    private _systemConfigService: SystemConfigService
+    public _router: Router,
+    public _renderer: Renderer,
+    public _authService: AuthService,
+    public _eventNotifyService: EventNotifyService,
+    public _systemConfigService: SystemConfigService
   ) {}
 
   ngOnInit() {
@@ -79,7 +79,7 @@ export class SideBarComponent {
     this.fixSidebar();
   }
 
-  private fixSidebar() {
+  public fixSidebar() {
     $(this.sideBar)
       .slimScroll({ destroy: true })
       .height("auto");
@@ -90,7 +90,7 @@ export class SideBarComponent {
     });
   }
 
-  private toggleSubMenu(element: HTMLElement, subMenuName: string) {
+  public toggleSubMenu(element: HTMLElement, subMenuName: string) {
     if (this.activeSubMenu === subMenuName) {
       this.activeSubMenu = "";
     } else {

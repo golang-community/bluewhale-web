@@ -9,10 +9,10 @@ export enum EventType {
 
 @Injectable()
 export class EventNotifyService {
-  private _data = new Subject<Object>();
-  private _dataStream$ = this._data.asObservable();
+  public _data = new Subject<Object>();
+  public _dataStream$ = this._data.asObservable();
 
-  private _subscriptions: Map<string, Array<Function>> = new Map<string, Array<Function>>();
+  public _subscriptions: Map<string, Array<Function>> = new Map<string, Array<Function>>();
 
   constructor() {
     this._dataStream$.subscribe((data) => this._onEvent(data));

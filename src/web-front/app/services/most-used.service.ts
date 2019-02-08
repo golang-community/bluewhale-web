@@ -6,7 +6,7 @@ declare let _: any;
 @Injectable()
 export class MostUsedService {
 
-  private userId: string;
+  public userId: string;
   constructor(authService: AuthService) {
     let currentUser = authService.getUserInfoFromCache();
     this.userId = currentUser.UserID;

@@ -11,22 +11,22 @@ declare let messager: any;
 })
 export class ManageGroupListPage {
 
-  private groups: Array<any>;
-  private delTarget: any;
-  private isAdmin: boolean = false;
-  private deleteGroupModalOptions: any = {};
+  public groups: Array<any>;
+  public delTarget: any;
+  public isAdmin: boolean = false;
+  public deleteGroupModalOptions: any = {};
 
-  private filterGroups: Array<any> = [];
-  private filterCondition: string;
-  private currentGroups: Array<any>;
+  public filterGroups: Array<any> = [];
+  public filterCondition: string;
+  public currentGroups: Array<any>;
 
-  private pageSize: number = 10;
-  private pageOptions: any;
+  public pageSize: number = 10;
+  public pageOptions: any;
 
   constructor(
-    private _router: Router,
-    private _groupService: GroupService,
-    private _authService: AuthService) {
+    public _router: Router,
+    public _groupService: GroupService,
+    public _authService: AuthService) {
 
   }
 
@@ -47,7 +47,7 @@ export class ManageGroupListPage {
     this.isAdmin = currentUser.IsAdmin;    
   }
 
-  private getGroups() {
+  public getGroups() {
     this._groupService.getForManage()
       .then(data => {
         this.groups = data;
@@ -59,8 +59,8 @@ export class ManageGroupListPage {
       });
   }
 
-  private searchTimeout: any;
-  private search(value?: any) {
+  public searchTimeout: any;
+  public search(value?: any) {
     this.filterCondition = value || '';
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
@@ -79,19 +79,19 @@ export class ManageGroupListPage {
     }, 100);
   }
 
-  private setPage(pageIndex: number) {
+  public setPage(pageIndex: number) {
     if (!this.filterGroups) return;
     let start = (pageIndex - 1) * this.pageSize;
     let end = start + this.pageSize;
     this.currentGroups = this.filterGroups.slice(start, end);
   }
 
-  private showDeleteModal(group: any) {
+  public showDeleteModal(group: any) {
     this.delTarget = group;
     this.deleteGroupModalOptions.show = true;
   }
 
-  private delGroup() {
+  public delGroup() {
     if (!this.delTarget) return;
     this.deleteGroupModalOptions.show = false;
     this._groupService.remove(this.delTarget.ID)

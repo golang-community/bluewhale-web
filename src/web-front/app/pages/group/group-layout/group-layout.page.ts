@@ -29,17 +29,17 @@ declare let messager: any;
 export class GroupLayoutPage {
 
   @ViewChild('groupTreePanel')
-  private groupTreePanel: ElementRef;
+  public groupTreePanel: ElementRef;
 
-  private selectedGroupId: any;
-  private groups: Array<any>;
+  public selectedGroupId: any;
+  public groups: Array<any>;
 
-  private routerEventSubscriber: any;
+  public routerEventSubscriber: any;
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _mostUsedService: MostUsedService) {
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _mostUsedService: MostUsedService) {
       console.log(_route)
   }
 
@@ -84,7 +84,7 @@ export class GroupLayoutPage {
     sessionStorage.removeItem('serverTab');
   }
 
-  private fixGroupTreePanel() {
+  public fixGroupTreePanel() {
     let panel = this.groupTreePanel.nativeElement;
     $(panel).slimScroll({ destroy: true }).height("auto");
     $(panel).slimscroll({

@@ -13,16 +13,16 @@ declare let messager: any;
 
 export class LoginPage {
 
-  private user: IUserLogin;
-  private isLogin: boolean;
-  private returnUrl: string;
+  public user: IUserLogin;
+  public isLogin: boolean;
+  public returnUrl: string;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _authService: AuthService) {
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _authService: AuthService) {
 
   }
 
@@ -41,7 +41,7 @@ export class LoginPage {
     this.subscribers.forEach((item: any) => item.unsubscribe());
   }
 
-  private login(form: any) {
+  public login(form: any) {
     if (form.invalid) return;
     this.isLogin = true;
     this._authService.login(this.user)

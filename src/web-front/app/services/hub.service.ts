@@ -4,7 +4,7 @@ import { SystemConfigService } from "./system-config.service";
 
 @Injectable()
 export class HubService {
-  constructor(private _http: CusHttpService, private _systemConfigService: SystemConfigService) {}
+  constructor(private _http: CusHttpService, public _systemConfigService: SystemConfigService) {}
 
   genURL(location?: string) {
     return `${this._systemConfigService.Config.PrivateRegistry}/v2`;

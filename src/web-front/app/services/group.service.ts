@@ -8,14 +8,14 @@ declare let _: any;
 @Injectable()
 export class GroupService {
 
-  private systemConfig: any;
-  private groups: any = {};
-  private baseUrl: string;
+  public systemConfig: any;
+  public groups: any = {};
+  public baseUrl: string;
 
   constructor(
-    private _http: CusHttpService,
-    private _authService: AuthService,
-    private _systemConfigService: SystemConfigService) {
+    public _http: CusHttpService,
+    public _authService: AuthService,
+    public _systemConfigService: SystemConfigService) {
     this.baseUrl = '/api/groups';
     this._systemConfigService.ConfigSubject.forEach(data => {
       this.systemConfig = data;
@@ -132,7 +132,7 @@ export class GroupService {
     this.groups = {};
   }
 
-  private notifyCenter(groupId: string, event: string) {
+  public notifyCenter(groupId: string, event: string) {
     if (!this.systemConfig.EnableClusterMode) return;
     let url = `${this.systemConfig.HumpbackCenterAPI}/v1/groups/event`;
     let body = {

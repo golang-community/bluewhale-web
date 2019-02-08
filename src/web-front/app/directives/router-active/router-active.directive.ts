@@ -9,12 +9,12 @@ export class RouterActiveDirective {
   @Input("hb-router-active")
   mRouterActive: any;
 
-  private subscription: Subscription;
+  public subscription: Subscription;
 
   constructor(
-    private el: ElementRef,
-    private renderer: Renderer,
-    private router: Router
+    public el: ElementRef,
+    public renderer: Renderer,
+    public router: Router
   ) {}
 
   ngOnInit() {
@@ -34,7 +34,7 @@ export class RouterActiveDirective {
     this.subscription.unsubscribe();
   }
 
-  private update() {
+  public update() {
     let currentUrl = this.router.url.toLowerCase();
     if (!this.mRouterActive.url) { return; }
     let addCls = false;

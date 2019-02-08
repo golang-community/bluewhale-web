@@ -9,17 +9,17 @@ import { DashboardService, LogService, MostUsedService, SystemConfigService } fr
 
 export class DashboardPage {
 
-  private dashboardInfo: any = {};
-  private logs: Array<any>;
-  private mostUsedServers: Array<any>;
-  private systemConfig: any;
+  public dashboardInfo: any = {};
+  public logs: Array<any>;
+  public mostUsedServers: Array<any>;
+  public systemConfig: any;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
   constructor(
-    private _dashboardService: DashboardService,
-    private _logService: LogService,
-    private _mostUsedService: MostUsedService,
-    private _systemConfigService: SystemConfigService) {
+    public _dashboardService: DashboardService,
+    public _logService: LogService,
+    public _mostUsedService: MostUsedService,
+    public _systemConfigService: SystemConfigService) {
 
   }
 

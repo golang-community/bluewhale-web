@@ -5,11 +5,11 @@ import { CusHttpService } from './custom-http.service';
 @Injectable()
 export class LogService {
 
-  private baseUrl: string;
+  public baseUrl: string;
 
   constructor(
-    private http: CusHttpService,
-    private authService: AuthService
+    public http: CusHttpService,
+    public authService: AuthService
   ) {
     this.baseUrl = '/api/logs';
   }

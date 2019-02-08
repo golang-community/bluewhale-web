@@ -6,7 +6,7 @@ import { SystemConfigService } from './../services';
 export class SystemConfigResolve implements Resolve<any> {
 
   constructor(
-    private _systemConfigService: SystemConfigService) {
+    public _systemConfigService: SystemConfigService) {
 
   }
 

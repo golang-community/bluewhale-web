@@ -14,33 +14,33 @@ declare let messager: any;
   styleUrls: ['./container-new.css']
 })
 export class ContainerNewPage {
-  private groupInfo: any;
-  private ip: string;
+  public groupInfo: any;
+  public ip: string;
 
-  private form: FormGroup;
-  private submitted: boolean = false;
-  private hasGetDockerInfo: boolean = false;
+  public form: FormGroup;
+  public submitted: boolean = false;
+  public hasGetDockerInfo: boolean = false;
 
-  private isNew: boolean;
-  private isEdit: boolean;
+  public isNew: boolean;
+  public isEdit: boolean;
 
-  private agentInvalid: boolean = false;
-  private containerId: string;
-  private containerInfo: any;
-  private servers: any;
-  private serversSelect2Options: Select2Options;
-  private selectedServers: Array<any> = [];
+  public agentInvalid: boolean = false;
+  public containerId: string;
+  public containerInfo: any;
+  public servers: any;
+  public serversSelect2Options: Select2Options;
+  public selectedServers: Array<any> = [];
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _fb: FormBuilder,
-    private _containerService: ContainerService,
-    private _composeService: ComposeService,
-    private _groupService: GroupService,
-    private _logService: LogService
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _fb: FormBuilder,
+    public _containerService: ContainerService,
+    public _composeService: ComposeService,
+    public _groupService: GroupService,
+    public _logService: LogService
   ) {}
 
   ngOnInit() {
@@ -105,11 +105,11 @@ export class ContainerNewPage {
     this.subscribers.forEach(item => item.unsubscribe());
   }
 
-  private refreshSelectedServer(data: any) {
+  public refreshSelectedServer(data: any) {
     this.selectedServers = data.value || [];
   }
 
-  private buildForm() {
+  public buildForm() {
     let data = this.containerInfo || {};
     this.form = this._fb.group({
       Name: [{ value: data.Name || '', disabled: this.isEdit }],
@@ -280,7 +280,7 @@ export class ContainerNewPage {
     }
   }
 
-  private addPortBinding() {
+  public addPortBinding() {
     let control = <FormArray>this.form.controls['Ports'];
     control.push(
       this._fb.group({
@@ -292,12 +292,12 @@ export class ContainerNewPage {
     );
   }
 
-  private removePortBinding(i: number) {
+  public removePortBinding(i: number) {
     let control = <FormArray>this.form.controls['Ports'];
     control.removeAt(i);
   }
 
-  private addVolumeBinding() {
+  public addVolumeBinding() {
     let control = <FormArray>this.form.controls['Volumes'];
     control.push(
       this._fb.group({
@@ -307,12 +307,12 @@ export class ContainerNewPage {
     );
   }
 
-  private removeVolumeBinding(i: number) {
+  public removeVolumeBinding(i: number) {
     let control = <FormArray>this.form.controls['Volumes'];
     control.removeAt(i);
   }
 
-  private addEnv() {
+  public addEnv() {
     let control = <FormArray>this.form.controls['Envs'];
     control.push(
       this._fb.group({
@@ -321,12 +321,12 @@ export class ContainerNewPage {
     );
   }
 
-  private removeEnv(i: number) {
+  public removeEnv(i: number) {
     let control = <FormArray>this.form.controls['Envs'];
     control.removeAt(i);
   }
 
-  private addLink() {
+  public addLink() {
     let control = <FormArray>this.form.controls['Links'];
     control.push(
       this._fb.group({
@@ -335,7 +335,7 @@ export class ContainerNewPage {
     );
   }
 
-  private addLabel() {
+  public addLabel() {
     let control = <FormArray>this.form.controls['Labels'];
     control.push(
       this._fb.group({
@@ -344,12 +344,12 @@ export class ContainerNewPage {
     );
   }
 
-  private removeLabel(i: number) {
+  public removeLabel(i: number) {
     let control = <FormArray>this.form.controls['Labels'];
     control.removeAt(i);
   }
 
-  private addUlimit() {
+  public addUlimit() {
     let control = <FormArray>this.form.controls['Ulimits'];
     control.push(
       this._fb.group({
@@ -360,12 +360,12 @@ export class ContainerNewPage {
     );
   }
 
-  private removeUlimit(i: number) {
+  public removeUlimit(i: number) {
     let control = <FormArray>this.form.controls['Ulimits'];
     control.removeAt(i);
   }
 
-  private getTargetLogDriver() {
+  public getTargetLogDriver() {
     if (!this.hasGetDockerInfo && this.form.controls.LogDriver.value && this.form.controls.LogOpts.value.length == 0) {
       this._containerService
         .getDockerInfo(this.ip, undefined, '123456')
@@ -404,12 +404,12 @@ export class ContainerNewPage {
     }
   }
 
-  private removeLink(i: number) {
+  public removeLink(i: number) {
     let control = <FormArray>this.form.controls['Links'];
     control.removeAt(i);
   }
 
-  private addLogOpt() {
+  public addLogOpt() {
     let control = <FormArray>this.form.controls['LogOpts'];
     control.push(
       this._fb.group({
@@ -418,12 +418,12 @@ export class ContainerNewPage {
     );
   }
 
-  private removeLogOpt(i: number) {
+  public removeLogOpt(i: number) {
     let control = <FormArray>this.form.controls['LogOpts'];
     control.removeAt(i);
   }
 
-  private onSubmit() {
+  public onSubmit() {
     this.submitted = true;
     if (!this.selectedServers || !this.selectedServers.length) {
       messager.error('Please select one server at least');

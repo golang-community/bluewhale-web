@@ -14,7 +14,7 @@ import { IValidationResult } from './../interfaces';
 })
 export class MultipleEmailsValidator implements Validator {
 
-  private regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  public regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
   constructor() { }
 
   validate(c: AbstractControl): IValidationResult {

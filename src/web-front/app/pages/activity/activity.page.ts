@@ -11,21 +11,21 @@ declare let messager: any;
 })
 export class ActivityPage {
 
-  private groups: Array<any> = [];
-  private servers: Array<any> = [];
-  private logs: Array<any> = [];
+  public groups: Array<any> = [];
+  public servers: Array<any> = [];
+  public logs: Array<any> = [];
 
-  private selectedGroupId: string = '';
-  private selectedServer: string = '';
-  private selectedType: string = '';
+  public selectedGroupId: string = '';
+  public selectedServer: string = '';
+  public selectedType: string = '';
 
-  private pageOptions: any;
-  private pageSize: number = 20;
-  private totalCount: number;
+  public pageOptions: any;
+  public pageSize: number = 20;
+  public totalCount: number;
 
   constructor(
-    private _groupService: GroupService,
-    private _logService: LogService) {
+    public _groupService: GroupService,
+    public _logService: LogService) {
 
   }
 
@@ -47,7 +47,7 @@ export class ActivityPage {
     this.setPage(1);
   }
 
-  private getLogs(pageIndex: number) {
+  public getLogs(pageIndex: number) {
     let group = this.selectedGroupId ? (this.selectedGroupId === 'All' ? '' : this.selectedGroupId) : '';
     let type = this.selectedType ? (this.selectedType === 'All' ? '' : this.selectedType) : '';
     let server = '';
@@ -61,21 +61,21 @@ export class ActivityPage {
       });
   }
 
-  private selectedGroupChange(value: any) {
+  public selectedGroupChange(value: any) {
     this.selectedGroupId = value || '';
     this.setPage(1);
   }
 
-  private selectedTypeChange(value: any) {
+  public selectedTypeChange(value: any) {
     this.selectedType = value || '';
     this.setPage(1);
   }
 
-  private search() {
+  public search() {
     this.setPage(1);
   }
 
-  private setPage(pageIndex: number) {
+  public setPage(pageIndex: number) {
     this.getLogs(pageIndex);
   }
 }

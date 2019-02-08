@@ -11,14 +11,14 @@ declare let messager: any;
 })
 export class HeaderComponent {
 
-  private userInfo: any;
-  private logoutModalOptions: any = {};
+  public userInfo: any;
+  public logoutModalOptions: any = {};
 
   constructor(
-    private _renderer: Renderer,
-    private _router: Router,
-    private _authService: AuthService,
-    private _eventNotifyService: EventNotifyService) {
+    public _renderer: Renderer,
+    public _router: Router,
+    public _authService: AuthService,
+    public _eventNotifyService: EventNotifyService) {
 
   }
 
@@ -31,7 +31,7 @@ export class HeaderComponent {
     };
   }
 
-  private toggleSidebar() {
+  public toggleSidebar() {
     let bodyEle = document.body;
     let isMini = bodyEle.classList.contains('sidebar-collapse');
     this._renderer.setElementClass(bodyEle, 'sidebar-collapse', !isMini);
@@ -39,11 +39,11 @@ export class HeaderComponent {
     this._eventNotifyService.notifyDataChanged(EventType.SidebarMini, !isMini);
   }
 
-  private showLogoutModal() {
+  public showLogoutModal() {
     this.logoutModalOptions.show = true;
   }
 
-  private logout() {
+  public logout() {
     this._authService.logout()
       .then(res => {
         this._router.navigate(['/login']);

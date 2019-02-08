@@ -5,7 +5,7 @@ import { GlobalLoadingService } from './global-loading.service';
 export class FileUploader {
 
   constructor(
-    private _globalLoading: GlobalLoadingService
+    public _globalLoading: GlobalLoadingService
   ) { }
 
   /**

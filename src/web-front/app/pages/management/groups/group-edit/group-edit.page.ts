@@ -10,12 +10,12 @@ declare let messager: any;
   templateUrl: './group-edit.html'
 })
 export class ManageGroupEditPage {
-  private subscribers: Array<any> = [];
-  private isNew: boolean = true;
-  private serverForm: FormGroup;
+  public subscribers: Array<any> = [];
+  public isNew: boolean = true;
+  public serverForm: FormGroup;
   public submitted: boolean;
 
-  private groupInfo: any = {
+  public groupInfo: any = {
     Name: '',
     Description: '',
     OpenToPublic: false,
@@ -25,17 +25,17 @@ export class ManageGroupEditPage {
     Servers: []
   };
 
-  private users: Array<string> = [];
-  private ownerSelect2Options: any;
-  private systemConfig: any = {};
+  public users: Array<string> = [];
+  public ownerSelect2Options: any;
+  public systemConfig: any = {};
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _groupService: GroupService,
-    private _authService: AuthService,
-    private _systemConfigService: SystemConfigService,
-    private _fb: FormBuilder
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public _groupService: GroupService,
+    public _authService: AuthService,
+    public _systemConfigService: SystemConfigService,
+    public _fb: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -100,7 +100,7 @@ export class ManageGroupEditPage {
     this.groupInfo.Owners = data.value || [];
   }
 
-  private buildForm() {
+  public buildForm() {
     this.submitted = false;
     let data = this.groupInfo || {};
     this.serverForm = this._fb.group({
@@ -118,7 +118,7 @@ export class ManageGroupEditPage {
     }
   }
 
-  private addServer(name?: string, ip?: string, authToken?: string, enableServerProxy: boolean = false) {
+  public addServer(name?: string, ip?: string, authToken?: string, enableServerProxy: boolean = false) {
     let control = <FormArray>this.serverForm.controls['Servers'];
     let serverCtrl = this._fb.group({
       Name: name || '',

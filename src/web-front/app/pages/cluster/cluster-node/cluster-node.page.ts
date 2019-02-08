@@ -13,21 +13,21 @@ declare let messager: any;
 
 export class ClusterNodePage {
 
-    private groupId: any;
-    private ip: any;
-    private groupInfo: any;
-    private form: FormGroup;
-    private nodeInfo: any = {};
-    private submitted: boolean = false;
+    public groupId: any;
+    public ip: any;
+    public groupInfo: any;
+    public form: FormGroup;
+    public nodeInfo: any = {};
+    public submitted: boolean = false;
 
-    private subscribers: Array<any> = [];
+    public subscribers: Array<any> = [];
 
     constructor(
-        private _fb: FormBuilder,
-        private _clusterService: ClusterService,
-        private _groupService: GroupService,
-        private _route: ActivatedRoute,
-        private _router: Router) {
+        public _fb: FormBuilder,
+        public _clusterService: ClusterService,
+        public _groupService: GroupService,
+        public _route: ActivatedRoute,
+        public _router: Router) {
 
       }
 
@@ -48,7 +48,7 @@ export class ClusterNodePage {
           this.subscribers.push(paramSub);
     }
 
-    private buildForm(data?: any){
+    public buildForm(data?: any){
         this.form = this._fb.group({
             Labels: this._fb.array([])
         })
@@ -64,7 +64,7 @@ export class ClusterNodePage {
         }
     }
 
-    private addLabel() {
+    public addLabel() {
         let control = <FormArray>this.form.controls['Labels'];
         control.push(this._fb.group({
           Name: [''],
@@ -72,12 +72,12 @@ export class ClusterNodePage {
         }));
       }
 
-      private removeLabel(i: number) {
+      public removeLabel(i: number) {
         let control = <FormArray>this.form.controls['Labels'];
         control.removeAt(i);
       }
 
-      private onSubmit(form: any) {
+      public onSubmit(form: any) {
         this.submitted = true;
         if (form.invalid) return;
 

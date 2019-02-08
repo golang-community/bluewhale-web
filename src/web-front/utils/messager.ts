@@ -1,5 +1,7 @@
+declare var spop: any;
+
 var messager = {
-  _parseContent: function (content) {
+  _parseContent: function(content) {
     if (typeof content !== 'string') {
       if (content.message) {
         return content.message;
@@ -15,27 +17,27 @@ var messager = {
     return content;
   },
 
-  error: function (content) {
+  error: function(content) {
     content = this._parseContent(content);
     spop({
       template: content,
-      position: "top-right",
-      style: "error",
+      position: 'top-right',
+      style: 'error',
       autoclose: 10000,
-      group: "same"
+      group: 'same'
     });
   },
 
-  success: function (content) {
+  success: function(content) {
     content = this._parseContent(content);
     spop({
       template: content,
-      position: "top-right",
-      style: "success",
+      position: 'top-right',
+      style: 'success',
       autoclose: 10000,
-      group: "same"
+      group: 'same'
     });
   }
-}
+};
 
-window.messager = messager;
+window['messager'] = messager;

@@ -15,26 +15,26 @@ declare let messager: any;
 })
 export class ImageOverviewPage {
 
-  private imageId: string;
-  private image: any = {};
-  private imageDescription: any;
-  private imageDockerfile: any;
-  private tags: Array<string> = [];
+  public imageId: string;
+  public image: any = {};
+  public imageDescription: any;
+  public imageDockerfile: any;
+  public tags: Array<string> = [];
 
-  private activedTab: string = 'description';
-  private privateRegistryAddress: string;
+  public activedTab: string = 'description';
+  public privateRegistryAddress: string;
 
-  private editDockerfileModal: any;
+  public editDockerfileModal: any;
 
-  private subscribers: Array<any> = [];
+  public subscribers: Array<any> = [];
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private sanitizer: DomSanitizer,
-    private _imageService: ImageService,
-    private _hubService: HubService,
-    private _systemConfigService: SystemConfigService) {
+    public _route: ActivatedRoute,
+    public _router: Router,
+    public sanitizer: DomSanitizer,
+    public _imageService: ImageService,
+    public _hubService: HubService,
+    public _systemConfigService: SystemConfigService) {
 
   }
 
@@ -63,7 +63,7 @@ export class ImageOverviewPage {
     this.subscribers.forEach((item: any) => item.unsubscribe());
   }
 
-  private getImageInfo() {
+  public getImageInfo() {
     this._imageService.getImageInfoFromDB(this.imageId)
       .then(data => {
         this.image = data;
@@ -84,7 +84,7 @@ export class ImageOverviewPage {
       });
   }
 
-  private getImageTags() {
+  public getImageTags() {
     this._hubService.getTags('gdev', this.imageId, false)
       .then(tags => {
         this.tags = tags;
@@ -94,24 +94,24 @@ export class ImageOverviewPage {
       });
   }
 
-  private highlightDockerfile(dockerfile: string) {
+  public highlightDockerfile(dockerfile: string) {
     let highlighted = hljs.highlight('dockerfile', dockerfile || '').value;
     this.imageDockerfile = highlighted;
   }
 
-  private setTab(value: string) {
+  public setTab(value: string) {
     this.activedTab = value;
     if (value === 'tags' && this.tags.length == 0) {
       this.getImageTags();
     }
   }
 
-  private showDockerfileModal() {
+  public showDockerfileModal() {
     this.editDockerfileModal.submitted = false;
     this.editDockerfileModal.show = true;
   }
 
-  private updateDockerfile(form: any) {
+  public updateDockerfile(form: any) {
     this.editDockerfileModal.submitted = true;
     if (form.invalid) return;
     let imageInfo = {
@@ -129,7 +129,7 @@ export class ImageOverviewPage {
       });
   }
 
-  private fileChangeEvent(fileInput: any) {
+  public fileChangeEvent(fileInput: any) {
     if (fileInput.target.files && fileInput.target.files[0]) {
       let file = fileInput.target.files[0];
       if (file.type || file.name !== 'Dockerfile') {

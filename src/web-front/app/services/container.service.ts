@@ -4,9 +4,9 @@ import { GroupService } from './group.service';
 declare let _: any;
 @Injectable()
 export class ContainerService {
-  constructor(private http: CusHttpService, private groupService: GroupService) {}
+  constructor(private http: CusHttpService, public groupService: GroupService) {}
 
-  private buildReq(ip: string, hidenLoading: boolean = false, authToken: string): any {
+  public buildReq(ip: string, hidenLoading: boolean = false, authToken: string): any {
     let useProxy: boolean = this.groupService.isIPEnableProxy(ip);
     let options: any = {
       disableLoading: hidenLoading,

@@ -7,9 +7,9 @@ import { GlobalLoadingService } from './global-loading.service';
 @Injectable()
 export class CusHttpService {
   constructor(
-    private _router: Router,
-    private _http: Http,
-    private _globalLoading: GlobalLoadingService) {
+    public _router: Router,
+    public _http: Http,
+    public _globalLoading: GlobalLoadingService) {
 
   }
 
