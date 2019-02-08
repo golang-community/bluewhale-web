@@ -1,14 +1,13 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
 import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
-declare let lightReload: any;
-
-if (process.env.ENV === 'production') {
+if (environment.production) {
   enableProdMode();
-} else {
-  require('light-reload/client');
-  lightReload.init(9107, { maxReconnectCount: 10 });
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  .catch(err => console.log(err));
