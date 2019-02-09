@@ -10,8 +10,8 @@ module.exports = webpackMerge(
   {},
   {
     entry: {
-      angular2: './src/client/angular2.ts',
-      app: './src/client/main.ts'
+      angular2: './src/web-front/angular2.ts',
+      app: './src/web-front/main.ts'
     },
     mode: 'none',
     resolve: {
@@ -41,29 +41,29 @@ module.exports = webpackMerge(
         },
         {
           test: /\.css$/,
-          exclude: util.root('src', 'client', 'app'),
+          exclude: util.root('src', 'web-front', 'app'),
           use: [{ loader: MiniCssExtractPlugin.loader }, 'css-loader']
         },
         {
           test: /\.css$/,
-          include: util.root('src', 'client', 'app'),
+          include: util.root('src', 'web-front', 'app'),
           use: 'raw-loader'
         }
       ]
     },
     plugins: [
       new ProgressBarPlugin(),
-      new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, util.root('src', 'client')),
+      new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, util.root('src', 'web-front')),
       new HtmlWebpackPlugin({
-        template: 'src/client/index.html'
+        template: 'src/web-front/index.html'
       }),
       new CopyWebpackPlugin([
         {
-          from: 'src/client/static',
+          from: 'src/web-front/static',
           to: 'static'
         },
         {
-          from: 'src/client/*.html',
+          from: 'src/web-front/*.html',
           ignore: 'index.html',
           to: '[name].html'
         }

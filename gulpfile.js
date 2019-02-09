@@ -56,16 +56,16 @@ gulp.task('client:dev-build', () => {
 });
 
 gulp.task('clean', () => {
-  return del(['dist/*', '!dist/dbFiles', '!dist/node_modules'], { force: true });
+  return del(['dist/*', '!dist/dbFiles','!dist/wwwroot', '!dist/node_modules'], { force: true });
 });
 
 gulp.task('server:clean', done => {
-  del(['dist/**/*', '!dist/client'], { force: true });
+  del(['dist/**/*', '!dist/wwwroot'], { force: true });
   done();
 });
 
 gulp.task('server:copy', () => {
-  return gulp.src(['src/server/**']).pipe(gulp.dest('dist/'));
+  return gulp.src(['src/**', '!src/web-front/**', '!src/web-front/**']).pipe(gulp.dest('dist/'));
 });
 
 gulp.task('server:start', callback => {
@@ -94,15 +94,15 @@ gulp.task('server:watch', done => {
 
 gulp.task('release:html', () => {
   return gulp
-    .src('dist/client/index.html')
+    .src('dist/web-front/index.html')
     .pipe(useref())
     .pipe(gulpif('*.js', uglify()))
     .pipe(gulpif('*.css', minifyCss()))
-    .pipe(gulp.dest('dist/client'));
+    .pipe(gulp.dest('dist/wwwroot'));
 });
 
 gulp.task('release:clean-unused-file', () => {
-  let rootPath = 'dist/client/static';
+  let rootPath = 'dist/wwwroot/static';
   return del(
     [
       `${rootPath}/**/*.css`,
@@ -118,7 +118,7 @@ gulp.task('release:clean-unused-file', () => {
 
 gulp.task('server:reload', gulp.series('server:copy', 'server:restart'));
 
-gulp.task('dev', gulp.series('clean', 'server:copy', 'server:start', 'server:watch', 'client:dev-build'));
+gulp.task('dev', gulp.series('clean', 'server:copy', 'server:start', 'server:watch'/*, 'client:dev-build'*/));
 
 gulp.task(
   'release',
