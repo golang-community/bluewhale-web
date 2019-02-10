@@ -33,9 +33,11 @@ app.use(cookieParser());
 app.use(
   session({
     secret: config.encryptKey,
-    name: 'humpback.session.id',
+    secure: true,
+    name: 'bluewhale.sid',
     resave: true,
     saveUninitialized: true,
+    httpOnly: true,
     store: new NedbStore({
       filename: path.join(__dirname, `./dbFiles/${config.dbConfigs.sessionCollection.name}.db`)
     })
