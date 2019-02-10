@@ -56,7 +56,7 @@ gulp.task('client:dev-build', () => {
 });
 
 gulp.task('clean', () => {
-  return del(['dist/*', '!dist/dbFiles','!dist/wwwroot', '!dist/node_modules'], { force: true });
+  return del(['dist/*', '!dist/dbFiles', '!dist/wwwroot', '!dist/node_modules'], { force: true });
 });
 
 gulp.task('server:clean', done => {
@@ -88,7 +88,7 @@ gulp.task('server:restart', callback => {
 });
 
 gulp.task('server:watch', done => {
-  gulp.watch(['src/server/**/*.js'], gulp.series('server:reload'));
+  gulp.watch(['src/**/*.js', '!src/web-front/**'], gulp.series('server:reload'));
   done();
 });
 
@@ -118,7 +118,7 @@ gulp.task('release:clean-unused-file', () => {
 
 gulp.task('server:reload', gulp.series('server:copy', 'server:restart'));
 
-gulp.task('dev', gulp.series('clean', 'server:copy', 'server:start', 'server:watch'/*, 'client:dev-build'*/));
+gulp.task('dev', gulp.series('clean', 'server:copy', 'server:start', 'server:watch' /*, 'client:dev-build'*/));
 
 gulp.task(
   'release',

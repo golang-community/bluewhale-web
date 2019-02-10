@@ -25,8 +25,24 @@ const decipher = (algorithm, key, encrypted) => {
   return decrypted;
 };
 
+const wrapAsyncFn = fn => {
+  return (req, res, next) => {
+    Promise.resolve()
+      .then(() => {
+        return fn(req, res, next);
+      })
+      .catch(next);
+  };
+};
+
+const ensureArray = arr => {
+  return Array.isArray(arr) ? arr : [];
+};
+
 module.exports = {
   md5Crypto,
   cipher,
-  decipher
+  decipher,
+  wrapAsyncFn,
+  ensureArray
 };

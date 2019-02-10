@@ -91,6 +91,7 @@ app.use('/api/images', require('./routers/imageInfo'));
 app.use('/api/logs', require('./routers/log'));
 app.use('/api/system-config', require('./routers/systemConfig'));
 app.use('/api/dashboard', require('./routers/dashboard'));
+app.use('/api/forward', require('./routers/forward'));
 
 errorHandler.title = `Humpback WebSite - ${config.version}`;
 app.use(errorHandler({ log: false }));
