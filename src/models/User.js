@@ -1,5 +1,5 @@
 const { dbUtil } = require('../common');
-const { sequelize, Sequelize, DBTypes, CommonFileds } = dbUtil;
+const { sequelize, Sequelize, DBTypes } = dbUtil;
 
 const User = sequelize.define('user', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
@@ -10,7 +10,7 @@ const User = sequelize.define('user', {
   department: Sequelize.STRING,
   email: Sequelize.STRING,
   isAdmin: DBTypes.tinyIntAsBool(), // { type: Sequelize.TINYINT, defaultValue: 0, allowNull: false }
-  ...CommonFileds
+  ...DBTypes.commonFileds()
 });
 
 module.exports = User;

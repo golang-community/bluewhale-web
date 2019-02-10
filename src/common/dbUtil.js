@@ -11,13 +11,18 @@ class DBUtil {
       },
       tinyIntAsBool() {
         return { type: Sequelize.TINYINT, defaultValue: 0, allowNull: false };
+      },
+      commonFileds(onlyCreator = false) {
+        const result = {
+          createTime: { type: Sequelize.BIGINT, allowNull: false, field: 'create_time' },
+          creatorId: { type: Sequelize.INTEGER, allowNull: false, field: 'creator_id' }
+        };
+        if (!onlyCreator) {
+          result.modifyTime = { type: Sequelize.BIGINT, allowNull: false, field: 'modify_time' };
+          result.modifierId = { type: Sequelize.INTEGER, allowNull: false, field: 'modifier_id' };
+        }
+        return result;
       }
-    };
-    this.CommonFileds = {
-      createTime: { type: Sequelize.BIGINT, allowNull: false, field: 'create_time' },
-      creatorId: { type: Sequelize.INTEGER, allowNull: false, field: 'creator_id' },
-      modifyTime: { type: Sequelize.BIGINT, allowNull: false, field: 'modify_time' },
-      modifierId: { type: Sequelize.INTEGER, allowNull: false, field: 'modifier_id' }
     };
 
     this.sequelize = new Sequelize(dbConf.database, dbConf.username, dbConf.password, {
