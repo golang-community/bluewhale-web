@@ -1,6 +1,4 @@
 const express = require('express');
-const logsCtrl = require('./../controllers/log');
-const logValidator = require('./../validators/log');
 const { util } = require('../common');
 const { sysLogsBiz } = require('../bizs');
 
@@ -10,7 +8,7 @@ router
   // 查询日志
   .get('/', util.wrapAsyncFn(sysLogsBiz.getSysLogs))
   // 写入日志
-  .post('/', util.wrapAsyncFn(sysLogsBiz.createLog), logValidator.validate, logsCtrl.add);
+  .post('/', util.wrapAsyncFn(sysLogsBiz.createLog));
 
 module.exports = {
   basePath: '/api/sys-logs',

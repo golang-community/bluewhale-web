@@ -10,51 +10,6 @@ const gulpif = require('gulp-if');
 const uglify = require('gulp-uglify');
 const minifyCss = require('gulp-clean-css');
 
-const showWebpackError = (err, stats) => {
-  if (err) {
-    throw new gutil.PluginError('webpack', err);
-  }
-  gutil.log(
-    '[webpack:build-dev]',
-    stats.toString({
-      colors: true,
-      hash: false,
-      timings: true,
-      chunks: true,
-      chunkModules: false,
-      modules: false,
-      children: false,
-      version: true,
-      cached: true,
-      cachedAssets: true,
-      reasons: false,
-      source: false,
-      errorDetails: false
-    })
-  );
-};
-
-gulp.task('client:prd-build', callback => {
-  let config = require('./build/webpack.prod.conf');
-  webpack(config, (err, stats) => {
-    showWebpackError(err, stats);
-    callback();
-  });
-});
-
-gulp.task('client:dev-build', () => {
-  let config = require('./build/webpack.dev.conf');
-  let compiler = webpack(config);
-  compiler.watch(200, (err, stats) => {
-    showWebpackError(err, stats);
-    notifier.notify({
-      title: 'Humpback-Client',
-      message: 'Client build succeed.'
-    });
-    lightReload.reload();
-  });
-});
-
 gulp.task('clean', () => {
   return del(['dist/*', '!dist/dbFiles', '!dist/wwwroot', '!dist/node_modules'], { force: true });
 });
@@ -120,7 +75,4 @@ gulp.task('server:reload', gulp.series('server:copy', 'server:restart'));
 
 gulp.task('dev', gulp.series('clean', 'server:copy', 'server:start', 'server:watch' /*, 'client:dev-build'*/));
 
-gulp.task(
-  'release',
-  gulp.series('clean', 'server:copy', 'client:prd-build', 'release:html', 'release:clean-unused-file')
-);
+gulp.task('release', gulp.series('clean', 'server:copy', 'release:html', 'release:clean-unused-file'));

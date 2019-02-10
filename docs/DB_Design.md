@@ -55,3 +55,17 @@ CREATE TABLE [group] (
 	[is_deleted] tinyint NOT NULL DEFAULT 0 -- 是否已删除
 );
 ```
+
+## 数据字典表（data_dict）
+
+```sql
+CREATE TABLE [data_dict] (
+	[id] integer NOT NULL PRIMARY KEY AUTOINCREMENT, -- 自增ID
+	[data_key] varchar(50) NOT NULL, -- 数据KEY
+	[data_value] varchar(2000) NOT NULL, -- 数据Value
+	[create_time] bigint NOT NULL, -- 创建时间
+	[creator_id] integer NOT NULL, -- 创建人ID
+	[modify_time] bigint NOT NULL, -- 修改时间
+	[modifier_id] integer NOT NULL -- 修改人ID
+);
+```

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const path = require('path');
+const config = require('../config');
 
 class DBUtil {
   constructor(dbConf) {
@@ -43,5 +43,5 @@ module.exports = new DBUtil({
   database: '',
   username: '',
   password: '',
-  dbFilePath: path.join(__dirname, '..', 'db/bluewhale.db')
+  dbFilePath: config.dbFilePath
 });

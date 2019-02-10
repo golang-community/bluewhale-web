@@ -4,6 +4,11 @@ const { util } = require('../common');
 
 const router = express.Router();
 
-router.post('/', util.wrapAsyncFn(forwardBiz.forwardRequest));
+router
+  // 转发请求
+  .post('/', util.wrapAsyncFn(forwardBiz.forwardRequest));
 
-module.exports = router;
+module.exports = {
+  basePath: '/api/forward',
+  router
+};

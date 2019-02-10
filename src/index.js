@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const compression = require('compression');
 const express = require('express');
@@ -9,7 +10,7 @@ require('console-stamp')(console, 'yyyy/mm/dd HH:MM:ss.l');
 const NedbStore = require('nedb-session-store')(session);
 
 const user = require('./controllers/user');
-const config = require('./config.js');
+const config = require('./config');
 const { util } = require('./common');
 
 let isDebugMode = config.isDebugMode;
@@ -18,6 +19,11 @@ console.debug = function(args) {
     console.log(args);
   }
 };
+
+// Process DB file
+if (!fs.existsSync(config.dbFilePath)) {
+  fs.copyFileSync(path.join(__dirname, 'db/bluewhale.db'), config.dbFilePath);
+}
 
 let app = express();
 app.disable('x-powered-by');
@@ -60,8 +66,7 @@ let ignoreAuthPaths = [
   '/api/users/avatar',
   '/api/system-config',
   '/api/groups/getclusters',
-  '/api/groups/getallservers',
-  '/api/dashboard'
+  '/api/groups/getallservers'
 ];
 
 app.all('/api/*', (req, res, next) => {
@@ -89,10 +94,7 @@ app.all('/api/*', (req, res, next) => {
 app.use('/api/users', require('./routers/user'));
 app.use('/api/groups', require('./routers/group'));
 app.use('/api/images', require('./routers/imageInfo'));
-app.use('/api/logs', require('./routers/log'));
 app.use('/api/system-config', require('./routers/systemConfig'));
-app.use('/api/dashboard', require('./routers/dashboard'));
-app.use('/api/forward', require('./routers/forward'));
 util.loadRoutes(app, path.join(__dirname, 'routes'));
 
 errorHandler.title = `Humpback WebSite - ${config.version}`;
