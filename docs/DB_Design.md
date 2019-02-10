@@ -26,7 +26,7 @@ CREATE TABLE [user] (
 ```sql
 CREATE TABLE [sys_log] (
 	[id] integer NOT NULL PRIMARY KEY AUTOINCREMENT, -- 自增ID
-	[groupId] varchar(50) NOT NULL, -- 组ID
+	[group_id] varchar(50) NOT NULL, -- 组ID
 	[server] varchar(50) NOT NULL, -- 服务器
 	[type] varchar(50) NOT NULL, -- 操作类型
 	[content] varchar(2000), -- 日志内容

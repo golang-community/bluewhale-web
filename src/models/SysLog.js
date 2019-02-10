@@ -11,6 +11,6 @@ const SysLog = sequelize.define('sys_log', {
   ...DBTypes.commonFileds(true)
 });
 
-SysLog.hasOne(User, { as: 'creator', foreignKey: 'creator_id' });
+SysLog.belongsTo(User, { as: 'creator', foreignKey: 'creatorId', targetKey: 'id' });
 
 module.exports = SysLog;

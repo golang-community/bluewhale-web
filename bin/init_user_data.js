@@ -1,4 +1,5 @@
 const { User } = require('../src/models');
+const { util } = require('../src/common');
 
 const now = Date.now();
 User.create({
@@ -7,7 +8,7 @@ User.create({
   modifierId: 0,
   modifyTime: now,
   username: 'admin',
-  password: '123456',
+  password: util.md5Crypto('123456'),
   userAvatar: '',
   isAdmin: 1,
   department: '',

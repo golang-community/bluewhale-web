@@ -1,5 +1,9 @@
 const User = require('./User');
+const SysLog = require('./SysLog');
+const Group = require('./Group');
 
 module.exports = {
-  User
+  User,
+  SysLog,
+  Group
 };

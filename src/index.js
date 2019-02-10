@@ -10,6 +10,7 @@ const NedbStore = require('nedb-session-store')(session);
 
 const user = require('./controllers/user');
 const config = require('./config.js');
+const { util } = require('./common');
 
 let isDebugMode = config.isDebugMode;
 console.debug = function(args) {
@@ -92,6 +93,7 @@ app.use('/api/logs', require('./routers/log'));
 app.use('/api/system-config', require('./routers/systemConfig'));
 app.use('/api/dashboard', require('./routers/dashboard'));
 app.use('/api/forward', require('./routers/forward'));
+util.loadRoutes(app, path.join(__dirname, 'routes'));
 
 errorHandler.title = `Humpback WebSite - ${config.version}`;
 app.use(errorHandler({ log: false }));
