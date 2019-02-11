@@ -48,6 +48,26 @@ const getLoginUser = async (req, res) => {
   res.json(result);
 };
 
+const changePassword = async (req, res, next) => {
+  const { body } = req;
+  const oldPassword = util.md5Crypto(body.OldPassword);
+  const findUser = await User.findOne({
+    where: {
+      username: body.UserID,
+      password: oldPassword
+    }
+  });
+  if (!findUser || findUser.username !== body.UserID) {
+    let err = new Error('OldPassword is not correct.');
+    return next(err);
+  }
+  const newPassword = util.md5Crypto(body.NewPassword);
+  await User.update({ password: newPassword }, { where: { id: findUser.id } });
+  res.json({
+    result: true
+  });
+};
+
 const shouldLogin = (req, res, next) => {
   if (req.session.user) {
     if (req.session.cookie.originalMaxAge && req.session.cookie.originalMaxAge < 20 * 60 * 1000) {
@@ -75,6 +95,7 @@ module.exports = {
   doLogin,
   doLogout,
   getLoginUser,
+  changePassword,
 
   shouldLogin,
   shouldAdmin

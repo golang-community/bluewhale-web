@@ -10,7 +10,9 @@ router
   // 登出
   .get('/logout', util.wrapAsyncFn(accountBiz.doLogout))
   // 检查登录
-  .get('/isLogin', util.wrapAsyncFn(accountBiz.getLoginUser));
+  .get('/isLogin', util.wrapAsyncFn(accountBiz.getLoginUser))
+  // 修改密码
+  .put('/change-password', accountBiz.shouldLogin, util.wrapAsyncFn(accountBiz.changePassword));
 
 module.exports = {
   basePath: '/api/account',

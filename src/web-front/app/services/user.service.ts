@@ -3,18 +3,17 @@ import { CusHttpService } from './custom-http.service';
 
 @Injectable()
 export class UserService {
-
   public baseUrl: string;
 
-  constructor(
-    public _http: CusHttpService) {
+  constructor(public _http: CusHttpService) {
     this.baseUrl = '/api/users';
   }
 
   getCurrentUser(): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = `${this.baseUrl}/current-user`;
-      this._http.get(url)
+      this._http
+        .get(url)
         .then(res => {
           resolve(res.json());
         })
@@ -30,7 +29,8 @@ export class UserService {
       if (search) {
         url = `${url}&q=${search}`;
       }
-      this._http.get(url)
+      this._http
+        .get(url)
         .then(res => {
           resolve(res.json());
         })
@@ -43,7 +43,8 @@ export class UserService {
   getById(userId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = `${this.baseUrl}/${userId}`;
-      this._http.get(url)
+      this._http
+        .get(url)
         .then(res => {
           resolve(res.json());
         })
@@ -56,7 +57,8 @@ export class UserService {
   registry(userInfo: any): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = `${this.baseUrl}/register`;
-      this._http.post(url, userInfo)
+      this._http
+        .post(url, userInfo)
         .then(res => {
           resolve(res.json());
         })
@@ -69,7 +71,8 @@ export class UserService {
   updateProfile(profile: any): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = `${this.baseUrl}/${profile.UserID}`;
-      this._http.put(url, profile)
+      this._http
+        .put(url, profile)
         .then(res => {
           resolve(res.json());
         })
@@ -85,9 +88,10 @@ export class UserService {
         UserID: userId,
         OldPassword: oldPassword,
         NewPassword: newPassword
-      }
-      let url = `${this.baseUrl}/change-password`;
-      this._http.put(url, body)
+      };
+      let url = `/api/account/change-password`;
+      this._http
+        .put(url, body)
         .then(res => {
           resolve(res.json());
         })
@@ -101,9 +105,10 @@ export class UserService {
     return new Promise((resolve, reject) => {
       let body = {
         UserID: userId
-      }
+      };
       let url = `${this.baseUrl}/reset-password`;
-      this._http.put(url, body)
+      this._http
+        .put(url, body)
         .then(res => {
           resolve(res.json());
         })
@@ -116,7 +121,8 @@ export class UserService {
   remove(userId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = `${this.baseUrl}/${userId}`;
-      this._http.delete(url)
+      this._http
+        .delete(url)
         .then(res => {
           resolve(res.json());
         })

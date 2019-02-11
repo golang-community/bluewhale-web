@@ -1,12 +1,13 @@
 const express = require('express');
-const { forwardBiz } = require('../bizs');
+const { accountBiz } = require('../bizs');
 const { util } = require('../common');
 
 const router = express.Router();
 
 router
-  // 转发请求
-  .post('/', util.wrapAsyncFn(forwardBiz.forwardRequest));
+  .use(accountBiz.shouldLogin, accountBiz.shouldAdmin)
+  //
+  .post('/');
 
 module.exports = {
   basePath: '/api/admin',

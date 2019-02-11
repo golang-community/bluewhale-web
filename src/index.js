@@ -38,6 +38,9 @@ app.use(
 );
 app.use(compression());
 app.use((req, res, next) => {
+  // 初始化状态传递对象
+  req.state = {};
+  // h5 fallback
   let ext = path.extname(req.url);
   if (ext && ext.length > 6) ext = null;
   if (req.method === 'GET' && !req.url.startsWith('/api') && !ext) {
@@ -46,44 +49,15 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/', express.static(path.join(__dirname, 'wwwroot')));
-app.use('/public/avatar', express.static(path.join(__dirname, 'public/avatar')));
+// app.use('/public/avatar', express.static(path.join(__dirname, 'public/avatar')));
 
-let ignoreAuthPaths = [
-  '/api/users/islogin',
-  '/api/users/login',
-  '/api/users/logout',
-  '/api/users/avatar',
-  '/api/system-config',
-  '/api/groups/getclusters',
-  '/api/groups/getallservers'
-];
-
-app.all('/api/*', (req, res, next) => {
-  let ignored = false;
-  for (let i = 0; i < ignoreAuthPaths.length; i++) {
-    if (req.path.startsWith(ignoreAuthPaths[i])) {
-      ignored = true;
-    }
-  }
-  if (ignored) {
-    return next();
-  }
-  if (req.session.currentUser && req.session.currentUser.UserID) {
-    if (req.session.cookie.originalMaxAge && req.session.cookie.originalMaxAge < 20 * 60 * 1000) {
-      req.session.cookie.maxAge = 20 * 60 * 1000;
-    }
-    return next();
-  } else {
-    error = new Error('UnAuthorization. Not login.');
-    error.statusCode = 401;
-    return next(error);
-  }
-});
+let ignoreAuthPaths = ['/api/users/avatar', '/api/groups/getclusters', '/api/groups/getallservers'];
 
 app.use('/api/users', require('./routers/user'));
 app.use('/api/groups', require('./routers/group'));
 app.use('/api/images', require('./routers/imageInfo'));
 app.use('/api/system-config', require('./routers/systemConfig'));
+// Load routes
 util.loadRoutes(app, path.join(__dirname, 'routes'));
 
 errorHandler.title = `Bluewhale WebSite - ${config.version}`;

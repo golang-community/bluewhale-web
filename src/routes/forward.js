@@ -1,10 +1,11 @@
 const express = require('express');
-const { forwardBiz } = require('../bizs');
+const { accountBiz, forwardBiz } = require('../bizs');
 const { util } = require('../common');
 
 const router = express.Router();
 
 router
+  .use(accountBiz.shouldLogin)
   // 转发请求
   .post('/', util.wrapAsyncFn(forwardBiz.forwardRequest));
 
