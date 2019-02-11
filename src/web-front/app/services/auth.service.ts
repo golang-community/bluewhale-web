@@ -5,19 +5,15 @@ import { IUserLogin } from './../interfaces';
 
 @Injectable()
 export class AuthService {
-
   public userInfo: any = null;
 
-  constructor(
-    public http: CusHttpService,
-    public eventNotify: EventNotifyService) {
-
-  }
+  constructor(public http: CusHttpService, public eventNotify: EventNotifyService) {}
 
   login(userInfo: IUserLogin): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = `/api/users/login`;
-      this.http.post(url, userInfo)
+      let url = `/api/account/login`;
+      this.http
+        .post(url, userInfo)
         .then(res => {
           this.userInfo = res.json();
           this.eventNotify.notifyDataChanged(EventType.UserInfoChanged, this.userInfo);
@@ -31,11 +27,12 @@ export class AuthService {
 
   isLogin(): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = `/api/users/islogin`;
+      let url = `/api/account/islogin`;
       if (this.userInfo) {
         return resolve(this.userInfo);
       }
-      this.http.get(url)
+      this.http
+        .get(url)
         .then(res => {
           let result = res.json();
           if (!result.IsLogin) {
@@ -53,15 +50,16 @@ export class AuthService {
 
   logout(): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = `/api/users/logout`;
-      this.http.get(url)
+      let url = `/api/account/logout`;
+      this.http
+        .get(url)
         .then(res => {
           this.clearUserInfo();
           resolve(true);
         })
         .catch(err => {
           reject(err.json ? err.json() : err);
-        })
+        });
     });
   }
 

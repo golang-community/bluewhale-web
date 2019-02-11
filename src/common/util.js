@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 const md5Crypto = (text, salt) => {
   salt = salt || 'hb@123';
@@ -25,8 +27,47 @@ const decipher = (algorithm, key, encrypted) => {
   return decrypted;
 };
 
+const wrapAsyncFn = fn => {
+  return (req, res, next) => {
+    Promise.resolve()
+      .then(() => {
+        return fn(req, res, next);
+      })
+      .catch(next);
+  };
+};
+
+const ensureArray = arr => {
+  return Array.isArray(arr) ? arr : [];
+};
+
+const ensureNumber = (num, defaultVal = 0) => {
+  num = +num;
+  if (num !== num) {
+    return defaultVal;
+  }
+  return num;
+};
+
+const loadRoutes = (app, routesFolder) => {
+  fs.readdirSync(routesFolder).forEach(name => {
+    const jsFile = path.join(routesFolder, name);
+    if (fs.statSync(jsFile).isFile()) {
+      const routeInfo = require(jsFile);
+      if (routeInfo.basePath && routeInfo.router) {
+        app.use(routeInfo.basePath, routeInfo.router);
+        console.info(`Load route ok, basePath = ${routeInfo.basePath}`);
+      }
+    }
+  });
+};
+
 module.exports = {
   md5Crypto,
   cipher,
-  decipher
+  decipher,
+  wrapAsyncFn,
+  ensureArray,
+  ensureNumber,
+  loadRoutes
 };

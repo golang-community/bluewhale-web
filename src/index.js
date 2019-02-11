@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const compression = require('compression');
 const express = require('express');
@@ -9,14 +10,13 @@ require('console-stamp')(console, 'yyyy/mm/dd HH:MM:ss.l');
 const NedbStore = require('nedb-session-store')(session);
 
 const user = require('./controllers/user');
-const config = require('./config.js');
+const config = require('./config');
+const { util } = require('./common');
 
-let isDebugMode = config.isDebugMode;
-console.debug = function(args) {
-  if (isDebugMode) {
-    console.log(args);
-  }
-};
+// Process DB file
+if (!fs.existsSync(config.dbFilePath)) {
+  fs.copyFileSync(path.join(__dirname, 'db/bluewhale.db'), config.dbFilePath);
+}
 
 let app = express();
 app.disable('x-powered-by');
@@ -26,17 +26,21 @@ app.use(cookieParser());
 app.use(
   session({
     secret: config.encryptKey,
-    name: 'humpback.session.id',
+    secure: true,
+    name: 'bluewhale.sid',
     resave: true,
     saveUninitialized: true,
+    httpOnly: true,
     store: new NedbStore({
       filename: path.join(__dirname, `./dbFiles/${config.dbConfigs.sessionCollection.name}.db`)
     })
   })
 );
 app.use(compression());
-
 app.use((req, res, next) => {
+  // 初始化状态传递对象
+  req.state = {};
+  // h5 fallback
   let ext = path.extname(req.url);
   if (ext && ext.length > 6) ext = null;
   if (req.method === 'GET' && !req.url.startsWith('/api') && !ext) {
@@ -45,66 +49,24 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/', express.static(path.join(__dirname, 'wwwroot')));
-app.use('/public/avatar', express.static(path.join(__dirname, 'public/avatar')));
+// app.use('/public/avatar', express.static(path.join(__dirname, 'public/avatar')));
 
-app.get('/humpback-backend-faq', (req, res, next) => {
-  res.json(config);
-  return;
-});
-
-let ignoreAuthPaths = [
-  '/api/users/islogin',
-  '/api/users/login',
-  '/api/users/logout',
-  '/api/users/avatar',
-  '/api/system-config',
-  '/api/groups/getclusters',
-  '/api/groups/getallservers',
-  '/api/dashboard'
-];
-
-app.all('/api/*', (req, res, next) => {
-  let ignored = false;
-  for (let i = 0; i < ignoreAuthPaths.length; i++) {
-    if (req.path.startsWith(ignoreAuthPaths[i])) {
-      ignored = true;
-    }
-  }
-  if (ignored) {
-    return next();
-  }
-  if (req.session.currentUser && req.session.currentUser.UserID) {
-    if (req.session.cookie.originalMaxAge && req.session.cookie.originalMaxAge < 20 * 60 * 1000) {
-      req.session.cookie.maxAge = 20 * 60 * 1000;
-    }
-    return next();
-  } else {
-    error = new Error('UnAuthorization. Not login.');
-    error.statusCode = 401;
-    return next(error);
-  }
-});
+let ignoreAuthPaths = ['/api/users/avatar', '/api/groups/getclusters', '/api/groups/getallservers'];
 
 app.use('/api/users', require('./routers/user'));
 app.use('/api/groups', require('./routers/group'));
 app.use('/api/images', require('./routers/imageInfo'));
-app.use('/api/logs', require('./routers/log'));
 app.use('/api/system-config', require('./routers/systemConfig'));
-app.use('/api/dashboard', require('./routers/dashboard'));
+// Load routes
+util.loadRoutes(app, path.join(__dirname, 'routes'));
 
-errorHandler.title = `Humpback WebSite - ${config.version}`;
+errorHandler.title = `Bluewhale WebSite - ${config.version}`;
 app.use(errorHandler({ log: false }));
 
-console.debug('Init system...');
-user
-  .initAdmin()
-  .then(() => {
-    app.listen(config.listenPort, () => {
-      console.debug('Init system succeed');
-      console.log(`Humpback Website is started on port ${config.listenPort}`);
-    });
+const server = app
+  .listen(config.listenPort, () => {
+    console.log(`Bluewhale web starting...,`, server.address());
   })
-  .catch(err => {
-    console.log(`System init failed. Error: ${err}`);
-    process.exit(-101);
+  .on('error', err => {
+    console.error(err);
   });

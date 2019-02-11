@@ -4,37 +4,39 @@ import { CusHttpService } from './custom-http.service';
 
 @Injectable()
 export class LogService {
-
   public baseUrl: string;
 
-  constructor(
-    public http: CusHttpService,
-    public authService: AuthService
-  ) {
-    this.baseUrl = '/api/logs';
+  constructor(public http: CusHttpService, public authService: AuthService) {
+    this.baseUrl = '/api/sys-logs';
   }
 
-  public addLog(content: string, type: string, group: string = "", server: string = ""): void {
+  public addLog(content: string, type: string, group: string = '', server: string = ''): void {
     let log = {
       Group: group,
       Server: server,
       Type: type,
       Content: content
     };
-    this.http.post(this.baseUrl, log, { disableLoading: true })
-      .then(res => {
-
-      })
+    this.http
+      .post(this.baseUrl, log, { disableLoading: true })
+      .then(res => {})
       .catch(err => {
         console.log('Add log error', err);
       });
   }
 
-  public getLog(type: string, pageSize: number, pageIndex: number, group: string = "", server: string = ""): Promise<any> {
+  public getLog(
+    type: string,
+    pageSize: number,
+    pageIndex: number,
+    group: string = '',
+    server: string = ''
+  ): Promise<any> {
     let query = `pageSize=${pageSize}&pageIndex=${pageIndex}&Type=${type}&Group=${group}&Server=${server}&t=${Date.now()}`;
     let url = `${this.baseUrl}?${query}`;
     return new Promise((resolve, reject) => {
-      this.http.get(url)
+      this.http
+        .get(url)
         .then(res => {
           var logs = res.json();
           resolve(logs);
