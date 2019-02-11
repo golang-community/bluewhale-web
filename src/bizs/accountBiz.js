@@ -48,8 +48,34 @@ const getLoginUser = async (req, res) => {
   res.json(result);
 };
 
+const shouldLogin = (req, res, next) => {
+  if (req.session.user) {
+    if (req.session.cookie.originalMaxAge && req.session.cookie.originalMaxAge < 20 * 60 * 1000) {
+      req.session.cookie.maxAge = 20 * 60 * 1000;
+    }
+    next();
+  } else {
+    const error = new Error('UnAuthorization. Not login.');
+    error.statusCode = 401;
+    next(error);
+  }
+};
+
+const shouldAdmin = (req, res, next) => {
+  // 正常情况
+  if (req.session.user.isAdmin) {
+    return next();
+  }
+  const error = new Error('Insufficient permissions.');
+  error.statusCode = 403;
+  next(error);
+};
+
 module.exports = {
   doLogin,
   doLogout,
-  getLoginUser
+  getLoginUser,
+
+  shouldLogin,
+  shouldAdmin
 };

@@ -13,13 +13,6 @@ const user = require('./controllers/user');
 const config = require('./config');
 const { util } = require('./common');
 
-let isDebugMode = config.isDebugMode;
-console.debug = function(args) {
-  if (isDebugMode) {
-    console.log(args);
-  }
-};
-
 // Process DB file
 if (!fs.existsSync(config.dbFilePath)) {
   fs.copyFileSync(path.join(__dirname, 'db/bluewhale.db'), config.dbFilePath);
@@ -44,7 +37,6 @@ app.use(
   })
 );
 app.use(compression());
-
 app.use((req, res, next) => {
   let ext = path.extname(req.url);
   if (ext && ext.length > 6) ext = null;
@@ -55,11 +47,6 @@ app.use((req, res, next) => {
 });
 app.use('/', express.static(path.join(__dirname, 'wwwroot')));
 app.use('/public/avatar', express.static(path.join(__dirname, 'public/avatar')));
-
-app.get('/humpback-backend-faq', (req, res, next) => {
-  res.json(config);
-  return;
-});
 
 let ignoreAuthPaths = [
   '/api/users/islogin',
@@ -99,19 +86,13 @@ app.use('/api/images', require('./routers/imageInfo'));
 app.use('/api/system-config', require('./routers/systemConfig'));
 util.loadRoutes(app, path.join(__dirname, 'routes'));
 
-errorHandler.title = `Humpback WebSite - ${config.version}`;
+errorHandler.title = `Bluewhale WebSite - ${config.version}`;
 app.use(errorHandler({ log: false }));
 
-console.debug('Init system...');
-user
-  .initAdmin()
-  .then(() => {
-    app.listen(config.listenPort, () => {
-      console.debug('Init system succeed');
-      console.log(`Humpback Website is started on port ${config.listenPort}`);
-    });
+const server = app
+  .listen(config.listenPort, () => {
+    console.log(`Bluewhale web starting...,`, server.address());
   })
-  .catch(err => {
-    console.log(`System init failed. Error: ${err}`);
-    process.exit(-101);
+  .on('error', err => {
+    console.error(err);
   });

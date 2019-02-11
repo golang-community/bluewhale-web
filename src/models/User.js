@@ -9,7 +9,7 @@ const User = sequelize.define('user', {
   userAvatar: { type: Sequelize.STRING, field: 'user_avatar' },
   department: Sequelize.STRING,
   email: Sequelize.STRING,
-  isAdmin: DBTypes.tinyIntAsBool(), // { type: Sequelize.TINYINT, defaultValue: 0, allowNull: false }
+  isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, field: 'is_admin', defaultValue: 0 }, // { type: Sequelize.TINYINT, defaultValue: 0, allowNull: false }
   ...DBTypes.commonFileds()
 });
 

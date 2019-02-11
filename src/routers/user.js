@@ -10,12 +10,6 @@ router.get('/current-user', userCtrl.getCurrentUser);
 
 router.get('/avatar/:userId', userCtrl.getAvatar);
 
-router.get('/isLogin', userCtrl.isLogin);
-
-router.post('/login', userValidator.validateLogin, userCtrl.login);
-
-router.get('/logout', userCtrl.logout);
-
 router.get('/search', userCtrl.search);
 
 router.get('/:userId', userCtrl.getById);

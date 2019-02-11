@@ -13,7 +13,7 @@ CREATE TABLE [user] (
   [user_avatar] varchar(500), -- 用户头像
 	[department] varchar(200),  -- 部门
 	[email] varchar(200),  -- 邮箱
-	[isAdmin] tinyint NOT NULL DEFAULT 0, -- 是否是管理员
+	[is_admin] tinyint NOT NULL DEFAULT 0, -- 是否是管理员
 	[create_time] bigint NOT NULL, -- 创建时间（时间戳）
 	[creator_id] integer NOT NULL, -- 创建人ID
 	[modify_time] bigint NOT NULL, -- 修改时间（时间戳）

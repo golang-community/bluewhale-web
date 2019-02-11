@@ -83,48 +83,6 @@ exports.getAvatar = (req, res, next) => {
   });
 };
 
-exports.isLogin = (req, res, next) => {
-  let result = {
-    IsLogin: false
-  };
-  if (req.session.currentUser && req.session.currentUser.UserID) {
-    result.IsLogin = true;
-    getUserById(req.session.currentUser.UserID)
-      .then(userInfo => {
-        result.UserInfo = userInfo;
-        res.json(result);
-      })
-      .catch(err => next(err));
-  } else {
-    res.json(result);
-  }
-};
-
-exports.login = (req, res, next) => {
-  let password = util.md5Crypto(req.body.Password);
-  login(req.body.UserID, password, false)
-    .then(userInfo => {
-      req.session.currentUser = userInfo;
-      if (!!req.body.RememberMe) {
-        req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
-      }
-      res.json(userInfo);
-    })
-    .catch(err => next(err));
-};
-
-exports.logout = (req, res, next) => {
-  let cookies = req.cookies;
-  for (let prop in cookies) {
-    if (!cookies.hasOwnProperty(prop)) {
-      continue;
-    }
-    res.cookie(prop, '', { maxAge: -1 });
-  }
-  req.session.currentUser = null;
-  res.json({ result: true });
-};
-
 exports.getCurrentUser = (req, res, next) => {
   let userId = req.session.currentUser.UserID;
   getUserById(userId)
@@ -310,28 +268,6 @@ let isExists = userId => {
     db.findOne({ UserID: { $regex: new RegExp(regStr, 'i') } }, (err, userInfo) => {
       if (err) return reject(err);
       resolve(!!userInfo);
-    });
-  });
-};
-
-let login = (userId, password, needCrypto) => {
-  if (needCrypto) {
-    password = util.md5Crypto(password);
-  }
-  let regStr = `^${userId}$`;
-  let query = {
-    UserID: { $regex: new RegExp(regStr, 'i') },
-    Password: password
-  };
-  return new Promise((resolve, reject) => {
-    db.findOne(query, (err, userInfo) => {
-      if (err) return next(err);
-      if (!userInfo) {
-        let err = new Error('UserID or Password is not correct.');
-        err.statusCode = 401;
-        return reject(err);
-      }
-      return resolve(userInfo);
     });
   });
 };
