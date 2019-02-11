@@ -12,7 +12,11 @@ router
   // 检查登录
   .get('/isLogin', util.wrapAsyncFn(accountBiz.getLoginUser))
   // 修改密码
-  .put('/change-password', accountBiz.shouldLogin, util.wrapAsyncFn(accountBiz.changePassword));
+  .put('/change-password', accountBiz.shouldLogin, util.wrapAsyncFn(accountBiz.changePassword))
+  // 更新用户信息
+  .put('/update', accountBiz.shouldLogin, util.wrapAsyncFn(accountBiz.updateUserInfo))
+  // 获取当前登录用户信息
+  .get('/me', accountBiz.shouldLogin, util.wrapAsyncFn(accountBiz.getSessionUser));
 
 module.exports = {
   basePath: '/api/account',

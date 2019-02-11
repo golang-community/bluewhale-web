@@ -62,10 +62,54 @@ const changePassword = async (req, res, next) => {
     return next(err);
   }
   const newPassword = util.md5Crypto(body.NewPassword);
-  await User.update({ password: newPassword }, { where: { id: findUser.id } });
+  const updateData = {
+    modifyTime: Date.now(),
+    modifierId: user.id,
+    password: newPassword
+  };
+  await User.update(updateData, { where: { id: findUser.id } });
   res.json({
     result: true
   });
+};
+
+const updateUserInfo = async (req, res) => {
+  const user = req.session.user;
+  const { body } = req;
+
+  const updateData = {
+    modifyTime: Date.now(),
+    modifierId: user.id,
+    displayName: body.FullName
+  };
+  if (body.Avatar) {
+    updateData.userAvatar = body.Avatar;
+  }
+  if (body.Department) {
+    updateData.department = body.Department;
+  }
+  if (body.Email) {
+    updateData.email = body.Email;
+  }
+
+  await User.update(updateData, { where: { id: user.id } });
+  res.json({
+    result: true
+  });
+};
+
+const getSessionUser = async (req, res, next) => {
+  const user = req.session.user;
+  const findUser = await User.findById(user.id);
+  if (!findUser) {
+    return next(new Error('User not found.'));
+  }
+  const resData = {
+    Email: findUser.email,
+    Department: findUser.department,
+    Avatar: findUser.userAvatar
+  };
+  res.json(resData);
 };
 
 const shouldLogin = (req, res, next) => {
@@ -96,6 +140,8 @@ module.exports = {
   doLogout,
   getLoginUser,
   changePassword,
+  updateUserInfo,
+  getSessionUser,
 
   shouldLogin,
   shouldAdmin

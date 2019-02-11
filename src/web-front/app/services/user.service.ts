@@ -11,7 +11,7 @@ export class UserService {
 
   getCurrentUser(): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = `${this.baseUrl}/current-user`;
+      let url = `/api/account/me`;
       this._http
         .get(url)
         .then(res => {
@@ -70,7 +70,7 @@ export class UserService {
 
   updateProfile(profile: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = `${this.baseUrl}/${profile.UserID}`;
+      let url = `/api/account/update`;
       this._http
         .put(url, profile)
         .then(res => {
