@@ -4,7 +4,7 @@
 
 # Introduction
 
-作为 [Humpback](https://humpback.github.io/humpback) 的直观展现，基于 [Angular2](https://github.com/angular/angular) 和 [AdminLTE](https://github.com/almasaeed2010/AdminLTE) 构建的用于管理 `docker ` 的网站。
+作为 [Bluewhale](https://humpback.github.io/humpback) 的直观展现，基于 [Angular2](https://github.com/angular/angular) 和 [AdminLTE](https://github.com/almasaeed2010/AdminLTE) 构建的用于管理 `docker ` 的网站。
 
 # Usage
 ```bash

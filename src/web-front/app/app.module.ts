@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Select2Module } from 'ng2-select2';
 import { TooltipModule } from 'ngx-bootstrap';
 
-import { HumpbackApp } from './app';
+import { RootApp } from './app';
 import { PAGES } from './pages';
 import { COMPONENTS } from './components';
 import { DIRECTIVES } from './directives';
@@ -32,7 +32,7 @@ import { AppRouting } from './app.routes';
     Select2Module
   ],
   declarations: [
-    HumpbackApp,
+    RootApp,
     ...PAGES,
     ...COMPONENTS,
     ...DIRECTIVES,
@@ -43,6 +43,6 @@ import { AppRouting } from './app.routes';
     ...SERVICES,
     ...RESOLVES
   ],
-  bootstrap: [HumpbackApp],
+  bootstrap: [RootApp],
 })
 export class AppModule { }

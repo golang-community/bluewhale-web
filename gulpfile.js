@@ -35,7 +35,7 @@ gulp.task('server:restart', callback => {
   server.restart(err => {
     if (err) console.log('restart', err);
     notifier.notify({
-      title: 'Humpback-Server',
+      title: 'Bluewhale-server',
       message: 'Server restarted.'
     });
   });

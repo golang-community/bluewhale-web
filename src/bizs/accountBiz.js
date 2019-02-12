@@ -21,11 +21,21 @@ const doLogin = async (req, res, next) => {
   loginUser = loginUser.toJSON();
   delete loginUser.password;
 
-  req.session.user = loginUser;
+  const sessionUser = {
+    id: loginUser.id,
+    UserID: loginUser.username,
+    IsAdmin: loginUser.isAdmin,
+    FullName: loginUser.displayName,
+    Avatar: loginUser.userAvatar,
+    Department: loginUser.department,
+    Email: loginUser.email
+  };
+
+  req.session.user = sessionUser;
   if (!!body.RememberMe) {
     req.session.cookie.maxAge = SEVEN_DAYS; // 保存7天
   }
-  res.json(loginUser);
+  res.json(sessionUser);
 };
 
 const doLogout = async (req, res) => {

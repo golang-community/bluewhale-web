@@ -2,18 +2,18 @@ import { Component } from "@angular/core";
 import { AuthService } from './services';
 
 @Component({
-  selector: 'humpback-app',
+  selector: 'root-app',
   template: `
     <router-outlet></router-outlet>
   `
 })
 
-export class HumpbackApp {
+export class RootApp {
   constructor(private authService: AuthService) {
 
   }
 
   ngOnInit() {
-    
+
   }
 }
