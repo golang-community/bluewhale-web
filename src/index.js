@@ -17,7 +17,7 @@ if (!fs.existsSync(config.dbFilePath)) {
   fs.copyFileSync(path.join(__dirname, 'db/bluewhale.db'), config.dbFilePath);
 }
 
-let app = express();
+const app = express();
 app.disable('x-powered-by');
 app.disable('etag');
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -48,7 +48,6 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/', express.static(path.join(__dirname, 'wwwroot')));
-// app.use('/public/avatar', express.static(path.join(__dirname, 'public/avatar')));
 
 let ignoreAuthPaths = ['/api/users/avatar', '/api/groups/getclusters', '/api/groups/getallservers'];
 
