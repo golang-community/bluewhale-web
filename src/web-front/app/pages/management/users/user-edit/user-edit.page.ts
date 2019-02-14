@@ -54,9 +54,9 @@ export class ManageUserEditPage {
     if (this.isNew) {
       if (!this.userInfo.Password)
         this.userInfo.Password = '123456';
-      promis = this._userService.registry(this.userInfo);
+      promis = this._userService.createUser(this.userInfo);
     } else {
-      promis = this._userService.updateProfile(this.userInfo);
+      promis = this._userService.updateUserInfo(this.userInfo);
     }
     promis
       .then((res: any) => {

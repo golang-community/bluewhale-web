@@ -6,7 +6,7 @@ export class UserService {
   public baseUrl: string;
 
   constructor(public _http: CusHttpService) {
-    this.baseUrl = '/api/users';
+    this.baseUrl = '/api/admin/users';
   }
 
   getCurrentUser(): Promise<any> {
@@ -54,9 +54,9 @@ export class UserService {
     });
   }
 
-  registry(userInfo: any): Promise<any> {
+  createUser(userInfo: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = `${this.baseUrl}/register`;
+      let url = `/api/admin/users`;
       this._http
         .post(url, userInfo)
         .then(res => {
@@ -73,6 +73,20 @@ export class UserService {
       let url = `/api/account/update`;
       this._http
         .put(url, profile)
+        .then(res => {
+          resolve(res.json());
+        })
+        .catch(err => {
+          reject(err.json ? err.json() : err);
+        });
+    });
+  }
+
+  updateUserInfo(userInfo) {
+    return new Promise((resolve, reject) => {
+      let url = `/api/admin/users/${userInfo.id}`;
+      this._http
+        .put(url, userInfo)
         .then(res => {
           resolve(res.json());
         })
@@ -103,12 +117,9 @@ export class UserService {
 
   resetPassword(userId: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      let body = {
-        UserID: userId
-      };
-      let url = `${this.baseUrl}/reset-password`;
+      let url = `/api/admin/users/${userId}/reset-pwd`;
       this._http
-        .put(url, body)
+        .post(url, null)
         .then(res => {
           resolve(res.json());
         })
@@ -120,7 +131,7 @@ export class UserService {
 
   remove(userId: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = `${this.baseUrl}/${userId}`;
+      let url = `/api/admin/users/${userId}`;
       this._http
         .delete(url)
         .then(res => {

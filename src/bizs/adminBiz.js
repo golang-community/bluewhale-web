@@ -1,19 +1,116 @@
 const { dbUtil, util } = require('../common');
-const { DataDict } = require('../models');
+const { DataDict, User } = require('../models');
+const { Op } = dbUtil;
 
 const SYS_CONFIG_FILTER = { dataKey: 'global_sys_config' };
 
-const getPagedUserList = async (req, res, next) => {};
+const _convertUserForResponse = user => {
+  return {
+    Avatar: user.userAvatar,
+    Department: user.department,
+    EditDate: user.modifyTime,
+    EditUser: '',
+    Email: user.email,
+    FullName: user.displayName,
+    IsAdmin: user.isAdmin,
+    UserID: user.username,
+    id: user.id
+  };
+};
 
-const createNewUser = async (req, res, next) => {};
+const getPagedUserList = async (req, res, next) => {
+  const { query } = req;
+  const pageSize = Math.max(1, util.ensureNumber(query.pageSize, 10)); // 每页记录数，最小为 1
+  const pageIndex = Math.max(1, util.ensureNumber(query.pageIndex, 1)); // 当前查询页数，最小为1
+  const where = {};
+  if (query.q) {
+    where[Op.or] = [{ username: { [Op.like]: `%${query.q}%` } }, { displayName: { [Op.like]: `%${query.q}%` } }];
+  }
+  const pagingData = await dbUtil.queryPagedList(
+    User,
+    where,
+    { size: pageSize, index: pageIndex },
+    {
+      sort: [['id', 'ASC']],
+      attrs: { exclude: 'password' }
+    }
+  );
+  const resData = {
+    pageIndex,
+    pageSize,
+    total_rows: pagingData.count,
+    rows: pagingData.rows.map(x => {
+      const item = x.toJSON();
+      return _convertUserForResponse(item);
+    })
+  };
+  res.json(resData);
+};
 
-const updateUserInfo = async (req, res, next) => {};
+const createNewUser = async (req, res, next) => {
+  const { body } = req;
+  const { user } = req.state;
+  const newUser = {
+    department: body.Department,
+    email: body.Email,
+    displayName: body.FullName,
+    isAdmin: body.IsAdmin,
+    password: util.md5Crypto(body.Password || '123456'),
+    username: body.UserID,
+    ...dbUtil.fillCommonFileds(user.userId)
+  };
+  await dbUtil.create(User, newUser);
+  res.json({ result: true });
+};
 
-const getUserInfoById = async (req, res, next) => {};
+const updateUserInfo = async (req, res, next) => {
+  const { params, body } = req;
+  const { user } = req.state;
+  const updateData = {
+    displayName: body.FullName,
+    department: body.Department,
+    email: body.Email,
+    isAdmin: body.IsAdmin,
+    ...dbUtil.fillCommonFileds(user.userId, true)
+  };
+  const affectedCount = await dbUtil.update(User, { id: params.userId }, updateData);
+  if (affectedCount === 0) {
+    return next(new Error('操作失败，可能是未找到用户'));
+  }
+  res.json({ result: true });
+};
 
-const deleteUserById = async (req, res, next) => {};
+const getUserInfoById = async (req, res, next) => {
+  const { params } = req;
+  const user = await dbUtil.findOne(User, { id: params.userId });
+  if (!user) {
+    return next(new Error('未找到用户'));
+  }
+  res.json(_convertUserForResponse(user));
+};
 
-const resetUserPassword = async (req, res, next) => {};
+const deleteUserById = async (req, res, next) => {
+  const { params } = req;
+  const affectedCount = await dbUtil.deleteAll(User, { id: params.userId });
+  if (affectedCount === 0) {
+    return next(new Error('操作失败，可能是未找到用户'));
+  }
+  res.json({ result: true });
+};
+
+const resetUserPassword = async (req, res, next) => {
+  const { params } = req;
+  const { user } = req.state;
+  const updateData = {
+    password: util.md5Crypto('123456'),
+    ...dbUtil.fillCommonFileds(user.userId, true)
+  };
+  const affectedCount = await dbUtil.update(User, { id: params.userId }, updateData);
+  if (affectedCount === 0) {
+    return next(new Error('操作失败，可能是未找到用户'));
+  }
+  res.json({ result: true });
+};
 
 const getSysConfig = async (req, res, next) => {
   const data = await dbUtil.findOne(DataDict, SYS_CONFIG_FILTER);

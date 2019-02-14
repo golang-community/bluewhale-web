@@ -1,4 +1,4 @@
-const { util } = require('../common');
+const { util, dbUtil } = require('../common');
 const { User } = require('../models');
 
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000; // 7天
@@ -60,22 +60,21 @@ const getLoginUser = async (req, res) => {
 
 const changePassword = async (req, res, next) => {
   const { body } = req;
+  const { user } = req.state;
   const oldPassword = util.md5Crypto(body.OldPassword);
   const findUser = await User.findOne({
     where: {
-      username: body.UserID,
-      password: oldPassword
+      id: user.userId
     }
   });
-  if (!findUser || findUser.username !== body.UserID) {
+  if (!findUser || findUser.password !== oldPassword) {
     let err = new Error('OldPassword is not correct.');
     return next(err);
   }
   const newPassword = util.md5Crypto(body.NewPassword);
   const updateData = {
-    modifyTime: Date.now(),
-    modifierId: user.id,
-    password: newPassword
+    password: newPassword,
+    ...dbUtil.fillCommonFileds(true)
   };
   await User.update(updateData, { where: { id: findUser.id } });
   res.json({
@@ -117,17 +116,19 @@ const getSessionUser = async (req, res, next) => {
   const resData = {
     Email: findUser.email,
     Department: findUser.department,
-    Avatar: findUser.userAvatar
+    Avatar: findUser.userAvatar,
+    FullName: findUser.displayName
   };
   res.json(resData);
 };
 
 const shouldLogin = (req, res, next) => {
-  if (req.session.user) {
+  const user = req.session.user;
+  if (user) {
     if (req.session.cookie.originalMaxAge && req.session.cookie.originalMaxAge < 20 * 60 * 1000) {
       req.session.cookie.maxAge = 20 * 60 * 1000;
     }
-    req.state.user = { userId: 0 };
+    req.state.user = { userId: user.id, username: user.UserID };
     next();
   } else {
     const error = new Error('UnAuthorization. Not login.');

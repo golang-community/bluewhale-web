@@ -46,7 +46,7 @@
             <td>{{ item.EditUser }}</td>
             <td>{{ item.EditDate | date:'yyyy-MM-dd HH:mm' }}</td>
             <td class="text-center">
-              <a [routerLink]="['/manage', 'users', item.UserID, 'edit']" title="edit user" class="margin-right-10">
+              <a [routerLink]="['/manage', 'users', item.id, 'edit']" title="edit user" class="margin-right-10">
                 <i class="fa fa-pencil"></i>
               </a>
               <a href="javascript:void(0)" title="reset password" class="margin-right-10" (click)="showResetPasswordModal(item)">

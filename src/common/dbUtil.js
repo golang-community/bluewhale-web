@@ -69,7 +69,7 @@ class DBUtil {
    * @param {any} options.transaction 要查询的字段
    */
   queryPagedList(Model, where, pagingInfo = { size: 20, index: 1 }, options = {}) {
-    return Model.findAll(this._buildFindOptions(where, pagingInfo, options));
+    return Model.findAndCountAll(this._buildFindOptions(where, pagingInfo, options));
   }
 
   /**
@@ -114,13 +114,14 @@ class DBUtil {
    * @param {sequelize.WhereOptions} where 条件
    * @param {object} updateData 要更新的对象
    * @param {transaction} transaction 事务对象
+   * @returns {number} 受影响的行数
    */
   update(Model, where, updateData, transaction) {
     const opt = { where };
     if (transaction) {
       opt.transaction = transaction;
     }
-    return Model.update(updateData, opt);
+    return Model.update(updateData, opt).then(results => results[0] || 0);
   }
 
   /**
