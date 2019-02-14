@@ -39,6 +39,24 @@ class DBUtil {
   }
 
   /**
+   * 填充通用字段
+   * @param {number} userId  用户ID
+   * @param {bool} forUpdate 是否是更新，更新，只会填充更新字段
+   */
+  fillCommonFileds(userId, forUpdate = false) {
+    const now = Date.now();
+    const result = {
+      modifyTime: now,
+      modifierId: userId
+    };
+    if (!forUpdate) {
+      result.createTime = now;
+      result.creatorId = userId;
+    }
+    return result;
+  }
+
+  /**
    * 查询分页列表
    * @param {Sequelize.Model} Model
    * @param {sequelize.WhereOptions} where
@@ -94,14 +112,29 @@ class DBUtil {
    * 更新指定的数据
    * @param {Sequelize.Model} Model
    * @param {sequelize.WhereOptions} where 条件
+   * @param {object} updateData 要更新的对象
    * @param {transaction} transaction 事务对象
    */
-  update(Model, where, transaction) {
+  update(Model, where, updateData, transaction) {
     const opt = { where };
     if (transaction) {
       opt.transaction = transaction;
     }
     return Model.update(updateData, opt);
+  }
+
+  /**
+   * 插入指定的数据
+   * @param {Sequelize.Model} Model
+   * @param {object} newData 要更新的对象
+   * @param {transaction} transaction 事务对象
+   */
+  create(Model, newData, transaction) {
+    const opt = {};
+    if (transaction) {
+      opt.transaction = transaction;
+    }
+    return Model.create(newData, opt);
   }
 
   /**
@@ -112,6 +145,7 @@ class DBUtil {
   findByPk(Model, pk) {
     return Model.findByPk(pk);
   }
+
   /**
    * 查询单个实体
    * @param {Sequelize.Model} Model
@@ -123,6 +157,15 @@ class DBUtil {
    */
   findOne(Model, where, options) {
     return Model.findOne(this._buildFindOptions(where, null, options));
+  }
+
+  /**
+   * 查询数量
+   * @param {Sequelize.Model} Model
+   * @param {sequelize.WhereOptions} where
+   */
+  count(Model, where) {
+    return Model.count({ where });
   }
 
   /**

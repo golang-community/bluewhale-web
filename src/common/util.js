@@ -62,6 +62,14 @@ const loadRoutes = (app, routesFolder) => {
   });
 };
 
+const safeJSONParse = str => {
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    return null;
+  }
+};
+
 module.exports = {
   md5Crypto,
   cipher,
@@ -69,5 +77,6 @@ module.exports = {
   wrapAsyncFn,
   ensureArray,
   ensureNumber,
-  loadRoutes
+  loadRoutes,
+  safeJSONParse
 };
