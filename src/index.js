@@ -9,7 +9,6 @@ const errorHandler = require('errorhandler');
 require('console-stamp')(console, 'yyyy/mm/dd HH:MM:ss.l');
 const NedbStore = require('nedb-session-store')(session);
 
-const user = require('./controllers/user');
 const config = require('./config');
 const { util } = require('./common');
 
@@ -53,10 +52,8 @@ app.use('/', express.static(path.join(__dirname, 'wwwroot')));
 
 let ignoreAuthPaths = ['/api/users/avatar', '/api/groups/getclusters', '/api/groups/getallservers'];
 
-app.use('/api/users', require('./routers/user'));
 app.use('/api/groups', require('./routers/group'));
 app.use('/api/images', require('./routers/imageInfo'));
-app.use('/api/system-config', require('./routers/systemConfig'));
 // Load routes
 util.loadRoutes(app, path.join(__dirname, 'routes'));
 

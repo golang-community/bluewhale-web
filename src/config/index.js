@@ -11,10 +11,6 @@ module.exports = {
   dbConfigs: {
     groupCollection: { name: 'GroupInfo' },
     imageCollection: { name: 'ImageInfo' },
-    userCollection: { name: 'UserInfo' },
-    logCollection: { name: 'LogInfo', ttl: 30 * 24 * 60 * 60 },
-    sessionCollection: { name: 'SessionInfo', ignoreLoad: true },
-    systemConfigCollection: { name: 'SystemConfig' },
-    dashboardCollection: { name: 'Dashboard' }
+    sessionCollection: { name: 'SessionInfo', ignoreLoad: true }
   }
 };
