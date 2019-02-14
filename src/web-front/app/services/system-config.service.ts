@@ -6,7 +6,6 @@ declare let _: any;
 
 @Injectable()
 export class SystemConfigService {
-
   public baseUrl: string;
 
   ConfigSubject = new ReplaySubject<any>(1);
@@ -20,9 +19,8 @@ export class SystemConfigService {
   }
   public _config: any;
 
-  constructor(
-    public _http: CusHttpService) {
-    this.baseUrl = `/api/system-config`;
+  constructor(public _http: CusHttpService) {
+    this.baseUrl = `/api/admin/sys-config`;
   }
 
   get(): Promise<any> {
@@ -30,7 +28,8 @@ export class SystemConfigService {
       if (this.Config) {
         return resolve(this.Config);
       }
-      this._http.get(this.baseUrl)
+      this._http
+        .get(this.baseUrl)
         .then(res => {
           let config = res.json();
           this.Config = config;
@@ -38,13 +37,14 @@ export class SystemConfigService {
         })
         .catch(err => {
           reject(err.json ? err.json() : err);
-        })
+        });
     });
   }
 
   save(config: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._http.put(this.baseUrl, config)
+      this._http
+        .post(this.baseUrl + '/save', config)
         .then(res => {
           this.Config = _.cloneDeep(config);
           let data = res.json();
@@ -52,7 +52,7 @@ export class SystemConfigService {
         })
         .catch(err => {
           reject(err.json ? err.json() : err);
-        })
+        });
     });
   }
 
@@ -62,10 +62,9 @@ export class SystemConfigService {
     let body = {
       Event: event
     };
-    this._http.post(url, body)
-      .then(res => {
-
-      })
-      .catch(err => { });
+    this._http
+      .post(url, body)
+      .then(res => {})
+      .catch(err => {});
   }
 }
