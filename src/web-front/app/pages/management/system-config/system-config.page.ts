@@ -11,17 +11,13 @@ declare let messager: any;
   styleUrls: ['./system-config.css']
 })
 export class SystemConfigPage {
-
   public config: any = {};
 
-  constructor(
-    public _router: Router,
-    public _systemConfig: SystemConfigService) {
-
-  }
+  constructor(public _router: Router, public _systemConfig: SystemConfigService) {}
 
   ngOnInit() {
-    this._systemConfig.get()
+    this._systemConfig
+      .get()
       .then(data => {
         this.config = _.cloneDeep(data);
       })
@@ -41,11 +37,12 @@ export class SystemConfigPage {
   public save(form: any) {
     if (this.config.EnablePrivateRegistry && form.controls.privateRegistry.invalid) return;
     if (this.config.EnableClusterMode && form.controls.humpbackCenterAPI.invalid) return;
-    this._systemConfig.save(this.config)
+    this._systemConfig
+      .save(this.config)
       .then(res => {
-        if(!form.controls.humpbackCenterAPI.invalid){
+        if (!form.controls.humpbackCenterAPI.invalid) {
           let event = this.config.EnableClusterMode ? 'enable' : 'disable';
-          this._systemConfig.notifyCenter(form.controls.humpbackCenterAPI.value, event)
+          this._systemConfig.notifyCenter(form.controls.humpbackCenterAPI.value, event);
         }
         messager.success('Updated.');
       })

@@ -23,6 +23,10 @@ export class SystemConfigService {
     this.baseUrl = `/api/admin/sys-config`;
   }
 
+  openGet(): Promise<any> {
+    return this.Config;
+  }
+
   get(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (this.Config) {

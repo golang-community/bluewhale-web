@@ -5,7 +5,7 @@ const { util } = require('../common');
 const router = express.Router();
 
 router
-  .use(accountBiz.shouldLogin, accountBiz.shouldAdmin({ ignorePaths: ['/api/admin/sys-config', '/api/admin/groups'] }))
+  .use(accountBiz.shouldLogin, accountBiz.shouldAdmin)
   // ---------------------------------用户管理--------------------
   // 获取用户列表
   .get('/users', util.wrapAsyncFn(adminBiz.getPagedUserList))
@@ -29,6 +29,8 @@ router
   .get('/groups', util.wrapAsyncFn(adminBiz.getAllGroups))
   // 创建Group
   .post('/groups', util.wrapAsyncFn(adminBiz.createGroup))
+  // 查询Group
+  .get('/groups/:groupId', util.wrapAsyncFn(adminBiz.getGroupDetail))
   // 修改Group
   .put('/groups/:groupId', util.wrapAsyncFn(adminBiz.updateGroup))
   // 删除Group

@@ -10,7 +10,6 @@ declare let messager: any;
   styleUrls: ['./group-list.css']
 })
 export class ManageGroupListPage {
-
   public groups: Array<any>;
   public delTarget: any;
   public isAdmin: boolean = false;
@@ -23,12 +22,7 @@ export class ManageGroupListPage {
   public pageSize: number = 10;
   public pageOptions: any;
 
-  constructor(
-    public _router: Router,
-    public _groupService: GroupService,
-    public _authService: AuthService) {
-
-  }
+  constructor(public _router: Router, public _groupService: GroupService, public _authService: AuthService) {}
 
   ngOnInit() {
     this.deleteGroupModalOptions = {
@@ -37,18 +31,19 @@ export class ManageGroupListPage {
       hideCloseBtn: true
     };
     this.pageOptions = {
-      "boundaryLinks": false,
-      "directionLinks": true,
-      "hidenLabel": true
+      boundaryLinks: false,
+      directionLinks: true,
+      hidenLabel: true
     };
     this.groups = [];
-    this.getGroups();
     let currentUser = this._authService.getUserInfoFromCache();
-    this.isAdmin = currentUser.IsAdmin;    
+    this.isAdmin = currentUser.IsAdmin;
+    this.getGroups();
   }
 
   public getGroups() {
-    this._groupService.getForManage()
+    this._groupService
+      .getForManage(this.isAdmin)
       .then(data => {
         this.groups = data;
         this.search(this.filterCondition);
@@ -94,7 +89,8 @@ export class ManageGroupListPage {
   public delGroup() {
     if (!this.delTarget) return;
     this.deleteGroupModalOptions.show = false;
-    this._groupService.remove(this.delTarget.ID)
+    this._groupService
+      .remove(this.delTarget.ID)
       .then(res => {
         messager.success('Succeed.');
         this._groupService.clear();

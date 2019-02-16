@@ -11,6 +11,6 @@ export class SystemConfigResolve implements Resolve<any> {
   }
 
   resolve(route: ActivatedRouteSnapshot) {
-    return this._systemConfigService.get();
+    return this._systemConfigService.openGet();
   }
 }

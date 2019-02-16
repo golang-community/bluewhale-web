@@ -7,7 +7,7 @@ declare let _: any;
 
 @Injectable()
 export class GroupService {
-  public systemConfig: any;
+  public systemConfig: any = {};
   public groups: any = {};
   public baseUrl: string;
 
@@ -41,8 +41,8 @@ export class GroupService {
     });
   }
 
-  getForManage(): Promise<any> {
-    let url = `/api/admin/groups?formanage=1`;
+  getForManage(isAdmin: boolean = false): Promise<any> {
+    let url = isAdmin ? `/api/admin/groups` : `/api/groups`;
     return new Promise((resolve, reject) => {
       this._http
         .get(url)
@@ -71,8 +71,8 @@ export class GroupService {
     });
   }
 
-  getById(id: string): Promise<any> {
-    let url = `${this.baseUrl}/${id}`;
+  getById(id: string, isAdmin: boolean): Promise<any> {
+    let url = isAdmin ? `/api/admin/groups/${id}` : `/api/groups/${id}`;
     return new Promise((resolve, reject) => {
       this._http
         .get(url)
@@ -89,7 +89,7 @@ export class GroupService {
   add(group: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this._http
-        .post(this.baseUrl, group)
+        .post(`/api/admin/groups`, group)
         .then(res => {
           let data = res.json();
           this.notifyCenter(data.ID, 'create');
@@ -101,10 +101,11 @@ export class GroupService {
     });
   }
 
-  update(group: any): Promise<any> {
+  update(group: any, isAdmin: boolean): Promise<any> {
+    const url = isAdmin ? `/api/admin/groups/${group.ID}` : `/api/groups/${group.ID}`;
     return new Promise((resolve, reject) => {
       this._http
-        .put(`/api/groups/${group.ID}`, group)
+        .put(url, group)
         .then(res => {
           this.notifyCenter(group.ID, 'change');
           resolve(res.json ? res.json() : res.text());

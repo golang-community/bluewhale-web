@@ -28,6 +28,7 @@ export class ManageGroupEditPage {
   public users: Array<string> = [];
   public ownerSelect2Options: any;
   public systemConfig: any = {};
+  public isAdmin: boolean = false;
 
   constructor(
     public _route: ActivatedRoute,
@@ -71,12 +72,13 @@ export class ManageGroupEditPage {
     };
     let currentUser = this._authService.getUserInfoFromCache();
     this.groupInfo.Owners.push(currentUser.UserID);
+    this.isAdmin = currentUser.IsAdmin;
     let paramSub = this._route.params.subscribe(params => {
       let groupId = params['groupId'];
       if (groupId) {
         this.isNew = false;
         this._groupService
-          .getById(groupId)
+          .getById(groupId, this.isAdmin)
           .then(data => {
             this.groupInfo = data;
             this.buildForm();
@@ -158,7 +160,7 @@ export class ManageGroupEditPage {
       promise = this._groupService.add(postData);
     } else {
       postData.ID = this.groupInfo.ID;
-      promise = this._groupService.update(postData);
+      promise = this._groupService.update(postData, this.isAdmin);
     }
     promise
       .then((res: any) => {

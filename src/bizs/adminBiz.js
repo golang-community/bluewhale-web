@@ -153,9 +153,38 @@ const getAllGroups = async (req, res, next) => {
   res.json(pagedGroups.rows);
 };
 
-const createGroup = async (req, res, next) => {};
+const createGroup = async (req, res, next) => {
+  const user = req.state.user;
+  const { body } = req;
 
-const updateGroup = async (req, res, next) => {};
+  const newGroup = {
+    groupId: util.newGuid(),
+    groupName: body.Name,
+    groupDesc: body.Description,
+    openToPublic: body.OpenToPublic,
+    isCluster: body.IsCluster,
+    owners: JSON.stringify(body.Owners) || '',
+    servers: JSON.stringify(body.Servers) || '',
+    contact: body.ContactInfo,
+    isDeleted: false,
+    ...dbUtil.fillCommonFileds(user.userId)
+  };
+  await dbUtil.create(Group, newGroup);
+  res.json({ result: true });
+};
+
+const getGroupDetail = async (req, res, next) => {
+  const { params } = req;
+  const group = await groupDal.getGroupDetail({ groupId: params.groupId });
+  res.json(group);
+};
+
+const updateGroup = async (req, res, next) => {
+  const user = req.state.user;
+  const { body, params } = req;
+  await groupDal.updateGroup(params.groupId, body, user.userId);
+  res.json({ result: true });
+};
 
 const deleteGroup = async (req, res, next) => {
   const { params } = req;
@@ -180,6 +209,7 @@ module.exports = {
   // Group
   getAllGroups,
   createGroup,
+  getGroupDetail,
   updateGroup,
   deleteGroup
 };

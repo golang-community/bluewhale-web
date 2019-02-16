@@ -24,36 +24,7 @@ const queryPagedGroups = async (where, pagingInfo) => {
   return pagedGroups;
 };
 
-const createGroup = async (req, res, next) => {
-  const user = req.state.user;
-  const { body } = req;
-
-  const newGroup = {
-    groupId: util.newGuid(),
-    groupName: body.Name,
-    groupDesc: body.Description,
-    openToPublic: body.OpenToPublic,
-    isCluster: body.IsCluster,
-    owners: JSON.stringify(body.Owners) || '',
-    servers: JSON.stringify(body.Servers) || '',
-    contact: body.ContactInfo,
-    isDeleted: false,
-    ...dbUtil.fillCommonFileds(user.userId)
-  };
-  await dbUtil.create(Group, newGroup);
-  res.json({ result: true });
-};
-
-const updateGroup = async (req, res, next) => {
-  const user = req.state.user;
-  const { body, params } = req;
-  const findCount = await dbUtil.count(Group, {
-    groupId: params.groupId,
-    [Op.or]: [{ owners: { [Op.like]: `%"${user.username}"%` } }, { openToPublic: true }]
-  });
-  if (findCount <= 0) {
-    return next(new Error('非法操作'));
-  }
+const updateGroup = async (groupId, body, userId) => {
   const updateData = {
     groupName: body.Name,
     groupDesc: body.Description,
@@ -62,19 +33,13 @@ const updateGroup = async (req, res, next) => {
     owners: JSON.stringify(body.Owners) || '',
     servers: JSON.stringify(body.Servers) || '',
     contact: body.ContactInfo,
-    ...dbUtil.fillCommonFileds(user.userId, true)
+    ...dbUtil.fillCommonFileds(userId, true)
   };
-  await dbUtil.update(Group, { groupId: params.groupId }, updateData);
-  res.json({ result: true });
+  return await dbUtil.update(Group, { groupId }, updateData);
 };
 
-const getGroupDetail = async (req, res, next) => {
-  const user = req.state.user;
-  const { params } = req;
-  const findGroup = await dbUtil.findOne(Group, {
-    groupId: params.groupId,
-    [Op.or]: [{ owners: { [Op.like]: `%"${user.username}"%` } }, { openToPublic: true }]
-  });
+const getGroupDetail = async where => {
+  const findGroup = await dbUtil.findOne(Group, where);
   if (!findGroup) {
     return next(new Error('找不到Group'));
   }
@@ -91,9 +56,11 @@ const getGroupDetail = async (req, res, next) => {
     Owners: util.safeJSONParse(x.owners),
     Servers: util.safeJSONParse(x.servers)
   };
-  res.json(resData);
+  return resData;
 };
 
 module.exports = {
-  queryPagedGroups
+  queryPagedGroups,
+  updateGroup,
+  getGroupDetail
 };

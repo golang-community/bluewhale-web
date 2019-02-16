@@ -1,32 +1,13 @@
 const { dbUtil, util } = require('../common');
 const { Op } = dbUtil;
 const { Group, User } = require('../models');
+const { groupDal } = require('../dal');
 
 const getUserGroups = async (req, res, next) => {
   const user = req.state.user;
   const where = { [Op.or]: [{ owners: { [Op.like]: `%"${user.username}"%` } }, { openToPublic: true }] };
   const pagedGroups = await groupDal.queryPagedGroups(where, { index: 1, size: 10000000 });
   res.json(pagedGroups.rows);
-};
-
-const createGroup = async (req, res, next) => {
-  const user = req.state.user;
-  const { body } = req;
-
-  const newGroup = {
-    groupId: util.newGuid(),
-    groupName: body.Name,
-    groupDesc: body.Description,
-    openToPublic: body.OpenToPublic,
-    isCluster: body.IsCluster,
-    owners: JSON.stringify(body.Owners) || '',
-    servers: JSON.stringify(body.Servers) || '',
-    contact: body.ContactInfo,
-    isDeleted: false,
-    ...dbUtil.fillCommonFileds(user.userId)
-  };
-  await dbUtil.create(Group, newGroup);
-  res.json({ result: true });
 };
 
 const updateGroup = async (req, res, next) => {
@@ -39,17 +20,7 @@ const updateGroup = async (req, res, next) => {
   if (findCount <= 0) {
     return next(new Error('非法操作'));
   }
-  const updateData = {
-    groupName: body.Name,
-    groupDesc: body.Description,
-    openToPublic: body.OpenToPublic,
-    isCluster: body.IsCluster,
-    owners: JSON.stringify(body.Owners) || '',
-    servers: JSON.stringify(body.Servers) || '',
-    contact: body.ContactInfo,
-    ...dbUtil.fillCommonFileds(user.userId, true)
-  };
-  await dbUtil.update(Group, { groupId: params.groupId }, updateData);
+  await groupDal.updateGroup(params.groupId, body, user.userId);
   res.json({ result: true });
 };
 
@@ -89,7 +60,6 @@ const searchUserList = async (req, res, next) => {
 
 module.exports = {
   getUserGroups,
-  createGroup,
   updateGroup,
   getGroupDetail,
   searchUserList
