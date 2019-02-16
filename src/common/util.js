@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const uuid = require('uuid');
 
 const md5Crypto = (text, salt) => {
   salt = salt || 'hb@123';
@@ -70,6 +71,10 @@ const safeJSONParse = str => {
   }
 };
 
+const newGuid = () => {
+  return uuid.v4().replace(/-/g, '');
+};
+
 module.exports = {
   md5Crypto,
   cipher,
@@ -78,5 +83,6 @@ module.exports = {
   ensureArray,
   ensureNumber,
   loadRoutes,
-  safeJSONParse
+  safeJSONParse,
+  newGuid
 };

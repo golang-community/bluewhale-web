@@ -49,7 +49,7 @@ CREATE TABLE [group] (
 	[servers] varchar(4000) NOT NULL, -- 服务器列表
 	[contact] varchar(200), -- 联系人
 	[creator_id] integer NOT NULL, -- 创建人ID
-	[creator_time] bigint NOT NULL, -- 创建时间
+	[create_time] bigint NOT NULL, -- 创建时间
 	[modifier_id] integer NOT NULL, -- 修改人ID
 	[modify_time] bigint NOT NULL, -- 修改时间
 	[is_deleted] tinyint NOT NULL DEFAULT 0 -- 是否已删除

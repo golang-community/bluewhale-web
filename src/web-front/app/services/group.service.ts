@@ -98,7 +98,7 @@ export class GroupService {
 
   update(group: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._http.put(this.baseUrl, group)
+      this._http.put(`/api/groups/${group.ID}`, group)
         .then(res => {
           this.notifyCenter(group.ID, 'change');
           resolve(res.json ? res.json() : res.text());

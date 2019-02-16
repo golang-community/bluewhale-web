@@ -47,7 +47,7 @@ export class ManageGroupEditPage {
       placeholder: 'Select User',
       dropdownAutoWidth: true,
       ajax: {
-        url: '/api/users/search',
+        url: '/api/groups/user-search',
         dataType: 'json',
         delay: 250,
         data: function(params: any) {

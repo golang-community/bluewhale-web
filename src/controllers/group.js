@@ -48,7 +48,7 @@ exports.getAllServers = (req, res, next) => {
 };
 
 exports.getByUser = (req, res, next) => {
-  let user = req.session.currentUser;
+  let user = req.session.user;
   let type = req.query.type || 'normal';
   let queryOption = {};
   if (!user.IsAdmin) {
@@ -99,7 +99,7 @@ exports.getByID = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-  let userID = req.session.currentUser.UserID;
+  let userID = req.session.user.UserID;
   let group = req.body;
   isExists(group.Name, '')
     .then(result => {

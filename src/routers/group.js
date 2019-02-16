@@ -4,7 +4,7 @@ const groupValidator = require('./../validators/group');
 
 let router = express.Router();
 
-router.get('/', groupCtrl.getByUser);
+// router.get('/', groupCtrl.getByUser);
 
 router.get('/getallservers', groupValidator.validateGetAllServers, groupCtrl.getAllServers);
 
@@ -16,9 +16,9 @@ router.get('/getComposeExample', groupCtrl.getComposeExample);
 
 router.get('/:groupID', groupCtrl.getByID);
 
-router.post('/', groupValidator.validate, groupCtrl.create);
+// router.post('/', groupValidator.validate, groupCtrl.create);
 
-router.put('/', groupValidator.validate, groupCtrl.update);
+// router.put('/', groupValidator.validate, groupCtrl.update);
 
 router.delete('/:groupID', groupCtrl.remove);
 
