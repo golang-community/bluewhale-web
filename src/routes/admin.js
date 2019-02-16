@@ -5,7 +5,7 @@ const { util } = require('../common');
 const router = express.Router();
 
 router
-  .use(accountBiz.shouldLogin, accountBiz.shouldAdmin({ ignorePaths: ['/api/admin/sys-config'] }))
+  .use(accountBiz.shouldLogin, accountBiz.shouldAdmin({ ignorePaths: ['/api/admin/sys-config', '/api/admin/groups'] }))
   // ---------------------------------用户管理--------------------
   // 获取用户列表
   .get('/users', util.wrapAsyncFn(adminBiz.getPagedUserList))

@@ -1,5 +1,6 @@
 const { dbUtil, util } = require('../common');
-const { DataDict, User } = require('../models');
+const { DataDict, User, Group } = require('../models');
+const { groupDal } = require('../dal');
 const { Op } = dbUtil;
 
 const SYS_CONFIG_FILTER = { dataKey: 'global_sys_config' };
@@ -147,13 +148,23 @@ const saveSysConfig = async (req, res, next) => {
   res.json({ result: true });
 };
 
-const getPagedGroupList = async (req, res, next) => {};
+const getAllGroups = async (req, res, next) => {
+  const pagedGroups = await groupDal.queryPagedGroups({}, { index: 1, size: 10000000 });
+  res.json(pagedGroups.rows);
+};
 
 const createGroup = async (req, res, next) => {};
 
 const updateGroup = async (req, res, next) => {};
 
-const deleteGroup = async (req, res, next) => {};
+const deleteGroup = async (req, res, next) => {
+  const { params } = req;
+  const affectedCount = await dbUtil.deleteAll(Group, { groupId: params.groupId });
+  if (affectedCount === 0) {
+    return next(new Error('操作失败，可能是未找到Group'));
+  }
+  res.json({ result: true });
+};
 
 module.exports = {
   // User
@@ -167,7 +178,7 @@ module.exports = {
   getSysConfig,
   saveSysConfig,
   // Group
-  getPagedGroupList,
+  getAllGroups,
   createGroup,
   updateGroup,
   deleteGroup

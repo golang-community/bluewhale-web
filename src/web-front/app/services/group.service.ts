@@ -7,7 +7,6 @@ declare let _: any;
 
 @Injectable()
 export class GroupService {
-
   public systemConfig: any;
   public groups: any = {};
   public baseUrl: string;
@@ -15,11 +14,12 @@ export class GroupService {
   constructor(
     public _http: CusHttpService,
     public _authService: AuthService,
-    public _systemConfigService: SystemConfigService) {
+    public _systemConfigService: SystemConfigService
+  ) {
     this.baseUrl = '/api/groups';
     this._systemConfigService.ConfigSubject.forEach(data => {
       this.systemConfig = data;
-    })
+    });
   }
 
   get(nocache: boolean = false, type: string = 'normal'): Promise<any> {
@@ -28,7 +28,8 @@ export class GroupService {
     }
     let url = `${this.baseUrl}?type=${type}`;
     return new Promise((resolve, reject) => {
-      this._http.get(url)
+      this._http
+        .get(url)
         .then(res => {
           let groups = res.json() || [];
           this.groups[type] = groups;
@@ -37,13 +38,14 @@ export class GroupService {
         .catch(err => {
           reject(err.json ? err.json() : err);
         });
-    })
+    });
   }
 
   getForManage(): Promise<any> {
-    let url = `${this.baseUrl}?formanage=1`;
+    let url = `/api/admin/groups?formanage=1`;
     return new Promise((resolve, reject) => {
-      this._http.get(url)
+      this._http
+        .get(url)
         .then(res => {
           this.groups = res.json();
           resolve(this.groups);
@@ -51,13 +53,14 @@ export class GroupService {
         .catch(err => {
           reject(err.json ? err.json() : err);
         });
-    })
+    });
   }
 
   getBasicGroupsInfo(): Promise<any> {
     let url = `${this.baseUrl}/getbasicgroupsinfo`;
     return new Promise((resolve, reject) => {
-      this._http.get(url)
+      this._http
+        .get(url)
         .then(res => {
           let groups = res.json();
           resolve(groups);
@@ -65,26 +68,28 @@ export class GroupService {
         .catch(err => {
           reject(err.json ? err.json() : err);
         });
-    })
+    });
   }
 
   getById(id: string): Promise<any> {
     let url = `${this.baseUrl}/${id}`;
     return new Promise((resolve, reject) => {
-      this._http.get(url)
+      this._http
+        .get(url)
         .then(res => {
           let group = res.json();
           resolve(group);
         })
         .catch(err => {
           reject(err.json ? err.json() : err);
-        })
-    })
+        });
+    });
   }
 
   add(group: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._http.post(this.baseUrl, group)
+      this._http
+        .post(this.baseUrl, group)
         .then(res => {
           let data = res.json();
           this.notifyCenter(data.ID, 'create');
@@ -98,7 +103,8 @@ export class GroupService {
 
   update(group: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._http.put(`/api/groups/${group.ID}`, group)
+      this._http
+        .put(`/api/groups/${group.ID}`, group)
         .then(res => {
           this.notifyCenter(group.ID, 'change');
           resolve(res.json ? res.json() : res.text());
@@ -110,9 +116,9 @@ export class GroupService {
   }
 
   remove(id: string): Promise<any> {
-    let url = `${this.baseUrl}/${id}`;
     return new Promise((resolve, reject) => {
-      this._http.delete(url)
+      this._http
+        .delete(`/api/admin/groups/${id}`)
         .then(res => {
           this.notifyCenter(id, 'remove');
           resolve(res.json ? res.json() : res.text());
@@ -120,7 +126,7 @@ export class GroupService {
         .catch(err => {
           reject(err.json ? err.json() : err);
         });
-    })
+    });
   }
 
   isIPEnableProxy(ip: string): boolean {
@@ -139,10 +145,9 @@ export class GroupService {
       GroupID: groupId,
       Event: event
     };
-    this._http.post(url, body)
-      .then(res => {
-
-      })
-      .catch(err => { });
+    this._http
+      .post(url, body)
+      .then(res => {})
+      .catch(err => {});
   }
 }
