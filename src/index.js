@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 const compression = require('compression');
 const express = require('express');
@@ -13,8 +13,9 @@ const config = require('./config');
 const { util } = require('./common');
 
 // Process DB file
-if (!fs.existsSync(config.dbFilePath)) {
-  fs.copyFileSync(path.join(__dirname, 'db/bluewhale.db'), config.dbFilePath);
+if (!fse.existsSync(config.dbFilePath)) {
+  fse.ensureDirSync(path.dirname(config.dbFilePath));
+  fse.copyFileSync(path.join(__dirname, 'db/bluewhale.db'), config.dbFilePath);
 }
 
 const app = express();
