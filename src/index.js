@@ -49,11 +49,6 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/', express.static(path.join(__dirname, 'wwwroot')));
-
-let ignoreAuthPaths = ['/api/users/avatar', '/api/groups/getclusters', '/api/groups/getallservers'];
-
-app.use('/api/groups-old', require('./routers/group'));
-app.use('/api/images', require('./routers/imageInfo'));
 // Load routes
 util.loadRoutes(app, path.join(__dirname, 'routes'));
 

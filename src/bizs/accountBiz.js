@@ -137,10 +137,14 @@ const shouldLogin = (req, res, next) => {
   }
 };
 
-const shouldAdmin = (req, res, next) => {
+const shouldAdmin = config => (req, res, next) => {
   // 正常情况
   const user = req.session.user;
   if (user.isAdmin || user.IsAdmin) {
+    return next();
+  }
+  const ignorePaths = (config && config.ignorePaths) || [];
+  if (ignorePaths.indexOf(req.originalUrl) >= 0) {
     return next();
   }
   const error = new Error('Insufficient permissions.');
