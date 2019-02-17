@@ -40,10 +40,6 @@ export class SystemConfigPage {
     this._systemConfig
       .save(this.config)
       .then(res => {
-        if (!form.controls.humpbackCenterAPI.invalid) {
-          let event = this.config.EnableClusterMode ? 'enable' : 'disable';
-          this._systemConfig.notifyCenter(form.controls.humpbackCenterAPI.value, event);
-        }
         messager.success('Updated.');
       })
       .catch(err => {

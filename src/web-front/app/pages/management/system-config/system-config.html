@@ -17,20 +17,6 @@
         <span class="help-block" *ngIf="privateRegistryInput.errors.pattern">Invalid URL.</span>
       </div>
     </div>
-    <div class="form-group" [class.has-error]="form.submitted && config.EnableClusterMode && humpbackCenterAPIInput.invalid">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" name="enableClusterMode" [(ngModel)]="config.EnableClusterMode">
-          <b>Enable Cluster Mode</b>
-        </label>
-      </div>
-      <input type="text" class="form-control" name="humpbackCenterAPI" #humpbackCenterAPIInput="ngModel" [(ngModel)]="config.HumpbackCenterAPI"
-        [attr.disabled]="config.EnableClusterMode ? null : 'disabled'" autocomplete="off" required pattern="https?://.+">
-      <div *ngIf="form.submitted && config.EnableClusterMode && humpbackCenterAPIInput.invalid">
-        <span class="help-block" *ngIf="humpbackCenterAPIInput.errors.required">HumpbackCenterAPI address is required.</span>
-        <span class="help-block" *ngIf="humpbackCenterAPIInput.errors.pattern">Invalid URL.</span>
-      </div>
-    </div>
     <div class="form-group">
       <label>Top news</label>
       <input type="text" class="form-control" name="topNews" [(ngModel)]="config.TopNews" autocomplete="off" maxlength="500">

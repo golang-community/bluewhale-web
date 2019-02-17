@@ -135,7 +135,6 @@ const saveSysConfig = async (req, res, next) => {
     PrivateRegistry: body.PrivateRegistry,
     TopNews: body.TopNews
   });
-  const now = Date.now();
   if (hasConfig) {
     await dbUtil.update(DataDict, SYS_CONFIG_FILTER, { dataValue, ...dbUtil.fillCommonFileds(user.userId, true) });
   } else {

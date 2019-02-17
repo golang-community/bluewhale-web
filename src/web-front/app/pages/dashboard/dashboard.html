@@ -14,7 +14,7 @@
               No activities.
             </div>
             <div class="box-comment" *ngFor="let log of logs;">
-              <img src="{{'/api/users/avatar/'+log.UserId}}" class="img-circle img-sm">
+              <img src="static/images/default.png" class="img-circle img-sm">
               <div class="comment-text">
                 <span class="username">
                   {{ log.FullName || log.UserId }}
