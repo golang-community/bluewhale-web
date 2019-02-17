@@ -1,78 +1,56 @@
 const gulp = require('gulp');
 const del = require('del');
-const gutil = require('gulp-util');
-const webpack = require('webpack');
+const shelljs = require('shelljs');
 const server = require('gulp-develop-server');
 const notifier = require('node-notifier');
 const lightReload = require('light-reload');
-const useref = require('gulp-useref');
-const gulpif = require('gulp-if');
-const uglify = require('gulp-uglify');
-const minifyCss = require('gulp-clean-css');
 
 gulp.task('clean', () => {
-  return del(['dist/*', '!dist/dbFiles', '!dist/wwwroot', '!dist/node_modules'], { force: true });
+  return del(['dist/*'], { force: true });
 });
 
-gulp.task('server:clean', done => {
-  del(['dist/**/*', '!dist/wwwroot'], { force: true });
-  done();
+gulp.task('clean:api', () => {
+  return del(['dist/*', '!dist/dbFiles', '!dist/wwwroot'], { force: true });
 });
 
-gulp.task('server:copy', () => {
-  return gulp.src(['src/**', '!src/web-front/**', '!src/web-front/**']).pipe(gulp.dest('dist/'));
+gulp.task('clean:web', () => {
+  return del(['dist/wwwroot/**/*'], { force: true });
 });
 
-gulp.task('server:start', callback => {
+gulp.task('copy:api', () => {
+  return gulp
+    .src(['src/**', '!src/web-front/**', 'package.json', 'package-loc[k].json'], { allowEmpty: true })
+    .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('api:start', done => {
   lightReload.init();
   server.listen({ path: 'dist/index.js' }, err => {
-    if (err) console.log('listen', err);
+    if (err) {
+      console.error('listen', err);
+    }
+    done();
   });
-  callback();
 });
 
-gulp.task('server:restart', callback => {
+gulp.task('api:restart', done => {
   server.restart(err => {
-    if (err) console.log('restart', err);
+    if (err) {
+      console.error('restart', err);
+    }
     notifier.notify({
       title: 'Bluewhale-server',
       message: 'Server restarted.'
     });
+    done();
   });
-  callback();
 });
 
-gulp.task('server:watch', done => {
-  gulp.watch(['src/**/*.js', '!src/web-front/**'], gulp.series('server:reload'));
+gulp.task('api:watch', done => {
+  gulp.watch(['src/**/*.js', '!src/web-front/**'], gulp.series('copy:api', 'api:restart'));
   done();
 });
 
-gulp.task('release:html', () => {
-  return gulp
-    .src('dist/web-front/index.html')
-    .pipe(useref())
-    .pipe(gulpif('*.js', uglify()))
-    .pipe(gulpif('*.css', minifyCss()))
-    .pipe(gulp.dest('dist/wwwroot'));
-});
+gulp.task('dev', gulp.series('clean:api', 'copy:api', 'api:start', 'api:watch'));
 
-gulp.task('release:clean-unused-file', () => {
-  let rootPath = 'dist/wwwroot/static';
-  return del(
-    [
-      `${rootPath}/**/*.css`,
-      `${rootPath}/**/*.js`,
-      `!${rootPath}/vendor/css/vendor.min.css`,
-      `!${rootPath}/vendor/js/vendor.min.js`,
-      `!${rootPath}/css/site.min.css`,
-      `!${rootPath}/js/site.min.js`
-    ],
-    { force: true }
-  );
-});
-
-gulp.task('server:reload', gulp.series('server:copy', 'server:restart'));
-
-gulp.task('dev', gulp.series('clean', 'server:copy', 'server:start', 'server:watch' /*, 'client:dev-build'*/));
-
-gulp.task('release', gulp.series('clean', 'server:copy', 'release:html', 'release:clean-unused-file'));
+gulp.task('build', gulp.series('copy:api'));
