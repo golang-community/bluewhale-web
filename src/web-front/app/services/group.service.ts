@@ -71,7 +71,7 @@ export class GroupService {
     });
   }
 
-  getById(id: string, isAdmin: boolean): Promise<any> {
+  getById(id: string, isAdmin: boolean = false): Promise<any> {
     let url = isAdmin ? `/api/admin/groups/${id}` : `/api/groups/${id}`;
     return new Promise((resolve, reject) => {
       this._http

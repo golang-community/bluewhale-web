@@ -16,7 +16,6 @@ import {
   ContainerLogPage,
   ServerDetailPage,
   ComponentNewPage,
-  // ClusterLayoutPage, ClusterOverviewPage, ClusterContainerEditPage, ClusterContainerInfoPage, ClusterNodePage,
   HubHomePage,
   ImageOverviewPage,
   EditImageDescriptionPage,
