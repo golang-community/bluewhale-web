@@ -1,15 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es5",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": false,
+    "declaration": true,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "removeComments": false,
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "lib": ["es2015", "dom"]
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
   },
-  "exclude": ["node_modules"]
+  "exclude": ["./src2/**/*"]
 }

@@ -1,8 +1,0 @@
-.error-page {
-  display: flex;
-  align-items: center;
-}
-
-.error-page > .error-content {
-  margin-left: 20px;
-}
