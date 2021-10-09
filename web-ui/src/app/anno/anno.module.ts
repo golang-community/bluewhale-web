@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login/login.component';
 
+import { SharedModule } from '../shared.module';
 import { AnnoRoutingModule } from './anno-routing.module';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [LoginComponent],
-  imports: [CommonModule, AnnoRoutingModule],
+  imports: [SharedModule, AnnoRoutingModule],
 })
 export class AnnoModule {}

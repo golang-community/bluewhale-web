@@ -3,13 +3,12 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-group-layout',
   templateUrl: './group-layout.component.html',
-  styleUrls: ['./group-layout.component.less']
+  styleUrls: ['./group-layout.component.less'],
 })
 export class GroupLayoutComponent implements OnInit {
+  isCollapsed = false;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

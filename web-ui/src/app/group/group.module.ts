@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { GroupRoutingModule } from './group-routing.module';
 import { GroupLayoutComponent } from './group-layout/group-layout.component';
 import { ServerOverviewComponent } from './server-overview/server-overview.component';
+import { SharedModule } from '../shared.module';
 
 @NgModule({
   declarations: [GroupLayoutComponent, ServerOverviewComponent],
-  imports: [CommonModule, RouterModule, GroupRoutingModule],
+  imports: [SharedModule, GroupRoutingModule],
 })
 export class GroupModule {}
