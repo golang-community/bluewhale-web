@@ -1,23 +1,10 @@
-# Docker Hub地址
+# Docker Hub 地址
 
 [https://hub.docker.com/?namespace=golangcommunity](https://hub.docker.com/?namespace=golangcommunity)
 
 # Introduction
 
-作为 [Bluewhale](https://humpback.github.io/humpback) 的直观展现，基于 [Angular2](https://github.com/angular/angular) 和 [AdminLTE](https://github.com/almasaeed2010/AdminLTE) 构建的用于管理 `docker ` 的网站。
-
-# Usage
-```bash
-git clone https://github.com/humpback/humpback-web.git
-cd humpback-web
-npm install
-npm start
-```
-Open [http://localhost](http://localhost)
-
-Default Account    
->UserID: `admin`   
-Password: `123456`    
+作为 [Bluewhale](https://humpback.github.io/humpback) 的直观展现，基于 [Angular](https://angular.io/) 和 [nestjs](https://nestjs.com/) 构建的用于管理 `docker` 的网站。 
 
 # Docker image
 [![](https://images.microbadger.com/badges/image/humpbacks/humpback-web:1.3.0.svg)](https://microbadger.com/images/humpbacks/humpback-web:1.3.0 "Get your own image badge on microbadger.com")
@@ -32,7 +19,7 @@ $ docker run -d --net=host --restart=always -e HUMPBACK_LISTEN_PORT=8012 \
 ```
 
 # Functions
-- 服务器分组管理
+[x] 服务器分组管理
 - 容器及镜像管理
 - 容器批量操作
 - 容器实时监控
@@ -40,7 +27,7 @@ $ docker run -d --net=host --restart=always -e HUMPBACK_LISTEN_PORT=8012 \
 - 私有仓库管理
 - etc.
 
-# Sample Page
+# Sample Pages
 #### Login Page
 ![image](https://cloud.githubusercontent.com/assets/9428909/22197325/73c2aba4-e18c-11e6-9c9a-c00318abf6f5.png)
 
@@ -60,32 +47,32 @@ Apache-2.0
 
 
 ## Develop
-
-推荐使用 `pnpm` 作为包管理工具
+> 推荐使用 `pnpm` 作为包管理工具
 
 ## Installation
 
 ```bash
-$ npm install
+$ pnpm i
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ npm start
 
-# watch mode
-$ npm run start:dev
+# open the web page 
+http://localhost:8009
 
-# production mode
-$ npm run start:prod
+# Default Account    
+UserID: `admin`   
+Password: `123456`   
 ```
 
 ## Test
 
 ```bash
-# unit tests
+# unit tests server
 $ npm run test
 
 # e2e tests
@@ -93,4 +80,7 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+
+# webui tests
+$ npm run web:test
 ```
