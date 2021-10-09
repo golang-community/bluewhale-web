@@ -12,6 +12,7 @@ specifiers:
   '@angular/platform-browser': ~12.2.0
   '@angular/platform-browser-dynamic': ~12.2.0
   '@angular/router': ~12.2.0
+  '@ant-design/icons-angular': ^12.0.3
   '@nestjs/cli': ^8.0.0
   '@nestjs/common': ^8.0.0
   '@nestjs/core': ^8.0.0
@@ -37,6 +38,7 @@ specifiers:
   karma-coverage: ~2.0.3
   karma-jasmine: ~4.0.0
   karma-jasmine-html-reporter: ~1.7.0
+  ng-zorro-antd: 12.0.1
   prettier: ^2.3.2
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
@@ -51,10 +53,12 @@ specifiers:
   zone.js: ~0.11.4
 
 dependencies:
+  '@ant-design/icons-angular': 12.0.3_568f89294d63a40e7d085ec83a345a38
   '@nestjs/common': 8.0.11_ad16f1f28877c5242670873e13562245
   '@nestjs/core': 8.0.11_fbed3fa0c229df251b831620a2821997
   '@nestjs/mapped-types': 1.0.0_d491799b8e02d3d21d5194c22f751936
   '@nestjs/platform-express': 8.0.11_1b23cd5ccb3fa850be22a42de16aab17
+  ng-zorro-antd: 12.0.1_6cdc564386e85fb0193d879c4987789e
   reflect-metadata: 0.1.13
   rxjs: 7.4.0
 
@@ -352,6 +356,21 @@ packages:
       tslib: 2.3.1
     dev: true
 
+  /@angular/cdk/12.2.9_fee24d2d196dac359046537a4578617d:
+    resolution: {integrity: sha512-9Wgj69iGAZ4teQqW/zPbVg2RGna+m9i3v0zkWGx/+Uo95rikJCUZBQM4bfeOe+bSJrS77jV5EisBWG7ayNUSzQ==}
+    peerDependencies:
+      '@angular/common': ^12.0.0 || ^13.0.0-0
+      '@angular/core': ^12.0.0 || ^13.0.0-0
+      rxjs: ^6.5.3 || ^7.0.0
+    dependencies:
+      '@angular/common': 12.2.9_@angular+core@12.2.9+rxjs@7.4.0
+      '@angular/core': 12.2.9_rxjs@7.4.0+zone.js@0.11.4
+      rxjs: 7.4.0
+      tslib: 2.3.1
+    optionalDependencies:
+      parse5: 5.1.1
+    dev: false
+
   /@angular/cli/12.2.9:
     resolution: {integrity: sha512-aYAb6LkqIpKOZE8Kkhst5NNWpM4W1o1mmPTt6Nm6b/4wVLSC+mDp1IBCJSihDWysDetXA5J3kNJ4R2XnpHpIKw==}
     engines: {node: ^12.14.1 || >=14.0.0, npm: ^6.11.0 || ^7.5.6, yarn: '>= 1.13.0'}
@@ -504,6 +523,28 @@ packages:
       rxjs: 7.4.0
       tslib: 2.3.1
     dev: true
+
+  /@ant-design/colors/5.1.1:
+    resolution: {integrity: sha512-Txy4KpHrp3q4XZdfgOBqLl+lkQIc3tEvHXOimRN1giX1AEC7mGtyrO9p8iRGJ3FLuVMGa2gNEzQyghVymLttKQ==}
+    dependencies:
+      '@ctrl/tinycolor': 3.4.0
+    dev: false
+
+  /@ant-design/icons-angular/12.0.3_568f89294d63a40e7d085ec83a345a38:
+    resolution: {integrity: sha512-Jl/O7fQiFGsFHuesOp7Oo/TKTPSlWAqMa2DBQdgQbNzv2c3v1ijQWd54ymDC6ftIHMsKD30nJ6bekCiqdbfZuA==}
+    peerDependencies:
+      '@angular/common': ^12.0.3
+      '@angular/core': ^12.0.3
+      '@angular/platform-browser': ^12.0.3
+      rxjs: ^6.4.0
+    dependencies:
+      '@angular/common': 12.2.9_@angular+core@12.2.9+rxjs@7.4.0
+      '@angular/core': 12.2.9_rxjs@7.4.0+zone.js@0.11.4
+      '@angular/platform-browser': 12.2.9_110a2ada9e8116ada60e5e57e254e11b
+      '@ant-design/colors': 5.1.1
+      rxjs: 7.4.0
+      tslib: 2.3.1
+    dev: false
 
   /@assemblyscript/loader/0.10.1:
     resolution: {integrity: sha512-H71nDOOL8Y7kWRLqf6Sums+01Q5msqBW2KhDUTemh1tvY04eSkSXrK0uj/4mmY0Xr16/3zyZmsrxN7CKuRbNRg==}
@@ -1834,6 +1875,11 @@ packages:
     resolution: {integrity: sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==}
     engines: {node: '>=4.0.0'}
     dev: true
+
+  /@ctrl/tinycolor/3.4.0:
+    resolution: {integrity: sha512-JZButFdZ1+/xAfpguQHoabIXkcqRRKpMrWKBkpEZZyxfY9C1DpADFB8PEqGSTeFr135SaTRfKqGKx5xSCLI7ZQ==}
+    engines: {node: '>=10'}
+    dev: false
 
   /@discoveryjs/json-ext/0.5.3:
     resolution: {integrity: sha512-Fxt+AfXgjMoin2maPIYzFZnQjAXjAL0PHscM5pRTtatFqB+vZxAM9tLp2Optnuw3QOQC40jTNeGYFOMvyf7v9g==}
@@ -4370,7 +4416,6 @@ packages:
   /date-fns/2.25.0:
     resolution: {integrity: sha512-ovYRFnTrbGPD4nqaEqescPEv1mNwvt+UTqI3Ay9SzNtey9NZnYu6E2qCcBBgJ6/2VF1zGGygpyTDITqpQQ5e+w==}
     engines: {node: '>=0.11'}
-    dev: true
 
   /date-format/2.1.0:
     resolution: {integrity: sha512-bYQuGLeFxhkxNOF3rcMtiZxvCBAquGzZm6oWA1oZ0g2THUzivaRhv8uOhdr19LmoobSOLoIAxeUK2RdbM8IFTA==}
@@ -7830,6 +7875,30 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
+  /ng-zorro-antd/12.0.1_6cdc564386e85fb0193d879c4987789e:
+    resolution: {integrity: sha512-3TDqKlLD3bYuBVF4cncfyGfWWHmEmN+I2Kr6RbLfIfyNHZL3VJbtKM9rWaXD3PTrPnGoSYnOwHbOCWvSN9kocw==}
+    peerDependencies:
+      '@angular/animations': ^12.1.0
+      '@angular/common': ^12.1.0
+      '@angular/core': ^12.1.0
+      '@angular/forms': ^12.1.0
+      '@angular/platform-browser': ^12.1.0
+      '@angular/router': ^12.1.0
+    dependencies:
+      '@angular/animations': 12.2.9_@angular+core@12.2.9
+      '@angular/cdk': 12.2.9_fee24d2d196dac359046537a4578617d
+      '@angular/common': 12.2.9_@angular+core@12.2.9+rxjs@7.4.0
+      '@angular/core': 12.2.9_rxjs@7.4.0+zone.js@0.11.4
+      '@angular/forms': 12.2.9_568f89294d63a40e7d085ec83a345a38
+      '@angular/platform-browser': 12.2.9_110a2ada9e8116ada60e5e57e254e11b
+      '@angular/router': 12.2.9_568f89294d63a40e7d085ec83a345a38
+      '@ant-design/icons-angular': 12.0.3_568f89294d63a40e7d085ec83a345a38
+      date-fns: 2.25.0
+      tslib: 2.3.1
+    transitivePeerDependencies:
+      - rxjs
+    dev: false
+
   /nice-napi/1.0.2:
     resolution: {integrity: sha512-px/KnJAJZf5RuBGcfD+Sp2pAKq0ytz8j+1NehvgIGFkvtvFrDM3T8E4x/JJODXK9WZow8RRGrbA9QQ3hs+pDhA==}
     os: ['!win32']
@@ -8355,6 +8424,12 @@ packages:
     dependencies:
       parse5: 6.0.1
     dev: true
+
+  /parse5/5.1.1:
+    resolution: {integrity: sha512-ugq4DFI0Ptb+WWjAdOK16+u/nHfiIrcE+sh8kZMaM0WllQKLI9rOUq6c2b7cwPkXdzfQESqvoqK6ug7U/Yyzug==}
+    requiresBuild: true
+    dev: false
+    optional: true
 
   /parse5/6.0.1:
     resolution: {integrity: sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==}

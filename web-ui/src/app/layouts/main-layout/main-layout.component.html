@@ -1,0 +1,53 @@
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="200px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
+    <div class="sidebar-logo">
+      <a href="/">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        <h1>BlueWhale</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="BASIC NAVIGATION">
+        <ul>
+          <li nz-menu-item nzMatchRouter nzIcon="dashboard">
+            <a routerLink="/dashboard">仪表盘</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/group">服务器组</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>活动日志</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="ADVANCE NAVIGATION" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a>账户管理</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+        </span>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

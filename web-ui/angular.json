@@ -1,7 +1,8 @@
 {
   "$schema": "../node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "packageManager": "pnpm"
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -78,7 +79,8 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 8009
+            "port": 8009,
+            "proxyConfig": "proxy.conf.json"
           }
         },
         "extract-i18n": {
