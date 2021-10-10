@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,16 +18,7 @@ registerLocaleData(zh);
 
 @NgModule({
   declarations: [AppComponent, MainLayoutComponent],
-  imports: [
-    BrowserModule,
-    RouterModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    IconsProviderModule,
-    SharedModule,
-  ],
+  imports: [BrowserModule, FormsModule, HttpClientModule, BrowserAnimationsModule, AppRoutingModule, SharedModule],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent],
 })

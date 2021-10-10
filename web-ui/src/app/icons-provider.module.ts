@@ -5,17 +5,31 @@ import {
   MenuFoldOutline,
   MenuUnfoldOutline,
   FormOutline,
-  DashboardOutline
+  DashboardOutline,
+  AppstoreOutline,
+  SettingOutline,
+  UserOutline,
+  FieldTimeOutline,
+  LogoutOutline,
+  LockOutline,
 } from '@ant-design/icons-angular/icons';
 
-const icons = [MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline];
+const icons = [
+  MenuFoldOutline,
+  MenuUnfoldOutline,
+  DashboardOutline,
+  FormOutline,
+  AppstoreOutline,
+  SettingOutline,
+  UserOutline,
+  FieldTimeOutline,
+  LogoutOutline,
+  LockOutline,
+];
 
 @NgModule({
   imports: [NzIconModule],
   exports: [NzIconModule],
-  providers: [
-    { provide: NZ_ICONS, useValue: icons }
-  ]
+  providers: [{ provide: NZ_ICONS, useValue: icons }],
 })
-export class IconsProviderModule {
-}
+export class IconsProviderModule {}
