@@ -9,7 +9,7 @@
   >
     <div class="sidebar-logo">
       <a href="/">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        <img src="assets/images/logo.webp" alt="logo" />
         <h1>BlueWhale</h1>
       </a>
     </div>
@@ -17,7 +17,9 @@
       <li nz-menu-group nzTitle="BASIC NAVIGATION">
         <ul>
           <li nz-menu-item nzMatchRouter nzIcon="dashboard">
-            <a routerLink="/dashboard"> <i nz-icon nzType="dashboard" nzTheme="outline"></i> 仪表盘</a>
+            <a routerLink="/dashboard">
+              <i nz-icon nzType="dashboard" nzTheme="outline"></i> {{!isCollapsed?"仪表盘":""}}</a
+            >
           </li>
           <li nz-menu-item nzMatchRouter nzMatchRouterExact nzIcon="appstore">
             <a routerLink="/group"> <i nz-icon nzType="appstore" nzTheme="outline"></i> 服务器组</a>
